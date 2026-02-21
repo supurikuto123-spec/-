@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SNS登録に使える捨てメアド比較【2025年版】 | tomy634.com</title>
+  <meta name="description" content="日本の tomy634.com / メルアドぽいぽい と、Temp Mail・10 Minute Mail・Guerrilla Mail・Mailinator・EmailOnDeck・Maildrop・Mohmal・Burner Mail を公式情報ベースで比較。無料プラン・有料プラン・API・使い勝手を整理し、SNS登録やテスト用途に合った使い捨てメールサービスの選び方を解説します。">
+  <link rel="canonical" href="https://tomy634.com/blog/disposable-mail-compare/"/>
+  <style>
+    :root{
+      --bg:#0a0f12;
+      --term:#0d1618;
+      --text:#d7ffe8;
+      --accent:#74ffcf;
+      --muted:#89bfa6;
+      --border:rgba(116,255,207,.35);
+      --link:#4dabff;
+    }
+    body{
+      margin:0;
+      font-family:ui-monospace,Consolas,monospace;
+      background:var(--bg);
+      color:var(--text);
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:16px 20px;
+      border-bottom:1px solid rgba(116,255,207,.2);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .logo{
+      width:36px;
+      height:36px;
+      border:1px solid var(--accent);
+      border-radius:8px;
+      display:grid;
+      place-items:center;
+      box-shadow:0 0 12px rgba(116,255,207,.3);
+      background:radial-gradient(circle at 30% 30%,rgba(116,255,207,.25),transparent);
+    }
+    .logo::after{
+      content:"$";
+      color:var(--accent);
+      font-weight:700;
+    }
+    h1{
+      font-size:18px;
+      margin:0;
+      color:var(--accent);
+    }
+    nav{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    nav a{
+      color:var(--muted);
+      text-decoration:none;
+      font-size:13px;
+    }
+    nav a:hover{
+      text-decoration:underline;
+      color:var(--accent);
+    }
+    .nav-main{
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(116,255,207,.4);
+      background:rgba(10,15,18,.8);
+    }
+    .nav-main:hover{
+      background:rgba(116,255,207,.12);
+    }
+
+    .wrap{
+      padding:20px;
+      max-width:1000px;
+      margin:auto;
+    }
+    .page-title{
+      font-size:22px;
+      margin:4px 0 10px;
+      color:var(--accent);
+    }
+    .page-sub{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:14px;
+    }
+
+    .notice{
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:12px 14px;
+      background:rgba(12,24,28,.8);
+      margin:10px 0 18px;
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .hero{
+      margin:14px 0 20px;
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid rgba(116,255,207,.2);
+      background:radial-gradient(circle at 0 0,rgba(116,255,207,.15),transparent 55%);
+    }
+    .hero img{
+      display:block;
+      width:100%;
+      height:auto;
+    }
+    .hero figcaption{
+      font-size:12px;
+      color:var(--muted);
+      padding:6px 10px 10px;
+    }
+
+    h2{
+      color:var(--accent);
+      font-size:16px;
+      margin:20px 0 8px;
+    }
+    h3{
+      color:var(--accent);
+      font-size:14px;
+      margin:16px 0 6px;
+    }
+    p,li{
+      color:var(--muted);
+      line-height:1.8;
+      font-size:13px;
+    }
+    a{
+      color:var(--link);
+    }
+    a:hover{
+      text-decoration:underline;
+    }
+    ul,ol{
+      padding-left:18px;
+    }
+
+    .index-links{
+      font-size:13px;
+      margin:10px 0 4px;
+    }
+    .index-links a{
+      margin-right:10px;
+    }
+
+    .compare-wrap{
+      overflow-x:auto;
+      margin:10px 0 18px;
+    }
+    table.compare{
+      width:100%;
+      border-collapse:collapse;
+      min-width:960px;
+      font-size:12px;
+    }
+    table.compare th,
+    table.compare td{
+      border:1px solid rgba(116,255,207,.25);
+      padding:8px 7px;
+      vertical-align:top;
+      text-align:left;
+    }
+    table.compare th{
+      background:rgba(12,24,28,.9);
+      color:var(--accent);
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+    table.compare tr:nth-child(even){
+      background:rgba(12,24,28,.6);
+    }
+    table.compare tr:nth-child(odd){
+      background:rgba(8,14,17,.9);
+    }
+    .svc-name{
+      white-space:nowrap;
+      font-weight:700;
+    }
+    .tag{
+      display:inline-block;
+      font-size:10px;
+      padding:1px 6px;
+      border-radius:999px;
+      border:1px solid rgba(116,255,207,.6);
+      margin-left:6px;
+      color:var(--muted);
+    }
+
+    .tips{
+      border-left:3px solid var(--accent);
+      padding-left:10px;
+      margin:8px 0 14px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .cta-box{
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:14px 16px;
+      background:rgba(10,22,24,.9);
+      margin:20px 0;
+      font-size:13px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <h1>tomy634.com // ブログ記事</h1>
+  </div>
+  <nav>
+    <a href="/blog" class="nav-main">ブログホーム</a>
+    <a href="/">tomy634.com に戻る</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <h2 class="page-title">SNS登録に使える捨てメアド比較【2025年版】</h2>
+  <p class="page-sub">
+    日本の <a href="https://tomy634.com/" target="_blank" rel="noopener">tomy634.com</a> / 
+    <a href="https://instaddr.com/" target="_blank" rel="noopener">メルアドぽいぽい（捨てメアド）</a> と、
+    海外の Temp Mail・10 Minute Mail・Guerrilla Mail・Mailinator・EmailOnDeck・Maildrop・Mohmal・Burner Mail を、
+    公式サイトの情報だけをもとに比較したまとめです。
+  </p>
+
+  <div class="notice">
+    <strong>このページについて</strong><br/>
+    実際に各サービスの公式サイト・アプリページにアクセスし、<strong>使い勝手 / 無料プランの制限 / 有料プランの価格 / API・独自ドメインなどの拡張機能</strong>を確認したうえで整理しています。<br/>
+    レビューサイトやまとめブログは参照せず、<strong>一次情報ベース</strong>で比較しているのが特徴です。
+  </div>
+
+  <figure class="hero">
+    <figcaption>
+      捨てメアドは、SNS登録や検証用に「本物のメールアドレスを晒さずに」使える便利なツールです。
+      ただしサービスごとに仕組みや制限が大きく異なるため、用途に合ったものを選ぶことが大切です。
+    </figcaption>
+  </figure>
+
+  <h2 id="overview">どういう視点で比べたか</h2>
+  <p>
+    ひとことで「捨てメアド」と言っても、
+    <strong>保存期間・アドレス数・送信機能・料金・APIや独自ドメイン対応</strong>などはサービスごとにバラバラです。
+    今回は、SNS登録やWebサービスの検証でよく問題になる次のポイントに注目しました。
+  </p>
+  <ul>
+    <li>どのくらいの期間メールアドレスを維持できるか（10分 / 24時間 / 無期限 など）</li>
+    <li>同時に何個までアドレスを持てるか、保存件数はどの程度か</li>
+    <li>受信専用なのか、返信・送信もできるのか</li>
+    <li>完全無料でどこまで使えるか、有料プランはいくらなのか</li>
+    <li>API・独自ドメイン対応など、開発者や企業向けの機能があるか</li>
+  </ul>
+  <p class="tips">
+    用語がわからない場合は、<a href="/blog/glossary/">Web・IT・プログラミング用語集</a> もあわせてどうぞ。
+    「SMTP」「API」「ドメイン」などの基本用語も軽く復習できます。
+  </p>
+
+  <h2 id="table">比較表：国内2サービス + 海外8サービス</h2>
+  <p>
+    まずは全体感をつかみやすいよう、主要10サービスをざっくり一覧にしました。
+    価格はすべて<strong>2025年11月時点の公式表示</strong>をベースにしています（為替変動などで実際の支払額は変わる場合があります）。
+  </p>
+
+  <div class="compare-wrap">
+    <table class="compare">
+      <thead>
+        <tr>
+          <th>サービス</th>
+          <th>使い勝手・性能</th>
+          <th>無料プラン / 主な制限</th>
+          <th>有料プラン（2025年11月時点）</th>
+          <th>メモ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="svc-name">
+            <a href="https://tomy634.com/" target="_blank" rel="noopener">tomy634.com</a>
+            <span class="tag">日本 / ブラウザ完結</span>
+          </td>
+          <td>
+            アクセスすると自動で一時メールアドレスを発行。<br/>
+            メールはリアルタイム受信 + 15秒ごとの自動更新。<br/>
+            UIが軽量で広告も控えめ、日本語向けに最適化。
+          </td>
+          <td>
+            登録不要・完全無料。<br/>
+            受信箱は<strong>最新10件まで</strong>表示。<br/>
+            アドレスはブラウザのクッキーに保存され、7日間継続利用が基本。
+          </td>
+          <td>
+            有料プランなし（現時点）。<br/>
+            将来的に<strong>無料API開放</strong>を検討中。
+          </td>
+          <td>
+            個人運営のシンプルなサービス。<br/>
+            重要アカウントには使わないよう注意書きあり。<br/>
+            「サクッと認証コードを受け取りたい」用途に最適。
+          </td>
+        </tr>
+
+        <tr>
+          <td class="svc-name">
+            <a href="https://instaddr.com/" target="_blank" rel="noopener">メルアドぽいぽい（捨てメアド / instaddr）</a>
+            <span class="tag">日本 / アプリ中心</span>
+          </td>
+          <td>
+            iOS / Android アプリがメイン。<br/>
+            複数の使い捨てメールを同時保持でき、有効期限は<strong>基本なし</strong>。<br/>
+            アプリから送信・返信・転送も可能で、プッシュ通知対応。
+          </td>
+          <td>
+            無料プランでもアドレスを複数作成可能。<br/>
+            広告表示あり。機能は十分。
+          </td>
+          <td>
+            アプリ内課金のプレミアムプラン：<br/>
+            月額<strong>1.49 USD</strong> または 年額<strong>7.99 USD</strong> 目安。<br/>
+            広告非表示 / プレミアムドメイン / 外部メーラー / 独自ドメインなどが解放。
+          </td>
+          <td>
+            日本の超定番捨てメアド。<br/>
+            「スマホアプリで全部済ませたい」人に向く。<br/>
+            ドメインがあまりに有名なので、一部サービスではブロックされる可能性も。
+          </td>
+        </tr>
+
+        <tr>
+          <td class="svc-name">
+            <a href="https://temp-mail.org/" target="_blank" rel="noopener">Temp Mail</a>
+            <span class="tag">海外 / 高機能</span>
+          </td>
+          <td>
+            ページを開くとランダムなアドレスを即発行。<br/>
+            基本操作（生成・コピー・削除・閲覧）は無料。<br/>
+            UIはモダンで、多言語対応。
+          </td>
+          <td>
+            無料は<strong>単一アドレス</strong>＆保存期間はおよそ<strong>2時間程度</strong>。<br/>
+            広告表示あり。
+          </td>
+          <td>
+            Temp Mail Premium：<br/>
+            月額<strong>10 USD</strong> / 年額<strong>60 USD</strong>（年払いで約50%オフ）。<br/>
+            最大10アドレス・プレミアムドメイン・100MB保存・カスタムドメイン接続・広告非表示など。
+          </td>
+          <td>
+            汎用性の高い海外定番。<br/>
+            本格的に使うなら有料プラン前提。<br/>
+            Paddle経由のサブスクで、いつでも解約可能。
+          </td>
+        </tr>
+
+        <tr>
+          <td class="svc-name">
+            <a href="https://10minutemail.com/" target="_blank" rel="noopener">10 Minute Mail</a>
+            <span class="tag">10分メール</span>
+          </td>
+          <td>
+            サイトにアクセスすると<strong>10分間有効</strong>なアドレスを発行。<br/>
+            シンプルなUIとカウントダウン表示。<br/>
+            必要に応じて10分延長が可能。
+          </td>
+          <td>
+            完全無料・登録不要。<br/>
+            アドレスと受信メールは<strong>10分後に自動削除</strong>。
+          </td>
+          <td>
+            有料プランなし。
+          </td>
+          <td>
+            「今この瞬間だけ使い捨てたい」用途に特化。<br/>
+            返信機能もあるが、保存期間が短いので長期運用には不向き。
+          </td>
+        </tr>
+
+        <tr>
+          <td class="svc-name">
+            <a href="https://www.guerrillamail.com/" target="_blank" rel="noopener">Guerrilla Mail</a>
+            <span class="tag">海外 / 1時間保存</span>
+          </td>
+          <td>
+            アクセスするとランダムアドレスを提供。<br/>
+            メールは<strong>約1時間</strong>保存後に削除。<br/>
+            複数ドメインから選べ、スパム対策や自動生成機能あり。
+          </td>
+          <td>
+            無料版は広告表示あり。<br/>
+            受信専用で保存時間は1時間程度。
+          </td>
+          <td>
+            「自分のドメイン」を接続するオプション：<br/>
+            年額<strong>9.99 USD</strong>。ドメインは別途取得が必要。
+          </td>
+          <td>
+            無料版はシンプルな受信専用。<br/>
+            独自ドメイン利用で、特定ユーザー向けの専用受信箱が作れる。
+          </td>
+        </tr>
+
+        <tr>
+          <td class="svc-name">
+            <a href="https://www.mailinator.com/" target="_blank" rel="noopener">Mailinator</a>
+            <span class="tag">テスト / 企業向け</span>
+          </td>
+          <td>
+            QA・テスト用に設計されたサービス。<br/>
+            無料プランは「誰でも見られる」パブリック受信箱のみ。<br/>
+            テスト自動化向けにSMTP・SMSワークフローやAPIが提供される。
+          </td>
+          <td>
+            無料パブリックプランは保存期間が短く、<br/>
+            添付ファイル・API利用は不可。
+          </td>
+          <td>
+            Business：月<strong>79 USD</strong>、Business Plus：月<strong>159 USD</strong>、<br/>
+            Enterprise：月<strong>699 USD</strong> 目安（年払い）。<br/>
+            プライベートインボックス・専用ドメイン・APIなどが含まれる。<br/>
+            認証後0 USDで使える Verified Pro プランもあり（1ユーザー制限）。
+          </td>
+          <td>
+            開発者 / 企業のテスト用途に特化。<br/>
+            無料版は<strong>完全に公開される受信箱</strong>なので機密用途NG。
+          </td>
+        </tr>
+
+        <tr>
+          <td class="svc-name">
+            <a href="https://emailondeck.com/" target="_blank" rel="noopener">EmailOnDeck</a>
+            <span class="tag">海外 / 仮想通貨決済</span>
+          </td>
+          <td>
+            2ステップで一時メールを生成できるシンプル設計。<br/>
+            JavaScript必須で、ブラウザ依存部分あり。<br/>
+            無料版は広告付きで1アドレスのみ。
+          </td>
+          <td>
+            無料プランあり（広告付き / 機能制限あり）。
+          </td>
+          <td>
+            Pro プランは仮想通貨で決済：<br/>
+            30日間アクセス分として<strong>0.000699 BTC</strong> 前後（相場により変動）。<br/>
+            100以上のアドレス・専用ドメイン・保存機能・APIアクセスなど。<br/>
+            複数月まとめ買いで約15%割引。
+          </td>
+          <td>
+            暗号通貨払いに抵抗がない人向け。<br/>
+            大量アドレスを回したいユーザー・開発者に向く。
+          </td>
+        </tr>
+
+        <tr>
+          <td class="svc-name">
+            <a href="https://maildrop.cc/" target="_blank" rel="noopener">Maildrop</a>
+            <span class="tag">海外 / シンプル</span>
+          </td>
+          <td>
+            任意の名前@maildrop.cc を作成し、<br/>
+            ログイン・登録不要で受信トレイを閲覧可能。<br/>
+            UIは非常にシンプル。
+          </td>
+          <td>
+            完全無料・登録不要。<br/>
+            1通500KB以下・添付ファイル不可。<br/>
+            各受信箱は<strong>最大10通</strong>・24時間以上未使用で自動削除。
+          </td>
+          <td>
+            有料プランなし。<br/>
+            ただし開発者向けに GraphQL API が公開されている。
+          </td>
+          <td>
+            スパムフィルターが強力で、迷惑メールをほぼブロック。<br/>
+            「軽くテストしたい」場面に便利。
+          </td>
+        </tr>
+
+        <tr>
+          <td class="svc-name">
+            <a href="https://www.mohmal.com/" target="_blank" rel="noopener">Mohmal</a>
+            <span class="tag">海外 / 45分メール</span>
+          </td>
+          <td>
+            ランダム名 or 任意名とドメインを選んでアドレス作成。<br/>
+            メール有効期間は<strong>45分</strong>で、時間内なら延長も可能。<br/>
+            多言語対応（アラビア語が中心）。
+          </td>
+          <td>
+            完全無料・登録不要。<br/>
+            利用終了後はメールが自動削除。
+          </td>
+          <td>
+            有料プランなし。
+          </td>
+          <td>
+            複数ドメインを定期的に入れ替えてブラックリスト回避。<br/>
+            短期利用（ワンショット認証コード受信）に向く。
+          </td>
+        </tr>
+
+        <tr>
+          <td class="svc-name">
+            <a href="https://burnermail.io/" target="_blank" rel="noopener">Burner Mail</a>
+            <span class="tag">海外 / バーナーアドレス</span>
+          </td>
+          <td>
+            ブラウザ拡張やWebから使える匿名メール生成サービス。<br/>
+            無料プランは<strong>5個のバーナーアドレス</strong>と1メールボックス、履歴7日保存。<br/>
+            UIはモダンで直感的。
+          </td>
+          <td>
+            無料プランあり（5アドレス / 1メールボックス / 7日履歴）。
+          </td>
+          <td>
+            Premium：月<strong>2.99 USD</strong>（年額34.99 USD）。<br/>
+            無制限アドレス・無制限メールボックス・カスタムアドレス・10+プレミアムドメイン・1カスタムドメインなど。<br/>
+            Enterprise は要問い合わせ。
+          </td>
+          <td>
+            広告なしでプライバシー重視。<br/>
+            個人で多数のバーナーアドレスを管理したい人に、コスパ良好。
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="scenario">シナリオ別：どの捨てメアドを選ぶべき？</h2>
+
+  <h3>① 日本語でサクッと SNS 登録だけ済ませたい</h3>
+  <p>
+    手軽さだけを重視するなら、まず候補になるのは<strong>tomy634.com</strong>です。
+  </p>
+  <ul>
+    <li>ブラウザを開くだけで自動発行（ログイン不要）</li>
+    <li>日本語UI・日本語のFAQで迷いにくい</li>
+    <li>広告が少なめで、画面がゴチャつかない</li>
+    <li>最新10件まで表示されるので、認証コード系メールはほぼカバー</li>
+  </ul>
+  <p>
+    いわゆる「使い捨てアドレス」としてはややシンプル寄りですが、だからこそ
+    <strong>Twitter・Instagram・TikTok などの登録時にパッと開いてコードだけ受け取る</strong>
+    という使い方には相性抜群です。
+  </p>
+
+  <h3>② 複数アカウントを長期間運用したい</h3>
+  <p>
+    サブ垢用のメールを長く持っておきたい場合は、
+    <strong>メルアドぽいぽい（捨てメアド）</strong> や <strong>Burner Mail</strong> のように
+    「アドレスに期限がない / かなり長い」サービスが候補になります。
+  </p>
+  <ul>
+    <li>メルアドぽいぽい：期限なし＆複数アドレス、スマホアプリから送受信も可能</li>
+    <li>Burner Mail：無料で5アドレス、月2.99 USDで無制限＆カスタムドメインも</li>
+  </ul>
+  <p>
+    本気で「長く運用するアカウント」のメールに捨てメアドを使うのはリスクもありますが、
+    プレミアムプランやバーナーアドレスをうまく使えば、
+    <strong>本物のメールアドレスを晒さずに、ある程度継続的な通知を受ける</strong>
+    ことも可能です。
+  </p>
+
+  <h3>③ 開発者・QAエンジニアとしてテストに使いたい</h3>
+  <p>
+    Webサービスやアプリの開発者・QA担当なら、次のような観点で選ぶと便利です。
+  </p>
+  <ul>
+    <li>API や Webhook があるか</li>
+    <li>独自ドメインを接続できるか</li>
+    <li>大量のテストアドレスを管理しやすいか</li>
+  </ul>
+  <p>
+    この観点では、<strong>Mailinator / Temp Mail Premium / EmailOnDeck Pro</strong> あたりが上位候補になります。
+  </p>
+  <ul>
+    <li>Mailinator：企業向けテスト専用。Business プラン以上で専用ドメイン＆API。</li>
+    <li>Temp Mail Premium：カスタムドメインや複数アドレス、100MB保存で年60 USD。</li>
+    <li>EmailOnDeck Pro：暗号通貨払いのみだが、100+アドレス＆専用ドメイン＆API。</li>
+  </ul>
+  <p>
+    将来的には <strong>tomy634.com の無料API</strong> も候補になるはずなので、
+    国産のシンプルなサービスでテストを回したい人は、今のうちからウォッチしておくと面白いと思います。
+  </p>
+
+  <h3>④ 完全無料＆登録不要にこだわる</h3>
+  <p>
+    「課金する予定は一切ない。今だけメールが届けばいい！」という割り切り派なら、
+    次の4サービスも候補に入ります。
+  </p>
+  <ul>
+    <li><strong>10 Minute Mail</strong>：10分限定（延長可）。瞬間的な使い捨て専用。</li>
+    <li><strong>Guerrilla Mail</strong>：1時間保存。複数ドメインから選択可能。</li>
+    <li><strong>Maildrop</strong>：完全無料・添付不可だがGraphQL APIもあり、軽い検証向き。</li>
+    <li><strong>Mohmal</strong>：45分有効で延長可。ドメインが定期的に変わるタイプ。</li>
+  </ul>
+  <p>
+    いずれも「復旧メール」には絶対使わないほうが良いので、
+    それなりに大事なアカウントを作るときは tomy634.com やメルアドぽいぽい、
+    あるいはふつうの Gmail / Yahoo! メールを使うのが無難です。
+  </p>
+
+  <div class="cta-box">
+    <strong>まとめ：用途に応じて “使い捨て方” を決めよう</strong><br/><br/>
+    捨てメアドは、うまく使えばあなたのプライバシーを守る強力な武器になりますが、
+    間違った場面で使うと「本人確認ができずアカウントが詰む」リスクもあります。<br/><br/>
+    <ul>
+      <li>ワンショットのSNS登録や認証コード受信 → <strong>tomy634.com / 10 Minute Mail / Mohmal</strong></li>
+      <li>複数アカウントを長期運用したい → <strong>メルアドぽいぽい / Burner Mail</strong></li>
+      <li>開発・QAで自動テストに組み込みたい → <strong>Mailinator / Temp Mail Premium / EmailOnDeck Pro</strong></li>
+    </ul>
+    自分の用途とリスク許容度にあわせて、賢く「使い捨て」していきましょう。
+  </div>
+
+  <p style="font-size:12px;color:var(--muted);margin-top:12px;">
+    ※本記事の内容・価格はすべて 2025年11月時点の公式情報をもとに作成しています。
+    料金プランや仕様は予告なく変更される可能性があるため、
+    実際に利用する際は各サービスの公式サイトで最新情報を確認してください。
+  </p>
+</div>
+
+</body>
+</html>

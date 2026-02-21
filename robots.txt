@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /api/
+Sitemap: https://tomy634.com/sitemap.xml

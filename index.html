@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>とみーメールJP｜一時メール・使い捨てメールアドレスサービス</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta name="description" content="とみーメールJP は、ブラウザだけで一時メールアドレス（使い捨てメール）を発行し、その場で受信内容を確認できるサービスです。会員登録不要で、フォーム動作確認や認証コードの受信などに便利です。"/>
+  <meta name="robots" content="index,follow"/>
+  <link rel="canonical" href="https://tomy634.com/"/>
+  <meta name="keywords" content="tomy634, 一時メール, 使い捨てメール, 捨てメアド, temp mail, 仮登録, 認証メール"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="tomy634.com｜一時メール・使い捨てメールアドレスサービス"/>
+  <meta property="og:description" content="ブラウザだけで一時メールアドレス（使い捨てメール）を発行し、その場で受信内容を確認できます。登録不要。フォームテストや認証コードの受信に。"/>
+  <meta property="og:url" content="https://tomy634.com/"/>
+  <meta property="og:site_name" content="とみーメールJP TEMP MAIL"/>
+  <meta property="og:locale" content="ja_JP"/>
+  <meta name="twitter:card" content="summary"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7460737380045616" crossorigin="anonymous"></script>
+  <style>
+    :root{
+      --bg:#0a0f12;--term:#0d1618;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6;
+      --danger:#ff7189;--ok:#7dffb3;--warn:#ffd569;--link:#4dabff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
+    header{
+      position:sticky;top:0;z-index:10;background:rgba(10,15,18,.95);backdrop-filter:saturate(120%) blur(6px);
+      border-bottom:1px solid rgba(116,255,207,.2);padding:10px 12px;
+    }
+    .bar{display:flex;align-items:center;gap:10px}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+    .logo{width:34px;height:34px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center;box-shadow:0 0 12px rgba(116,255,207,.3)}
+    .logo::after{content:"$";color:var(--accent);font-weight:700}
+    h1{font-size:16px;margin:0;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .notice{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:6px}
+    .badge{color:var(--accent);text-decoration:none;font-size:12px;border:1px solid rgba(116,255,207,.35);padding:4px 8px;border-radius:999px;white-space:nowrap}
+    .badge:hover{background:rgba(116,255,207,.08)}
+    /* nav */
+    .navwrap{display:flex;align-items:center;gap:8px}
+    .nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .nav a{color:var(--muted);text-decoration:none;font-size:13px;white-space:nowrap}
+    .nav a:hover{text-decoration:underline;color:var(--accent)}
+    .menu-btn{display:none;border:1px solid rgba(116,255,207,.6);color:var(--accent);background:transparent;border-radius:8px;padding:6px 10px;font-size:12px}
+    .menu{display:none;padding:8px 10px;border-top:1px solid rgba(116,255,207,.2)}
+    .menu a{display:block;padding:8px 4px;color:var(--muted);text-decoration:none;font-size:14px}
+    .menu a:hover{color:var(--accent)}
+    .wrap{padding:16px;max-width:900px;margin:auto}
+    .intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+    .panel{border:1px solid rgba(116,255,207,.35);border-radius:10px;padding:12px 14px;background:rgba(12,24,28,.8);margin-bottom:12px}
+    .addr-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .addr-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .addr-value{font-size:16px;font-weight:700;color:var(--accent);word-break:break-all}
+    .btn{font-family:inherit;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid rgba(116,255,207,.6);background:transparent;color:var(--accent);cursor:pointer}
+    .btn:hover{background:rgba(116,255,207,.12)}
+    .status-line{font-size:12px;color:var(--muted);margin:8px 0 12px}
+    .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ok);margin-right:6px;box-shadow:0 0 6px rgba(125,255,179,.8)}
+    .dot.err{background:var(--danger);box-shadow:0 0 6px rgba(255,113,137,.8)}
+    .mail-item{border:1px solid rgba(116,255,207,.3);border-radius:10px;padding:12px 14px;margin-bottom:12px;background:rgba(12,24,28,.6)}
+    .from{color:var(--ok);font-size:13px}
+    .subject{color:var(--accent);font-weight:bold;cursor:pointer}
+    .date{color:var(--muted);font-size:12px}
+    .body{
+      display:none;margin-top:10px;border-top:1px dashed rgba(116,255,207,.3);padding-top:10px;font-size:13px;
+      white-space:pre-wrap;line-height:1.5;
+    }
+    .body a{
+      color:var(--link);text-decoration:underline;
+      word-break:normal;overflow-wrap:anywhere;line-break:anywhere;
+    }
+    .empty{font-size:13px;color:var(--muted);margin:10px 0}
+    footer{border-top:1px solid rgba(116,255,207,.2);margin-top:18px;padding:12px 16px;color:var(--muted);font-size:13px}
+    .contacts{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .icon{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;border:1px solid rgba(116,255,207,.25);padding:6px 10px;border-radius:999px}
+    .icon:hover{color:var(--accent);border-color:rgba(116,255,207,.6);background:rgba(116,255,207,.08)}
+    .icon svg{width:16px;height:16px;display:block}
+    .mail-frame{width:100%;min-height:80px;max-height:600px;border:1px solid rgba(116,255,207,.4);background:#fff;border-radius:6px}
+
+    /* モバイル最適化 */
+    @media (max-width: 860px){
+      .nav{display:none}
+      .menu-btn{display:inline-block}
+      .notice{gap:6px}
+      h1{font-size:15px}
+      .badge{padding:3px 7px;font-size:11px}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">
+      <div class="logo"></div>
+      <h1>tomy634.com // TEMP MAIL</h1>
+      <div class="notice">
+        <a class="badge" href="/news" title="お知らせ">お知らせ</a>
+        <a class="badge" href="/status" title="稼働状況">稼働状況</a>
+        <a class="badge" href="/changelog" title="更新履歴">更新履歴</a>
+      </div>
+    </div>
+    <div class="navwrap">
+      <nav class="nav" aria-label="メイン">
+        <a href="/">ホーム</a>
+        <a href="/blog">ブログ</a>
+        <a href="/how-to-use">使い方</a>
+        <a href="/faq">FAQ</a>
+        <a href="/tools">ツール</a>
+        <a href="/about">概要</a>
+        <a href="/terms">利用規約</a>
+        <a href="/privacy">プライバシー</a>
+        <a href="/contact">お問い合わせ</a>
+        <a href="/api">API</a>
+      </nav>
+      <button id="menu-toggle" class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">メニュー</button>
+    </div>
+  </div>
+  <div id="menu" class="menu" hidden>
+    <a href="/">ホーム</a>
+    <a href="/blog">ブログ</a>
+    <a href="/how-to-use">使い方</a>
+    <a href="/faq">FAQ</a>
+    <a href="/tools">ツール</a>
+    <a href="/about">概要</a>
+    <a href="/terms">利用規約</a>
+    <a href="/privacy">プライバシー</a>
+    <a href="/contact">お問い合わせ</a>
+    <a href="/api">API</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="intro">
+    このページでは、<strong>一時メールアドレス</strong>を発行して受信内容を確認できます。フォームの動作確認や登録メールの受け取りにご利用ください。重要アカウントの登録には使用しないでください。
+  </div>
+
+  <div class="panel">
+    <div class="addr-label">現在の一時メールアドレス</div>
+    <div class="addr-row">
+      <div id="current-address" class="addr-value">loading...</div>
+      <button id="copy-btn" class="btn" type="button">コピー</button>
+      <button id="new-btn" class="btn" type="button">新しいアドレスを生成</button>
+      <button id="refresh-btn" class="btn" type="button">更新</button>
+    </div>
+    <div class="addr-label" style="margin-top:6px;">このアドレス宛の新着メールは順次以下に表示されます。</div>
+  </div>
+
+  <div id="status" class="status-line"><span class="dot"></span>受信ボックスを監視中...</div>
+  <div id="empty" class="empty" style="display:none;">まだメールはありません。上のアドレス宛に送ってください。</div>
+  <div id="mails" aria-live="polite"></div>
+
+  <div class="panel" style="margin-top:16px">
+    <div class="addr-label"><strong>注意事項</strong></div>
+    <div class="addr-label">
+      ・重要なアカウントの登録には使用しないでください。<br/>
+      ・本文内リンクの開封は自己責任でお願いします。<br/>
+    </div>
+  </div>
+
+  <footer>
+    <div class="contacts">
+      <span>サポート（毎日 08:00–24:00 JST）:</span>
+      <a class="icon" href="mailto:admin@tomy634.com" title="Email">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18v12H3z" stroke="currentColor"/><path d="M3 7l9 6 9-6" stroke="currentColor"/></svg>
+        admin@tomy634.com
+      </a>
+      <a class="icon" href="https://instagram.com/xau_usdpt" target="_blank" rel="noopener" title="Instagram @xau_usdpt">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor"/><circle cx="12" cy="12" r="4" stroke="currentColor"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        @xau_usdpt
+      </a>
+      <a class="icon" href="https://discord.com/users/xm0g" target="_blank" rel="noopener" title="Discord @xm0g">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M7 7c2-1 4-1 5-1s3 0 5 1c1 2 2 4 2 6 0 5-4 6-7 6s-7-1-7-6c0-2 1-4 2-6z" stroke="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/></svg>
+        @xm0g
+      </a>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== ヘッダ（スマホメニュー） ===== */
+  (function headerMenu(){
+    var btn = document.getElementById('menu-toggle');
+    var menu = document.getElementById('menu');
+    if(!btn || !menu) return;
+    function set(open){
+      if(open){
+        menu.hidden = false;
+        menu.style.display = 'block';
+        btn.setAttribute('aria-expanded','true');
+      }else{
+        menu.hidden = true;
+        menu.style.display = 'none';
+        btn.setAttribute('aria-expanded','false');
+      }
+    }
+    btn.addEventListener('click', function(){
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      set(!open);
+    });
+  })();
+
+  /* ===== 既存ロジック（点滅防止：append-only） ===== */
+  var DOMAIN = 'tomy634.com';
+  var COOKIE = 'tm_box_id';
+  var DEFAULT_ID_LEN = 8;
+  var REFRESH_MS = 1000;
+  var HARD_LIMIT = 100;
+
+  var boxId = null;
+  var openIds = Object.create(null);
+
+  var press = {downAt:0, moved:false, long:false, timer:null};
+
+  function markOpen(id, on){ if(!id) return; if(on) openIds[id]=true; else delete openIds[id]; }
+  function isOpen(id){ return !!openIds[id]; }
+
+  function getCookie(name){
+    var parts = document.cookie.split(';');
+    for(var i=0;i<parts.length;i++){
+      var kv = parts[i].trim(); if(!kv) continue;
+      var p = kv.indexOf('='); if(p===-1) continue;
+      var k = kv.substring(0,p);
+      if(k===name) return decodeURIComponent(kv.substring(p+1));
+    }
+    return null;
+  }
+  function setCookie(n,v,days){
+    var ex=''; if(days){ var d=new Date(); d.setTime(d.getTime()+days*24*60*60*1000); ex='; expires='+d.toUTCString(); }
+    document.cookie = n+'='+encodeURIComponent(v)+ex+'; path=/';
+  }
+  function rid(len){
+    len = len || DEFAULT_ID_LEN;
+    var chars='abcdefghijklmnopqrstuvwxyz0123456789', out='';
+    if(window.crypto && window.crypto.getRandomValues){
+      var a=new Uint32Array(len); window.crypto.getRandomValues(a);
+      for(var i=0;i<len;i++) out+=chars[a[i]%chars.length];
+    } else {
+      for(var j=0;j<len;j++) out+=chars.charAt(Math.random()*chars.length|0);
+    }
+    return out;
+  }
+  function ensureBox(){
+    try{
+      var v=getCookie(COOKIE);
+      if(!v || !/^[a-z0-9]{8,16}$/.test(v)){
+        v = rid(DEFAULT_ID_LEN);
+        setCookie(COOKIE, v, 7);
+      }
+      boxId = v.toLowerCase();
+    }catch(e){
+      boxId = rid(DEFAULT_ID_LEN);
+    }
+    var el=document.getElementById('current-address');
+    if(el) el.textContent = boxId + '@' + DOMAIN;
+  }
+  function keyOf(m){
+    if(m && m.id!=null) return String(m.id);
+    var d=(m&&m.date)||'', f=(m&&m.from)||'', s=(m&&m.subject)||'';
+    return d+'|'+f+'|'+s;
+  }
+  function esc(s){
+    return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function softWrapUrl(u){
+    var disp = u.replace(/([\/._\-?&=:#])/g, '$1\u200b');
+    disp = disp.replace(/([A-Za-z0-9]{30})(?=[A-Za-z0-9])/g, '$1\u200b');
+    return disp;
+  }
+  function linkify(text){
+    var safe = esc(text || '');
+    return safe.replace(/https?:\/\/[^\s]+/g, function(u){
+      var disp = softWrapUrl(u);
+      return '<a href="'+u+'" target="_blank" rel="noopener noreferrer">'+disp+'</a>';
+    });
+  }
+  function patchHtmlLinks(html){
+    if(!html) return '';
+    return String(html).replace(/<a\b([^>]*?)>/gi,function(all,attrs){
+      var res = '<a'+attrs;
+      if(!/target\s*=\s*(['"])_blank\1/i.test(attrs)){ res += ' target="_blank"'; }
+      if(!/rel\s*=/i.test(attrs)){ res += ' rel="noopener noreferrer"'; }
+      res += '>';
+      return res;
+    });
+  }
+  function fitFrameHeight(frame){
+    try{
+      var doc=frame.contentDocument||frame.contentWindow.document; if(!doc) return;
+      var body=doc.body, html=doc.documentElement, h=0;
+      if(body) h=Math.max(h, body.scrollHeight||0, body.offsetHeight||0);
+      if(html) h=Math.max(h, html.scrollHeight||0, html.offsetHeight||0);
+      if(!h||h<80) h=80; if(h>600) h=600; frame.style.height=h+'px';
+    }catch(e){}
+  }
+
+  function buildCard(m){
+    var id = keyOf(m);
+    var wrap=document.createElement('div');
+    wrap.className='mail-item';
+    wrap.setAttribute('data-mid', id);
+
+    var s=document.createElement('div'); s.className='subject'; s.textContent=m.subject||'(no subject)';
+    var f=document.createElement('div'); f.className='from'; f.textContent='From: '+(m.from||'(unknown)');
+    var dt=document.createElement('div'); dt.className='date';
+    try{
+      if(m.date) dt.textContent='日時: '+ new Date(m.date).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'});
+      else dt.textContent='日時: (no date)';
+    }catch(e){ dt.textContent='日時: (invalid date)'; }
+
+    var body=document.createElement('div'); body.className='body';
+
+    if(m.html && typeof m.html==='string' && m.html.trim().length>0){
+      var html=patchHtmlLinks(m.html);
+      var frame=document.createElement('iframe');
+      frame.className='mail-frame';
+      frame.setAttribute('sandbox','allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
+      frame.setAttribute('referrerpolicy','no-referrer');
+      frame.srcdoc=html;
+      frame.addEventListener('load',function(ev){
+        var fr=ev.currentTarget; fitFrameHeight(fr);
+        try{
+          var d=fr.contentDocument||fr.contentWindow.document; if(!d) return;
+          var imgs=d.images||[];
+          for(var j=0;j<imgs.length;j++){
+            imgs[j].addEventListener('load',function(){fitFrameHeight(fr);});
+            imgs[j].addEventListener('error',function(){fitFrameHeight(fr);});
+          }
+        }catch(e){}
+        setTimeout(function(){fitFrameHeight(fr);},800);
+        setTimeout(function(){fitFrameHeight(fr);},2000);
+      });
+      body.appendChild(frame);
+    }else{
+      body.innerHTML=linkify(m.body||'');
+    }
+
+    // ===== タイトルのみ開閉（クリック/タップ） =====
+    (function(mailId, bodyEl, subjectEl){
+      function hasSelection(){
+        var sel = window.getSelection && window.getSelection();
+        return sel && String(sel).length>0;
+      }
+      function toggle(){
+        var on = bodyEl.style.display==='block';
+        bodyEl.style.display = on ? 'none' : 'block';
+        markOpen(mailId, !on);
+      }
+      // クリック（PC/モバイル両方で発火する保険）
+      subjectEl.addEventListener('click', function(ev){
+        // 直前の長押し/スワイプ/選択時は無視
+        if(press.long || press.moved || hasSelection()) return;
+        toggle();
+      });
+      // 詳細な抑止（PCドラッグ選択）
+      subjectEl.addEventListener('mousedown', function(){
+        press.downAt=Date.now(); press.moved=false; press.long=false; clearTimeout(press.timer);
+      });
+      subjectEl.addEventListener('mousemove', function(){ press.moved=true; });
+      subjectEl.addEventListener('mouseup', function(){
+        var dur = Date.now()-press.downAt;
+        if(press.moved || dur>500 || hasSelection()) return;
+        // clickで処理するのでここでは何もしない
+      });
+      // タッチ（長押し/スワイプ無視）
+      subjectEl.addEventListener('touchstart', function(){
+        press.downAt=Date.now(); press.moved=false; press.long=false; clearTimeout(press.timer);
+        press.timer=setTimeout(function(){ press.long=true; },450);
+      }, {passive:true});
+      subjectEl.addEventListener('touchmove', function(){ press.moved=true; }, {passive:true});
+      subjectEl.addEventListener('touchend', function(){
+        clearTimeout(press.timer);
+        // click に任せる
+      }, {passive:true});
+      subjectEl.setAttribute('tabindex','0');
+      subjectEl.addEventListener('keydown', function(ev){
+        if(ev.key==='Enter' || ev.key===' '){
+          ev.preventDefault(); toggle();
+        }
+      });
+    })(id, body, s);
+
+    if(isOpen(id)) body.style.display='block';
+
+    wrap.appendChild(s); wrap.appendChild(f); wrap.appendChild(dt); wrap.appendChild(body);
+    return wrap;
+  }
+
+  function currentIdSet(container){
+    var set = new Set();
+    var nodes = container.querySelectorAll('[data-mid]');
+    for(var i=0;i<nodes.length;i++) set.add(nodes[i].getAttribute('data-mid'));
+    return set;
+  }
+
+  function appendOnlyNew(list){
+    var M=document.getElementById('mails');
+    var E=document.getElementById('empty');
+    if(!M) return;
+
+    var arr = Array.isArray(list) ? list : [];
+
+    if(arr.length===0){
+      if(M.children.length===0 && E) E.style.display='block';
+      return;
+    } else if(E){ E.style.display='none'; }
+
+    var exist = currentIdSet(M);
+
+    // サーバは新→旧で返す想定。古い方から順に prepend して結果として「新しいのが上」になる。
+    for(var i=arr.length-1;i>=0;i--){
+      var m  = arr[i];
+      var id = keyOf(m); if(!id) continue;
+      if(exist.has(id)) continue; // 既存は一切触らない
+      var card = buildCard(m);
+      M.insertBefore(card, M.firstChild);
+      exist.add(id);
+    }
+
+    while(M.children.length > HARD_LIMIT){
+      var last = M.lastElementChild;
+      if(!last) break;
+      var lid = last.getAttribute('data-mid');
+      if(lid && isOpen(lid)){
+        var prev = last.previousElementSibling;
+        if(!prev) break;
+        M.removeChild(prev);
+      }else{
+        M.removeChild(last);
+      }
+    }
+  }
+
+  function load(){
+    if(!boxId) ensureBox();
+    var st=document.getElementById('status');
+    var url='/api/boxes/'+encodeURIComponent(boxId)+'.json?t='+Date.now();
+
+    if(st){ st.innerHTML='<span class="dot"></span>'+boxId+'@'+DOMAIN+' // 監視中'; }
+
+    fetch(url,{cache:'no-store'})
+      .then(function(r){
+        if(r.status===404) return [];
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        return r.json();
+      })
+      .then(function(data){
+        appendOnlyNew(data);
+      })
+      .catch(function(e){
+        if(st){
+          st.innerHTML='<span class="dot err"></span>'+
+            (boxId?boxId+'@'+DOMAIN:'(no id)')+' // エラー: '+(e && e.message?e.message:e);
+        }
+      });
+  }
+
+  function setupButtons(){
+    var copyBtn=document.getElementById('copy-btn');
+    var newBtn=document.getElementById('new-btn');
+    var refBtn=document.getElementById('refresh-btn');
+
+    if(copyBtn){
+      copyBtn.addEventListener('click',function(){
+        if(!boxId) ensureBox();
+        var addr=boxId+'@'+DOMAIN;
+        function fallback(){
+          var ta=document.createElement('textarea'); ta.value=addr; ta.style.position='fixed'; ta.style.left='-9999px';
+          document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta);
+        }
+        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(addr).catch(fallback); }
+        else { fallback(); }
+      });
+    }
+    if(newBtn){
+      newBtn.addEventListener('click',function(){
+        boxId = rid(DEFAULT_ID_LEN);
+        setCookie(COOKIE, boxId, 7);
+        var el=document.getElementById('current-address'); if(el) el.textContent=boxId+'@'+DOMAIN;
+        openIds=Object.create(null);
+        document.getElementById('mails').innerHTML='';
+        var st=document.getElementById('status');
+        if(st){ st.innerHTML='<span class="dot"></span>'+boxId+'@'+DOMAIN+' // 監視中'; }
+        load();
+      });
+    }
+    if(refBtn){ refBtn.addEventListener('click',function(){ load(); }); }
+  }
+
+  function setup(){
+    ensureBox();
+    setupButtons();
+    load();
+    setInterval(load, REFRESH_MS);
+  }
+  document.addEventListener('DOMContentLoaded', setup);
+})();
+</script>
+</body>
+</html>

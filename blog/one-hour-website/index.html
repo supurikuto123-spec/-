@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>1時間で作る“超軽量”個人サイト：無料ホスティング3択と最短公開手順【2025年版】 | tomy634.com</title>
+<meta name="description" content="ドメインがなくてもOK。最小HTMLを用意して、GitHub Pages / Cloudflare Pages / Netlify の3通りで60分以内に公開する最短ルートを図解とコマンドで解説。">
+<style>
+:root{--bg:#0a0f12;--term:#0d1618;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6;--link:#4dabff}
+body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(116,255,207,.2)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center;box-shadow:0 0 10px rgba(116,255,207,.25)}
+.logo::after{content:"$";color:var(--accent);font-weight:700}
+h1{font-size:18px;margin:0;color:var(--accent)}
+nav{display:flex;gap:10px;align-items:center}
+nav a{color:var(--muted);text-decoration:none;font-size:13px}
+nav a:hover{color:var(--accent);text-decoration:underline}
+.wrap{padding:20px;max-width:960px;margin:auto}
+.article-title{font-size:20px;color:var(--accent);margin:8px 0 4px}
+.meta{font-size:12px;color:var(--muted);opacity:.9;margin-bottom:12px}
+.badge{font-size:10px;border:1px solid rgba(116,255,207,.6);border-radius:999px;padding:2px 6px;margin-left:6px}
+p,li{color:var(--muted);line-height:1.9;font-size:13px}
+h2{color:var(--accent);font-size:16px;margin:18px 0 6px}
+h3{color:var(--accent);font-size:14px;margin:14px 0 6px}
+.notice,.panel{border:1px solid rgba(116,255,207,.35);border-radius:10px;padding:12px 14px;background:rgba(12,24,28,.85);margin:10px 0}
+code{background:#0b1115;border:1px solid rgba(116,255,207,.25);padding:2px 4px;border-radius:6px;color:#c7ffe6}
+pre{background:#0b1115;border:1px solid rgba(116,255,207,.25);padding:10px 12px;border-radius:10px;overflow:auto;color:#c7ffe6;font-size:12px;line-height:1.6}
+a{color:var(--link)}
+a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid rgba(116,255,207,.25);margin:18px 0}
+kbd{border:1px solid rgba(255,255,255,.2);border-bottom-width:2px;padding:1px 4px;border-radius:4px;background:#0a0f12;color:#fff;font-size:12px}
+.toc a{margin-right:10px}
+.tip{font-size:12px;color:#a7e7c7}
+.footer-cta{margin-top:22px;border-top:1px dashed rgba(116,255,207,.25);padding-top:14px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <h1>tomy634.com // ブログ</h1>
+  </div>
+  <nav>
+    <a href="/blog" class="nav-main">ブログホーム</a>
+    <a href="/">tomy634.com に戻る</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <h1 class="article-title">1時間で作る“超軽量”個人サイト：無料ホスティング3択と最短公開手順【2025年版】</h1>
+  <div class="meta">
+    公開日: 2025-11-18 / 更新日: 2025-11-18
+    <span class="badge">入門</span><span class="badge">Web制作</span><span class="badge">ホスティング</span>
+  </div>
+
+  <div class="notice">
+    <strong>この記事のゴール</strong>：<br/>
+    ① 最小の <code>index.html</code> を用意 → ② <strong>GitHub Pages / Cloudflare Pages / Netlify</strong> のどれかで公開 → ③（任意）独自ドメインをつなぐ。<br/>
+    PC1台・無料で <strong>60分以内に「人に見せられる」個人サイト</strong> を作ります。
+  </div>
+
+  <h2 id="prep">準備（所要10分）</h2>
+  <ul>
+    <li>GitHub または Google アカウント（Cloudflare/Netlifyもソーシャル連携でOK）</li>
+    <li>エディタ（メモ帳で可）</li>
+    <li>コマンドは不要ですが、可能なら <code>git</code> を入れておくと速いです</li>
+  </ul>
+
+  <h2 id="template">まずは最小テンプレ（コピペOK / 30秒）</h2>
+  <p>このまま公開しても見栄えする“超軽量”テンプレです。画像もフォントも外部依存なし。</p>
+  <pre><code>&lt;!doctype html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"/&gt;
+  &lt;meta name="viewport" content="width=device-width,initial-scale=1"/&gt;
+  &lt;title&gt;My site&lt;/title&gt;
+  &lt;style&gt;
+    :root{--bg:#0a0f12;--ink:#d7ffe8;--acc:#74ffcf;--mute:#89bfa6}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,Consolas,monospace}
+    .wrap{max-width:900px;margin:auto;padding:24px}
+    h1{color:var(--acc);font-size:22px;margin:8px 0}
+    p{color:var(--mute);line-height:1.9}
+    a{color:#4dabff}
+    .card{border:1px solid rgba(116,255,207,.35);border-radius:12px;padding:14px;background:rgba(12,24,28,.85)}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="wrap"&gt;
+    &lt;h1&gt;Hello, world!&lt;/h1&gt;
+    &lt;div class="card"&gt;最初の1ページが公開できました。&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <h2 id="host">公開の方法は3通り（どれか1つでOK）</h2>
+  <div class="panel">
+    <h3>A) GitHub Pages（無料・早い）</h3>
+    <ol>
+      <li>GitHubでリポジトリ作成（Public / 例: <code>my-site</code>）。</li>
+      <li>ローカルでフォルダを作り、<code>index.html</code> を保存。</li>
+      <li>下のコマンドを実行（WindowsはPowerShellでOK）。</li>
+    </ol>
+<pre><code>git init
+git add index.html
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/&lt;YOUR_NAME&gt;/my-site.git
+git push -u origin main
+</code></pre>
+    <ol start="4">
+      <li>GitHubリポジトリ → <em>Settings &gt; Pages</em> → <strong>Build and deployment: Deploy from a branch</strong> → Branch: <code>main</code> / Folder: <code>/root</code> → Save。</li>
+      <li>数分で <code>https://&lt;YOUR_NAME&gt;.github.io/my-site/</code> が公開。</li>
+    </ol>
+    <p class="tip">Jekyllを使わない素のHTMLなら、ルートに <code>.nojekyll</code>（空ファイル）を置いてもOK。</p>
+  </div>
+
+  <div class="panel">
+    <h3>B) Cloudflare Pages（無料・速い・独自ドメイン簡単）</h3>
+    <ol>
+      <li>Cloudflare Pagesにログイン → <em>Create a project</em> → GitHub連携で <code>my-site</code> を選択。</li>
+      <li>Build command: <code>None</code> / Output directory: <code>/</code>（ビルド不要）。</li>
+      <li>デプロイ完了後、<em>Custom domains</em> で独自ドメインを追加（DNSがCloudflareなら一発反映）。</li>
+    </ol>
+  </div>
+
+  <div class="panel">
+    <h3>C) Netlify（ドラッグ&ドロップで即公開）</h3>
+    <ol>
+      <li>Netlifyにログイン → <em>Sites</em> → <em>Drop</em> にフォルダ（<code>index.html</code>のみ）をドラッグ。</li>
+      <li>ランダムURLで即公開。<em>Site settings &gt; Domain management</em>から独自ドメインも可。</li>
+    </ol>
+  </div>
+
+  <h2 id="domain">独自ドメインを付ける（任意 / 15分）</h2>
+  <ul>
+    <li><strong>GitHub Pages：</strong>リポジトリの <em>Settings &gt; Pages</em> でカスタムドメインを設定 → DNSで <code>username.github.io</code> へCNAME。</li>
+    <li><strong>Cloudflare Pages：</strong><em>Custom domains</em> にドメイン追加 → DNSは自動。</li>
+    <li><strong>Netlify：</strong><em>Domain management</em> でカスタムドメイン追加 → CNAMEで <code>your-site.netlify.app</code> へ。</li>
+  </ul>
+  <p class="tip">どのサービスもHTTPSは自動発行。反映に数分〜最大1時間程度かかることがあります。</p>
+
+  <h2 id="quality">公開直後にやる“品質チェック”（5分）</h2>
+  <ul>
+    <li>モバイルで確認（ズーム不要で読めるか、行間は十分か）。</li>
+    <li><code>&lt;meta name="viewport"&gt;</code> が入っているか。</li>
+    <li>ページのタイトル/説明（検索結果での見え方）を簡潔に。</li>
+    <li>画像を置く場合は <code>alt</code> をつけ、サイズを最適化。</li>
+    <li>リンク切れがないか（外部は新しいタブ推奨）。</li>
+  </ul>
+
+  <h2 id="next">次の一歩（任意）</h2>
+  <ul>
+    <li>ページ分割：<code>/about</code>、<code>/contact</code> を追加。</li>
+    <li>問い合わせフォーム：最初は <code>mailto:</code> でOK。後でWebhookやサーバレスに移行。</li>
+    <li>簡易ブログ：フォルダを作り、<code>/blog/記事-slug/index.html</code> を積む方式（本サイトと同じ）。</li>
+  </ul>
+
+  <hr/>
+  <div class="footer-cta">
+    <p>テスト用の受信が必要なら、広告ゼロの一時メール <a href="/">tomy634.com</a> を使うと即チェックできます。</p>
+    <p>関連ツール：<a href="/tools/charcount/">文字数カウンター</a> / <a href="/tools/password/">パスワード生成</a></p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>実録：お問い合わせ対応を自動化してみた ─ Webhook＋スプレッドシート＋通知【設計〜コード公開】 | tomy634.com</title>
+<meta name="description" content="フォーム→Webhook→スプレッドシート保存→Discord通知の“最短で運用できる”構成を実録ベースで公開。Cloudflare Workers / Node.js / Google Apps Scriptの3パターンと、スパム対策・監視・運用のコツもまとめました。">
+<style>
+:root{--bg:#0a0f12;--term:#0d1618;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6;--link:#4dabff}
+body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(116,255,207,.2)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center;box-shadow:0 0 10px rgba(116,255,207,.25)}
+.logo::after{content:"$";color:var(--accent);font-weight:700}
+h1{font-size:18px;margin:0;color:var(--accent)}
+nav{display:flex;gap:10px;align-items:center}
+nav a{color:var(--muted);text-decoration:none;font-size:13px}
+nav a:hover{color:var(--accent);text-decoration:underline}
+.wrap{padding:20px;max-width:960px;margin:auto}
+.article-title{font-size:20px;color:var(--accent);margin:8px 0 4px}
+.meta{font-size:12px;color:var(--muted);opacity:.9;margin-bottom:12px}
+.badge{font-size:10px;border:1px solid rgba(116,255,207,.6);border-radius:999px;padding:2px 6px;margin-left:6px}
+p,li{color:var(--muted);line-height:1.9;font-size:13px}
+h2{color:var(--accent);font-size:16px;margin:18px 0 6px}
+h3{color:var(--accent);font-size:14px;margin:14px 0 6px}
+.notice,.panel{border:1px solid rgba(116,255,207,.35);border-radius:10px;padding:12px 14px;background:rgba(12,24,28,.85);margin:10px 0}
+code{background:#0b1115;border:1px solid rgba(116,255,207,.25);padding:2px 4px;border-radius:6px;color:#c7ffe6}
+pre{background:#0b1115;border:1px solid rgba(116,255,207,.25);padding:10px 12px;border-radius:10px;overflow:auto;color:#c7ffe6;font-size:12px;line-height:1.6}
+a{color:var(--link)}
+a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid rgba(116,255,207,.25);margin:18px 0}
+blockquote{border-left:3px solid rgba(116,255,207,.35);margin:10px 0;padding:6px 10px;color:var(--muted);background:rgba(12,24,28,.6);border-radius:6px}
+.table{width:100%;border-collapse:collapse;margin:10px 0}
+.table th,.table td{border:1px solid rgba(116,255,207,.25);padding:8px 10px;font-size:12px;color:var(--muted)}
+.table th{color:var(--accent);background:rgba(12,24,28,.6);text-align:left}
+kbd{border:1px solid rgba(255,255,255,.2);border-bottom-width:2px;padding:1px 4px;border-radius:4px;background:#0a0f12;color:#fff;font-size:12px}
+.tip{font-size:12px;color:#a7e7c7}
+.small{font-size:12px;color:var(--muted)}
+.diagram{font-family:ui-monospace,Consolas,monospace;font-size:12px;line-height:1.5;background:#0b1115;border:1px solid rgba(116,255,207,.25);padding:10px;border-radius:10px;overflow:auto}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <h1>tomy634.com // ブログ</h1>
+  </div>
+  <nav>
+    <a href="/blog" class="nav-main">ブログホーム</a>
+    <a href="/">tomy634.com に戻る</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <h1 class="article-title">実録：お問い合わせ対応を自動化してみた ─ Webhook＋スプレッドシート＋通知【設計〜コード公開】</h1>
+  <div class="meta">
+    公開日: 2025-11-18 / 更新日: 2025-11-18
+    <span class="badge">自動化</span><span class="badge">Webhook</span><span class="badge">GAS</span><span class="badge">Discord通知</span>
+  </div>
+
+  <div class="notice">
+    <strong>この記事のゴール</strong><br/>
+    「フォームで送信 → Webhookで受信 → スプレッドシートに保存 → Discordへ通知」を、<em>1時間以内で運用開始</em>できるテンプレに落とし込みます。<br/>
+    最初に <strong>GAS単体で完結する方式</strong> を示し、次に Cloudflare Workers / Node.js の代替も紹介します。
+  </div>
+
+  <h2 id="map">0. 全体図（最小で回る構成）</h2>
+  <pre class="diagram">[Browser Form]
+     |  fetch(JSON)
+     v
+[Google Apps Script Web App] --- append ---> [Google Sheets]
+     |                                         (問い合わせ台帳)
+     +-- UrlFetchApp.fetch() --> [Discord Webhook]
+  </pre>
+  <p>この形だと無料枠で運用でき、VPSなし・DBなしで始められます。</p>
+
+  <h2 id="step1">1. 受付フォーム（コピペOK）</h2>
+  <p>あなたの既存デザインに合わせて、最低限のバリデーション＋Webhook POSTだけ入れます。</p>
+  <pre><code>&lt;form id="contact"&gt;
+  &lt;label&gt;返信が必要ですか？&lt;/label&gt;
+  &lt;label&gt;&lt;input type="radio" name="need_reply" value="yes" checked&gt; はい&lt;/label&gt;
+  &lt;label&gt;&lt;input type="radio" name="need_reply" value="no"&gt; いいえ&lt;/label&gt;
+
+  &lt;label&gt;返信用メール（必要な場合は必須）&lt;/label&gt;
+  &lt;input name="email" type="email" placeholder="you@example.com"&gt;
+
+  &lt;label&gt;タイトル（任意）&lt;/label&gt;
+  &lt;input name="title" type="text" maxlength="120"&gt;
+
+  &lt;label&gt;本文（必須）&lt;/label&gt;
+  &lt;textarea name="body" required minlength="5" maxlength="4000"&gt;&lt;/textarea&gt;
+
+  &lt;!-- スパム用ハニーポット（CSSで非表示） --&gt;
+  &lt;input name="website" type="text" autocomplete="off" style="position:absolute;left:-9999px;" tabindex="-1"&gt;
+
+  &lt;button type="submit"&gt;送信&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;script&gt;
+const ENDPOINT = "（この後つくるGASの公開URLを貼る）";
+document.getElementById('contact').addEventListener('submit', async (e) =&gt; {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  const need = f.get('need_reply') === 'yes';
+  const email = f.get('email')?.trim();
+  const body  = f.get('body')?.trim();
+  if (!body) { alert('本文は必須です'); return; }
+  if (need && !email) { alert('返信が必要な場合はメールを入力してください'); return; }
+  const payload = {
+    need_reply: need,
+    email: email || '',
+    title: (f.get('title')||'').slice(0,120),
+    body: body.slice(0,4000),
+    hp: (f.get('website')||'') // ハニーポット
+  };
+  const res = await fetch(ENDPOINT, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  });
+  if (res.ok) {
+    alert('送信しました。内容を確認してご連絡します。');
+    e.target.reset();
+  } else {
+    const t = await res.text();
+    alert('送信に失敗しました: ' + t);
+  }
+});
+&lt;/script&gt;</code></pre>
+
+  <h2 id="step2">2. 受け側（GAS Webアプリ） ─ 保存＆通知を“一括”で</h2>
+  <p>Googleドライブで <strong>Googleスプレッドシート</strong> を作成（例：<code>Contact Inbox</code>）。1行目に次のヘッダーを入れます。</p>
+  <pre><code>timestamp, need_reply, email, title, body, ip, ua, ref, id</code></pre>
+
+  <h3>Apps Script（doPost）</h3>
+  <p>スプレッドシート（拡張機能→Apps Script）に以下を貼り付けて保存 → <em>デプロイ &gt; 新しいデプロイ</em> → 種類「<strong>ウェブアプリ</strong>」 → アクセス権「<strong>全員</strong>」にして発行URLを取得します。</p>
+  <pre><code class="language-javascript">/** Webhook受け口：JSONを受け取ってシート保存→Discord通知 */
+const SHEET_NAME = 'シート1';             // 実際のシート名に合わせる
+const WEBHOOK = 'https://discord.com/api/webhooks/xxxx/yyyy'; // あなたのWebhook
+const ORIGIN_ALLOW = ['https://tomy634.com','http://localhost:8080'];
+
+function doPost(e){
+  try{
+    const contentType = e.postData && e.postData.type;
+    if (!contentType || contentType.indexOf('application/json') === -1){
+      return _res(415, 'content-type must be application/json');
+    }
+    const data = JSON.parse(e.postData.contents || '{}');
+
+    // ハニーポット・サイズ制限
+    if (data.hp) return _res(202,'ok'); // botは無視
+    if (!data.body || data.body.length &lt; 5) return _res(400,'body required');
+
+    // 返信要否とメールの整合
+    if (data.need_reply && !data.email) return _res(400,'email required when need_reply=true');
+
+    // 受信メタ
+    const ip = _ip(e);
+    const ua = (e.parameter && e.parameter.ua) || (e.postData && e.postData.contents ? '' : '');
+    const ref = (e.parameter && e.parameter.ref) || '';
+
+    // 保存
+    const id = Utilities.getUuid().slice(0,8);
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName(SHEET_NAME) || ss.getSheets()[0];
+    const now = new Date();
+    sheet.appendRow([ now.toISOString(), !!data.need_reply, (data.email||''), (data.title||''), data.body, ip, ua, ref, id ]);
+
+    // Discord通知（長文は畳む）
+    const msg = [
+      '**お問い合わせ受信**',
+      `ID: ${id}`,
+      `返信要否: ${data.need_reply ? '必要' : '不要'}`,
+      data.email ? `返信先: &lt;${data.email}&gt;` : '',
+      data.title ? `件名: ${data.title}` : '',
+      '本文:',
+      '```',
+      String(data.body).slice(0,1500),
+      '```',
+      `From: ${ip}`
+    ].filter(Boolean).join('\n');
+
+    UrlFetchApp.fetch(WEBHOOK, {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({ content: msg })
+    });
+
+    return _res(200, 'ok');
+  }catch(err){
+    // 失敗も通知（過剰になりすぎないよう簡易）
+    try{
+      UrlFetchApp.fetch(WEBHOOK, {method:'post',contentType:'application/json',
+        payload: JSON.stringify({content: '🚨 エラー: '+ String(err)})});
+    }catch(_){}
+    return _res(500, String(err));
+  }
+}
+
+// CORS（必要に応じて）
+function doOptions(e){
+  return _res(204,'ok');
+}
+
+function _res(code, body){
+  const resp = ContentService.createTextOutput(body);
+  resp.setMimeType(ContentService.MimeType.TEXT);
+  const headers = {
+    'Access-Control-Allow-Origin': ORIGIN_ALLOW.join(','),
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+  return { status: code, headers, body: resp };
+}
+
+function _ip(e){
+  try {
+    // Apps ScriptはX-Forwarded-Forをヘッダに持ってくることがある
+    const h = e?.parameter || {};
+    return h['x-forwarded-for'] || 'unknown';
+  } catch(_){ return 'unknown'; }
+}</code></pre>
+  <p class="small">※ 公開範囲「全員」は匿名POSTを許します。必要ならGoogleアカウント限定にして、フロント側はCloudflare Workersなどからプロキシする方法に切り替えてください。</p>
+
+  <h2 id="step3">3. Discord通知の見た目（Embed版オプション）</h2>
+  <p>装飾したい場合はEmbedを使います。</p>
+  <pre><code class="language-javascript">// Embed Payload（GAS側のUrlFetchApp.fetchに渡す）
+const payload = {
+  embeds: [{
+    title: "お問い合わせ受信",
+    color: 0x74ffcf,
+    fields: [
+      { name: "ID", value: id, inline: true },
+      { name: "返信要否", value: data.need_reply ? "必要" : "不要", inline: true },
+      ...(data.email ? [{ name:"返信先", value: data.email, inline: false }] : []),
+      ...(data.title ? [{ name:"件名", value: data.title, inline: false }] : []),
+      { name: "本文", value: (String(data.body).slice(0,1000) || "-") }
+    ],
+    footer: { text: new Date().toISOString() }
+  }]
+};
+UrlFetchApp.fetch(WEBHOOK, {method:'post',contentType:'application/json',payload:JSON.stringify(payload)});</code></pre>
+
+  <h2 id="alt">4. 代替構成：Workers / Node.js で受ける</h2>
+  <div class="panel">
+    <h3>A) Cloudflare Workers（無料枠で高速）</h3>
+    <pre><code class="language-javascript">export default {
+  async fetch(req, env, ctx) {
+    if (req.method === 'OPTIONS') return new Response('', {status:204, headers:cors()});
+    if (req.method !== 'POST') return new Response('method', {status:405, headers:cors()});
+    const data = await req.json().catch(()=>null);
+    if (!data || !data.body) return new Response('bad', {status:400, headers:cors()});
+    if (data.need_reply && !data.email) return new Response('email required', {status:400, headers:cors()});
+
+    // Discord通知
+    const content = `**お問い合わせ**\\n返信要否:${data.need_reply?'必要':'不要'}\\n件名:${data.title||''}\\n本文:\\n` + (data.body||'');
+    await fetch(env.WEBHOOK, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({content}) });
+
+    // 保存はGASのエンドポイントへ中継（非公開にしておけば良い）
+    await fetch(env.GAS_URL, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(data) });
+
+    return new Response('ok', {status:200, headers:cors()});
+  }
+};
+function cors(){ return {'Access-Control-Allow-Origin':'https://tomy634.com','Access-Control-Allow-Headers':'Content-Type','Access-Control-Allow-Methods':'POST,OPTIONS'}; }</code></pre>
+    <p class="small">環境変数 <code>WEBHOOK</code> / <code>GAS_URL</code> をダッシュボードで設定。GASを「Googleアカウント限定」にできるのが利点。</p>
+  </div>
+
+  <div class="panel">
+    <h3>B) Node.js（VPS運用）</h3>
+    <pre><code class="language-javascript">import express from 'express';
+import fetch from 'node-fetch';
+const app = express();
+app.use(express.json());
+
+app.post('/webhook/contact', async (req, res) =&gt; {
+  try{
+    const {need_reply, email, title, body, hp} = req.body||{};
+    if (hp) return res.status(202).send('ok');
+    if (!body) return res.status(400).send('body required');
+    if (need_reply && !email) return res.status(400).send('email required');
+
+    // Discord
+    await fetch(process.env.WEBHOOK, {method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({content: `**お問い合わせ**\\n${email||''}\\n${title||''}\\n${body||''}`})
+    });
+
+    // 保存はGAS or DBへ
+    await fetch(process.env.GAS_URL, {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(req.body)});
+
+    res.send('ok');
+  }catch(e){ res.status(500).send(String(e)); }
+});
+
+app.listen(3000);</code></pre>
+    <p class="small">CORS・RateLimit（<code>express-rate-limit</code>）・HTTPS終端（Nginx/Traefik）を忘れずに。</p>
+  </div>
+
+  <h2 id="ops">5. スパム・安全対策（実運用のコツ）</h2>
+  <ul>
+    <li><strong>ハニーポット＋遅延</strong>：非表示inputと送信時の最小遅延（例：500ms未満は弾く）。</li>
+    <li><strong>レート制限</strong>：IP/UAごとに分単位の上限（例：5req/min）。</li>
+    <li><strong>文字数・リンク制限</strong>：本文のURL数上限、超過で保留扱い。</li>
+    <li><strong>NGワード薄め</strong>：完全ブロックでなく「保留→人間確認」へ回す。</li>
+    <li><strong>Turnstile/Recaptcha v3</strong>：採点スコアが低い場合は別キューへ。</li>
+    <li><strong>秘密情報は保存しない</strong>：カード情報・パスワード等はフォームに書かせない文言を明記。</li>
+  </ul>
+
+  <h2 id="monitor">6. 監視と運用</h2>
+  <ul>
+    <li><strong>Discord通知の二重化</strong>：障害時にメール転送も用意（Gmailフィルタ→ラベル）。</li>
+    <li><strong>台帳の管轄</strong>：スプレッドシートは編集権を絞る。<em>閲覧専用</em>で共有し、編集は運用担当のみ。</li>
+    <li><strong>エラーログの残し方</strong>：GASの<em>実行ログ</em>、Workersの<em>Tail</em>、Nodeの<em>journalctl/systemd</em>で集約。</li>
+    <li><strong>バックアップ</strong>：シートの<em>バージョン履歴</em>＋月次のCSVエクスポート。</li>
+  </ul>
+
+  <h2 id="trouble">7. よくある詰まり（トラブルシュート）</h2>
+  <table class="table">
+    <thead><tr><th>現象</th><th>原因</th><th>対処</th></tr></thead>
+    <tbody>
+      <tr><td>415 Unsupported Media Type</td><td>Content-TypeがJSONでない</td><td>fetchのヘッダに<code>application/json</code>、<code>JSON.stringify()</code>で送る</td></tr>
+      <tr><td>405 Method Not Allowed</td><td>GETで叩いている</td><td>POST限定にする／フォーム側を見直す</td></tr>
+      <tr><td>GASがタイムアウト</td><td>通知や外部呼び出しが遅い</td><td>保存→通知を非同期化／通知のみ別Webhookへ</td></tr>
+      <tr><td>Discord通知が切れる</td><td>1メッセージの上限超過</td><td>本文を<code>slice()</code>で短縮／Embedの<code>fields</code>に分割</td></tr>
+      <tr><td>スパムが多い</td><td>Botに狙われている</td><td>Turnstile導入、RateLimit強化、言語フィルタ</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="checklist">8. リリース前チェックリスト</h2>
+  <ul>
+    <li>[ ] 正常系：保存→通知まで通る</li>
+    <li>[ ] 返信要否とメールの整合バリデーションが効く</li>
+    <li>[ ] ハニーポットが生きている（人間は触れない）</li>
+    <li>[ ] 文字数上限で落ちない（長文もOK）</li>
+    <li>[ ] スプレッドシートの権限が最小</li>
+    <li>[ ] 障害通知のルートが複線化されている</li>
+  </ul>
+
+  <hr/>
+  <div class="notice">
+    <strong>まとめ</strong><br/>
+    GASだけで「保存＋通知」を一気に作るのが最短。その後、WorkersやNodeに切り替えて権限とスケールを固めていくのが堅実です。<br/>
+    テスト用のメール受信は広告ゼロの一時メール <a href="/">tomy634.com</a> を使うとスムーズです。
+  </div>
+
+  <div class="panel">
+    <strong>関連：</strong>
+    <a href="/blog/qr-safety/">QRコードの安全講座</a> /
+    <a href="/blog/dont-outsource-to-chatgpt/">AIに任せてはいけない作業</a> /
+    <a href="/blog/one-hour-website/">1時間で作る個人サイト</a> /
+    <a href="/tools/charcount/">文字数カウンター</a> /
+    <a href="/tools/password/">パスワード生成</a>
+  </div>
+</div>
+
+</body>
+</html>

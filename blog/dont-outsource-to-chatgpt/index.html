@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ChatGPTに「任せてはいけない」作業リスト：安全な使い分けと運用ルール【2025年版】 | tomy634.com</title>
+<meta name="description" content="AIは万能ではありません。法務・医療・金融・セキュリティなど高リスク領域や、一次情報の検証が必要な作業は“任せない”が基本。何を避け、どう使えば安全で生産的かを、実務のチェックリストとテンプレ付きで解説。">
+<style>
+:root{--bg:#0a0f12;--term:#0d1618;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6;--link:#4dabff}
+body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(116,255,207,.2)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center;box-shadow:0 0 10px rgba(116,255,207,.25)}
+.logo::after{content:"$";color:var(--accent);font-weight:700}
+h1{font-size:18px;margin:0;color:var(--accent)}
+nav{display:flex;gap:10px;align-items:center}
+nav a{color:var(--muted);text-decoration:none;font-size:13px}
+nav a:hover{color:var(--accent);text-decoration:underline}
+.wrap{padding:20px;max-width:960px;margin:auto}
+.article-title{font-size:20px;color:var(--accent);margin:8px 0 4px}
+.meta{font-size:12px;color:var(--muted);opacity:.9;margin-bottom:12px}
+.badge{font-size:10px;border:1px solid rgba(116,255,207,.6);border-radius:999px;padding:2px 6px;margin-left:6px}
+p,li{color:var(--muted);line-height:1.9;font-size:13px}
+h2{color:var(--accent);font-size:16px;margin:18px 0 6px}
+h3{color:var(--accent);font-size:14px;margin:14px 0 6px}
+.notice,.panel{border:1px solid rgba(116,255,207,.35);border-radius:10px;padding:12px 14px;background:rgba(12,24,28,.85);margin:10px 0}
+code{background:#0b1115;border:1px solid rgba(116,255,207,.25);padding:2px 4px;border-radius:6px;color:#c7ffe6}
+pre{background:#0b1115;border:1px solid rgba(116,255,207,.25);padding:10px 12px;border-radius:10px;overflow:auto;color:#c7ffe6;font-size:12px;line-height:1.6}
+a{color:var(--link)}
+a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid rgba(116,255,207,.25);margin:18px 0}
+blockquote{border-left:3px solid rgba(116,255,207,.35);margin:10px 0;padding:6px 10px;color:var(--muted);background:rgba(12,24,28,.6);border-radius:6px}
+dl{margin:0}
+dt{color:var(--accent);font-weight:700;margin-top:10px}
+dd{margin:4px 0 10px 10px}
+.kbd{border:1px solid rgba(255,255,255,.2);border-bottom-width:2px;padding:1px 4px;border-radius:4px;background:#0a0f12;color:#fff;font-size:12px}
+.table{width:100%;border-collapse:collapse;margin:10px 0}
+.table th,.table td{border:1px solid rgba(116,255,207,.25);padding:8px 10px;font-size:12px;color:var(--muted)}
+.table th{color:var(--accent);background:rgba(12,24,28,.6);text-align:left}
+.tip{font-size:12px;color:#a7e7c7}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <h1>tomy634.com // ブログ</h1>
+  </div>
+  <nav>
+    <a href="/blog" class="nav-main">ブログホーム</a>
+    <a href="/">tomy634.com に戻る</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <h1 class="article-title">ChatGPTに「任せてはいけない」作業リスト：安全な使い分けと運用ルール【2025年版】</h1>
+  <div class="meta">
+    公開日: 2025-11-18 / 更新日: 2025-11-18
+    <span class="badge">AI運用</span><span class="badge">安全性</span><span class="badge">実務</span>
+  </div>
+
+  <div class="notice">
+    <strong>この記事のゴール</strong><br/>
+    AIに<strong>頼らないほうがいい作業</strong>を明確にし、現実的な「併用の作法」を用意すること。<br/>
+    結論：<em>高リスク領域は“任せない”、低〜中リスクは“下書きとして使い、人間が確定”</em>。その線引きを具体的に示します。
+  </div>
+
+  <h2 id="toc">目次</h2>
+  <p>
+    <a href="#risk">まずは結論：AIに任せない10カテゴリ</a> /
+    <a href="#why">なぜ危険？よくある失敗パターン</a> /
+    <a href="#how">安全な使い分け（運用ルール）</a> /
+    <a href="#templates">すぐ使えるテンプレ</a> /
+    <a href="#faq">FAQ</a> /
+    <a href="#summary">まとめ</a>
+  </p>
+
+  <h2 id="risk">まずは結論：AIに任せない10カテゴリ</h2>
+  <table class="table">
+    <thead><tr><th>カテゴリ</th><th>任せない理由</th><th>AIの使い所（あるなら）</th></tr></thead>
+    <tbody>
+      <tr><td>① 法務・契約・規約の最終案</td><td>条文の解釈ズレ／法域差／最新改正の反映漏れ</td><td>ドラフト骨子作成、条文比較の観点出し</td></tr>
+      <tr><td>② 医療・健康・投薬アドバイス</td><td>誤情報の致命傷リスク、個別事情の考慮が不可</td><td>病院で医師に聞くための質問整理</td></tr>
+      <tr><td>③ 投資・税務・保険の意思決定</td><td>規制・税制の頻繁な改定、責任の所在不明</td><td>比較表の項目出し、用語解説</td></tr>
+      <tr><td>④ セキュリティ設計・鍵/秘密情報の扱い</td><td>秘匿情報の漏えい／誤設定の連鎖事故</td><td>チェックリスト作成、ベストプラクティスの要約</td></tr>
+      <tr><td>⑤ 本番データの変換・削除・移行の自動実行</td><td>不可逆処理の誤操作リスクが高い</td><td>プレイブックの下書き、ドライランの観点出し</td></tr>
+      <tr><td>⑥ 研究・統計の“新事実”断定</td><td>一次情報への当たり不足、引用の混線</td><td>関連論点のブレスト、既知の概念整理</td></tr>
+      <tr><td>⑦ 事故・障害の公式アナウンス最終文</td><td>法務/広報/CS整合が必須、表現の一語が火種</td><td>初期ドラフト、ステークホルダー別トーン案</td></tr>
+      <tr><td>⑧ 人事・評価・採否の判断</td><td>バイアス・差別の懸念、個別事情の重み</td><td>評価観点の定義、行動事実の要約</td></tr>
+      <tr><td>⑨ 学位・資格等の本人課題の直接回答</td><td>学習評価を歪める／規約違反</td><td>方針・ヒント・模範解答の構成例</td></tr>
+      <tr><td>⑩ 著作権グレーの“元ネタ当て”コンテンツ</td><td>トレーニング由来の近似生成や権利侵害の懸念</td><td>オリジナル企画のブレスト、構成テンプレ</td></tr>
+    </tbody>
+  </table>
+  <p class="tip">共通原則：<strong>人命・金・信用</strong>に直接効く領域は「任せない」。使うなら<strong>下書き</strong>に限定し、最終判断は人間が行う。</p>
+
+  <h2 id="why">なぜ危険？よくある失敗パターン</h2>
+  <ul>
+    <li><strong>もっともらしい誤情報（ハルシネーション）</strong>：実在しない規則・論文・仕様をそれっぽく提示。</li>
+    <li><strong>最新性の欠落</strong>：日付の誤認、改定の未反映。相手サービスのUIも頻繁に変わる。</li>
+    <li><strong>暗黙条件の取りこぼし</strong>：利害関係者・監査・地域ルールなど、前提が省略されがち。</li>
+    <li><strong>境界の越境</strong>：秘密情報やPII（個人情報）をプロンプトに貼り付けるミス。</li>
+    <li><strong>責任の所在が宙に浮く</strong>：「AIが言った」では済まない。監督責任は常に人間側。</li>
+  </ul>
+
+  <h2 id="how">安全な使い分け（運用ルール）</h2>
+  <div class="panel">
+    <h3>RGRフレームワーク（Role / Grounding / Rules）</h3>
+    <dl>
+      <dt>Role：役割を限定</dt>
+      <dd>「あなたは<em>下書き支援</em>のアシスタント。最終判断は人間」という前提を明示。</dd>
+      <dt>Grounding：根拠を紐づけ</dt>
+      <dd>一次情報のURL/規程/社内文書の範囲に限定し、<strong>出典を必須</strong>にする。</dd>
+      <dt>Rules：守るべき規則</dt>
+      <dd>PII秘匿・日付の明記・不確実な箇所は「保留（要確認）」のタグをつける等。</dd>
+    </dl>
+  </div>
+
+  <h3>ヒューマン・イン・ザ・ループ（HITL）最小セット</h3>
+  <ol>
+    <li><strong>ドラフトの目的確認</strong>（誰に／何を／いつまでに）。</li>
+    <li><strong>出典チェック</strong>（一次情報5点ルール：日付・発行主体・適用範囲・改定履歴・原文リンク）。</li>
+    <li><strong>リスク判定</strong>（人命・金・信用に直結？ → AIは下書きのみ）。</li>
+    <li><strong>最終レビュー</strong>（責任者がサインオフ）。</li>
+    <li><strong>変更ログ</strong>（いつ・誰が・何を変えたか）。</li>
+  </ol>
+
+  <h3>AIを使ってよいケース／避けるケース</h3>
+  <table class="table">
+    <thead><tr><th>OK（推奨）</th><th>NG（避ける）</th></tr></thead>
+    <tbody>
+      <tr><td>文章のたたき台、見出しの候補、要約、言い換え</td><td>規約・契約の最終文、社外公式発表</td></tr>
+      <tr><td>コードの雛形、テストケースのアイデア出し</td><td>本番DBに直接作用するスクリプトの生成と即実行</td></tr>
+      <tr><td>比較観点の列挙、チェックリスト草案</td><td>医療/税務/法務の断定的判断</td></tr>
+      <tr><td>学習教材の構成、練習問題の作成</td><td>本人評価・採否・試験の回答作成</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="templates">すぐ使えるテンプレ</h2>
+  <div class="panel">
+    <h3>① プロンプトの雛形（下書き支援モード）</h3>
+    <pre><code>【役割】あなたは下書き支援のアシスタント。最終判断は人間が行います。
+【目的】&lt;目的&gt;
+【対象】&lt;読者/ステークホルダー&gt;
+【制約】日付は必ずYYYY-MM-DDで明記。断定を避け、根拠URLを各節末に列挙。
+【安全】個人情報・秘密情報は出さない。曖昧な点は [要確認] と明示。
+【出力】見出し案3つ＋本文ドラフト（800〜1200字）、最後に出典候補リンク。</code></pre>
+  </div>
+
+  <div class="panel">
+    <h3>② リスク確認チェックリスト（保存推奨）</h3>
+    <ul>
+      <li>[ ] 人命・金・信用に直結しないか？（直結ならAIは下書きのみ）</li>
+      <li>[ ] 出典は一次情報か？（発行主体・日付・適用範囲が確認できるか）</li>
+      <li>[ ] 改定の可能性が高い分野か？（高い場合は日付を本文に明記）</li>
+      <li>[ ] 秘密・個人情報が混じっていないか？（プロンプト・出力ともに）</li>
+      <li>[ ] 責任者レビュー（サインオフ）は済んだか？</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h3>③ 公式アナウンスのドラフト→最終の運び方</h3>
+    <ol>
+      <li>AIで「<em>構成のみ</em>」を作る（時系列・対象範囲・再発防止）。</li>
+      <li>社内関係者で事実確認 → 数字・日時を確定。</li>
+      <li>法務・広報・CSの観点レビュー。</li>
+      <li>最終文は人間がリライト→リスク語を調整（断定/謝罪/補償）。</li>
+      <li>公開後はQ&Aを随時追加（AIの提案は採否を明記して記録）。</li>
+    </ol>
+  </div>
+
+  <h2 id="cases">具体例：この用途は“下書きまで”</h2>
+  <h3>ケース1：セキュリティ運用文書</h3>
+  <p>AIに「運用項目の洗い出し」まで頼み、人間が環境固有の設定値・責任分担・復旧SLOを確定。公開版は監査と整合。</p>
+
+  <h3>ケース2：本番データ移行の手順書</h3>
+  <p>AIでプレイブックの骨子→<strong>ドライランで実測値を埋める</strong>（件数・所要時間・ロールバック手順）。実行権限は人間のみ。</p>
+
+  <h3>ケース3：契約の条項レビュー</h3>
+  <p>AIに「不利になり得る観点」を列挙させ、条文は必ず人間の法務が修正。改正法は日付で追う。</p>
+
+  <h2 id="faq">FAQ</h2>
+  <h3>Q. AIの回答に出典が付いていれば信用していい？</h3>
+  <p>出典の文脈と日付を必ず照合。リンク切れや“似て非なる文書”の引用も多い。<strong>5点チェック（発行主体/日付/適用範囲/改定履歴/原文）</strong>を習慣化。</p>
+
+  <h3>Q. クリエイティブ制作はどう扱う？</h3>
+  <p>参考案や構成まで。最終はオリジナル表現に落とし込む。近似生成や権利者のスタイル模倣は避ける。</p>
+
+  <h3>Q. 社内の機密を使ってもいい？</h3>
+  <p>プロンプト/出力にPIIや秘匿情報を入れないのが原則。必要なら<strong>社内閉域のモデル</strong>を使い、ログ保存の有無を明確に。</p>
+
+  <h2 id="summary">まとめ</h2>
+  <div class="panel">
+    <strong>要点</strong><br/>
+    ・人命・金・信用に直結する領域は「任せない」。<br/>
+    ・それ以外は「下書きとして活用 → 人間が確定」。<br/>
+    ・RGRとHITLで、出典・日付・責任の線を明確にする。<br/>
+    ・“戻れる設計”にしておけば、AIは強力な加速装置になる。
+  </div>
+
+  <hr/>
+  <div class="notice">
+    <strong>関連：</strong>
+    <a href="/blog/git-3-commands/">Git入門：3コマンド</a> /
+    <a href="/blog/one-hour-website/">1時間で作る個人サイト</a> /
+    <a href="/tools/charcount/">文字数カウンター</a> /
+    <a href="/tools/password/">パスワード生成</a>
+    <br/>
+    メール検証や受信テストは、広告ゼロの一時メール <a href="/">tomy634.com</a> でどうぞ。
+  </div>
+</div>
+
+</body>
+</html>

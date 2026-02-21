@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>使い方 | tomy634.com</title>
+  <style>
+    :root{
+      --bg:#0a0f12;--term:#0d1618;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6;
+      --danger:#ff7189;--ok:#7dffb3;--warn:#ffd569;--link:#4dabff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:ui-monospace,Consolas,monospace;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    /* 共通ヘッダ */
+    header{
+      position:sticky;
+      top:0;z-index:10;
+      background:rgba(10,15,18,.95);
+      backdrop-filter:saturate(120%) blur(6px);
+      border-bottom:1px solid rgba(116,255,207,.2);
+      padding:10px 12px;
+    }
+    .bar{display:flex;align-items:center;gap:10px}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+    .logo{
+      width:34px;height:34px;
+      border:1px solid var(--accent);
+      border-radius:8px;
+      display:grid;place-items:center;
+      box-shadow:0 0 12px rgba(116,255,207,.3);
+    }
+    .logo::after{content:"$";color:var(--accent);font-weight:700}
+    h1{
+      font-size:16px;margin:0;color:var(--accent);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+
+    .navwrap{display:flex;align-items:center;gap:8px}
+    .nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .nav a{
+      color:var(--muted);text-decoration:none;
+      font-size:13px;white-space:nowrap;
+    }
+    .nav a:hover{text-decoration:underline;color:var(--accent)}
+    .menu-btn{
+      display:none;
+      border:1px solid rgba(116,255,207,.6);
+      color:var(--accent);background:transparent;
+      border-radius:8px;padding:6px 10px;font-size:12px;
+    }
+    .menu{
+      display:none;
+      padding:8px 10px;
+      border-top:1px solid rgba(116,255,207,.2);
+    }
+    .menu a{
+      display:block;
+      padding:8px 4px;
+      color:var(--muted);
+      text-decoration:none;
+      font-size:14px;
+    }
+    .menu a:hover{color:var(--accent)}
+
+    @media (max-width: 860px){
+      .nav{display:none}
+      .menu-btn{display:inline-block}
+      h1{font-size:15px}
+    }
+
+    /* ここからは元の how-to-use の本文用スタイル（中身そのまま） */
+    .wrap{padding:20px;max-width:900px;margin:auto}
+    h2{color:var(--accent);font-size:16px;margin:14px 0 8px}
+    p,li{color:var(--muted);line-height:1.7;font-size:13px}
+    .panel{
+      border:1px solid rgba(116,255,207,.35);
+      border-radius:10px;
+      padding:14px 16px;
+      background:rgba(12,24,28,.8);
+      margin:10px 0;
+    }
+    code{
+      background:#0d1618;
+      border:1px solid rgba(116,255,207,.25);
+      padding:2px 6px;
+      border-radius:6px;
+    }
+    a{color:var(--link)}
+  </style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">
+      <div class="logo"></div>
+      <h1>tomy634.com // 使い方</h1>
+    </div>
+    <div class="navwrap">
+      <nav class="nav" aria-label="メイン">
+        <a href="/">ホーム</a>
+        <a href="/blog">ブログ</a>
+        <a href="/how-to-use">使い方</a>
+        <a href="/faq">FAQ</a>
+        <a href="/tools">ツール</a>
+        <a href="/about">概要</a>
+        <a href="/terms">利用規約</a>
+        <a href="/privacy">プライバシー</a>
+        <a href="/contact">お問い合わせ</a>
+        <a href="/api">API</a>
+      </nav>
+      <button id="menu-toggle" class="menu-btn" type="button"
+              aria-expanded="false" aria-controls="menu">メニュー</button>
+    </div>
+  </div>
+  <div id="menu" class="menu" hidden>
+    <a href="/">ホーム</a>
+    <a href="/blog">ブログ</a>
+    <a href="/how-to-use">使い方</a>
+    <a href="/faq">FAQ</a>
+    <a href="/tools">ツール</a>
+    <a href="/about">概要</a>
+    <a href="/terms">利用規約</a>
+    <a href="/privacy">プライバシー</a>
+    <a href="/contact">お問い合わせ</a>
+    <a href="/api">API</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <h2>概要</h2>
+    <p>tomy634.com は、ブラウザを開くだけで<strong>一時メールアドレス</strong>を自動発行し、同じページで受信トレイを表示します。登録不要・無料で、短時間の検証や登録確認に最適です。</p>
+  </div>
+
+  <h2>手順（最短 3 ステップ）</h2>
+  <ol>
+    <li><strong>ホーム</strong>（<a href="/">/</a>）を開くと、<em>自動で一時アドレスが表示</em>されます。</li>
+    <li>アドレス横の<strong>コピー</strong>ボタンでコピーし、登録フォーム等に貼り付けます。</li>
+    <li>メールが届くと<strong>即時反映</strong>され、本文はクリックで開閉できます。<em>リンクは青色</em>でクリック可能です。</li>
+  </ol>
+
+  <h2>ヒント</h2>
+  <ul>
+    <li><strong>新しいアドレスを生成</strong>：同ページのボタンで即発行。既存アドレスはクッキーに7日間保存。</li>
+    <li><strong>手動更新</strong>：<code>更新</code>ボタンで即再取得。自動更新（15秒）も同時に有効。</li>
+    <li><strong>開いていた本文は閉じない</strong>：更新しても、開封状態を維持します。</li>
+    <li><strong>最大10件まで表示</strong>：過去分は自動で間引きます。</li>
+  </ul>
+
+  <h2>セキュリティと注意</h2>
+  <ul>
+    <li>重要アカウント（銀行、基幹SNS等）の登録には<strong>使用しない</strong>でください。</li>
+    <li>本文内リンクの開封は自己責任で。疑わしいURLは開かないでください。</li>
+    <li>一時アドレスは<strong>共有的性質</strong>があります。秘匿が必要な用途には不向きです。</li>
+  </ul>
+
+  <div class="panel">
+    <h2>お問い合わせ</h2>
+    <p>サポート窓口：毎日 08:00–24:00 (JST)<br/>メール <a href="mailto:admin@tomy634.com">admin@tomy634.com</a> / Instagram <a href="https://instagram.com/xau_usdpt" target="_blank" rel="noopener">@xau_usdpt</a> / Discord <a href="https://discord.com/users/xm0g" target="_blank" rel="noopener">@xm0g</a></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var btn  = document.getElementById('menu-toggle');
+  var menu = document.getElementById('menu');
+  if(!btn || !menu) return;
+
+  function set(open){
+    if(open){
+      menu.hidden = false;
+      menu.style.display = 'block';
+      btn.setAttribute('aria-expanded','true');
+    }else{
+      menu.hidden = true;
+      menu.style.display = 'none';
+      btn.setAttribute('aria-expanded','false');
+    }
+  }
+
+  btn.addEventListener('click', function(){
+    var open = btn.getAttribute('aria-expanded') === 'true';
+    set(!open);
+  });
+})();
+</script>
+</body>
+</html>

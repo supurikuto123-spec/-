@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>ブログ | tomy634.com</title>
+  <meta name="description" content="tomy634.com のブログです。使い捨てメール、Web・サーバー・プログラミング・SNS・SEO など、インターネットまわりの知識をゆるく深く解説していきます。">
+  <style>
+    :root{
+      --bg:#0a0f12;
+      --term:#0d1618;
+      --text:#d7ffe8;
+      --accent:#74ffcf;
+      --muted:#89bfa6;
+      --link:#4dabff;
+    }
+    body{
+      margin:0;
+      font-family:ui-monospace,Consolas,monospace;
+      background:var(--bg);
+      color:var(--text);
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:16px 20px;
+      border-bottom:1px solid rgba(116,255,207,.2);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .logo{
+      width:36px;
+      height:36px;
+      border:1px solid var(--accent);
+      border-radius:8px;
+      display:grid;
+      place-items:center;
+      box-shadow:0 0 10px rgba(116,255,207,.25);
+    }
+    .logo::after{
+      content:"$";
+      color:var(--accent);
+      font-weight:700;
+    }
+    h1{
+      font-size:18px;
+      margin:0;
+      color:var(--accent);
+    }
+    nav{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    nav a{
+      color:var(--muted);
+      text-decoration:none;
+      font-size:13px;
+    }
+    nav a:hover{
+      text-decoration:underline;
+      color:var(--accent);
+    }
+    .nav-main{
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(116,255,207,.4);
+      background:rgba(10,15,18,.8);
+    }
+    .nav-main:hover{
+      background:rgba(116,255,207,.12);
+    }
+    .wrap{
+      padding:20px;
+      max-width:960px;
+      margin:auto;
+    }
+    h2{
+      font-size:16px;
+      margin:16px 0 8px;
+      color:var(--accent);
+    }
+    p{
+      font-size:13px;
+      line-height:1.8;
+      color:var(--muted);
+      margin:4px 0 10px;
+    }
+    .section{ margin:18px 0; }
+    .card-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:8px;
+    }
+    .card{
+      border:1px solid rgba(116,255,207,.35);
+      border-radius:10px;
+      padding:12px 14px;
+      background:rgba(12,24,28,.85);
+    }
+    .card-title{
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:4px;
+    }
+    .card-title a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+    .card-title a:hover{ text-decoration:underline; }
+    .card-meta{
+      font-size:11px;
+      color:var(--muted);
+      opacity:.9;
+      margin-bottom:6px;
+    }
+    .badge{
+      font-size:10px;
+      border:1px solid rgba(116,255,207,.6);
+      border-radius:999px;
+      padding:2px 6px;
+      margin-left:4px;
+    }
+    a{ color:var(--link); }
+    a:hover{ text-decoration:underline; }
+    .future-list{
+      list-style:square;
+      padding-left:18px;
+      font-size:13px;
+      color:var(--muted);
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <h1>tomy634.com // ブログ</h1>
+  </div>
+  <nav>
+    <a href="/blog" class="nav-main">ブログホーム</a>
+    <a href="/">tomy634.com に戻る</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <section class="section">
+    <p>
+      ここは <strong>tomy634.com のブログセクション</strong>です。<br/>
+      使い捨てメールの仕組みだけでなく、<strong>Web・サーバー・プログラミング・SNS・SEO</strong> など、<br/>
+      「サービスを作る人／使いこなしたい人」向けのゆるい技術メモを書いていきます。
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>📚 用語集・辞書コンテンツ</h2>
+    <div class="card-list">
+      <div class="card">
+        <div class="card-title">
+          <a href="/blog/glossary/">Web・IT・プログラミング・SNS用語集【辞書モード】</a>
+          <span class="badge">用語集</span><span class="badge">A〜Z+α</span>
+        </div>
+        <div class="card-meta">URL: /blog/glossary/ / 最終更新: 2025-11-15</div>
+        <p>
+          サイト構築・サーバー・プログラミング・メール・SNS・SEO など、
+          Webまわりの単語を <strong>A〜Z</strong> で引けるミニ辞書です。<br/>
+          「用語から記事に飛ぶ」「分からない単語をとりあえずここで調べる」使い方を想定しています。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 公開中の記事 一覧 -->
+  <section class="section">
+    <h2>📄 公開中の記事</h2>
+    <div class="card-list">
+
+      <!-- 新規：SSL/TLS -->
+      <div class="card">
+        <div class="card-title">
+          <a href="/blog/ssl-tls-5min/">5分でわかるSSL/TLS：仕組み・証明書・実務チェックリスト【2025年版】</a>
+          <span class="badge">セキュリティ</span><span class="badge">入門</span>
+        </div>
+        <div class="card-meta">URL: /blog/ssl-tls-5min/ / 公開日: 2025-11-18</div>
+        <p>
+          “鍵マーク”の正体を5分で理解。TLS1.3の流れ、DV/OV/EVの違い、HSTS/OCSP Stapling、HTTP/2・HTTP/3の関係、
+          よくあるエラーと対処まで、運用の現場で迷わない要点を凝縮。
+        </p>
+      </div>
+
+      <!-- 新規：用語の誤用Top50 -->
+      <div class="card">
+        <div class="card-title">
+          <a href="/blog/web-terms-misuse-top50/">Webでよく見る用語の誤用 Top50：正しい意味と使い分け【保存版】</a>
+          <span class="badge">基礎知識</span><span class="badge">用語</span>
+        </div>
+        <div class="card-meta">URL: /blog/web-terms-misuse-top50/ / 公開日: 2025-11-18</div>
+        <p>
+          Cookie/Cache、認証/認可、API/Webhook、OAuth/OIDC、301/302 など“わかってるつもり”の境界を
+          一枚の表でクリアに。実務の言い間違いを減らす保存版。
+        </p>
+      </div>
+
+      <!-- 既刊：お問い合わせ自動化 -->
+      <div class="card">
+        <div class="card-title">
+          <a href="/blog/contact-automation-webhook-sheets/">実録：お問い合わせ対応を自動化してみた（Webhook＋スプレッドシート＋通知）</a>
+          <span class="badge">自動化</span><span class="badge">実録</span>
+        </div>
+        <div class="card-meta">URL: /blog/contact-automation-webhook-sheets/ / 公開日: 2025-11-18</div>
+        <p>
+          フォーム→Webhook→GAS→スプレッドシート保存→Discord通知まで“最短で運用できる”テンプレを公開。
+          Cloudflare Workers / Node.js 代替パターンやスパム対策・監視も。
+        </p>
+      </div>
+
+      <!-- 既刊：QR安全講座 -->
+      <div class="card">
+        <div class="card-title">
+          <a href="/blog/qr-safety/">QRコードの安全講座：フィッシングを見抜く＆作る側のベストプラクティス【2025年版】</a>
+          <span class="badge">セキュリティ</span><span class="badge">実務</span>
+        </div>
+        <div class="card-meta">URL: /blog/qr-safety/ / 公開日: 2025-11-18</div>
+        <p>
+          利用者の“見抜き方”と配布側の“安全な作り方”。短縮URLを避ける設計、期限・署名・一回性トークン、
+          紙媒体の上貼り対策まで。
+        </p>
+      </div>
+
+      <!-- 既刊：AI任せNG -->
+      <div class="card">
+        <div class="card-title">
+          <a href="/blog/dont-outsource-to-chatgpt/">ChatGPTに「任せてはいけない」作業リスト：安全な使い分けと運用ルール【2025年版】</a>
+          <span class="badge">AI運用</span><span class="badge">安全性</span>
+        </div>
+        <div class="card-meta">URL: /blog/dont-outsource-to-chatgpt/ / 公開日: 2025-11-18</div>
+        <p>
+          高リスク領域は“任せない”。低〜中リスクは“下書きのみ”。RGR/HITLの運用ルールと
+          すぐ使えるチェックリスト・テンプレを添えて解説。
+        </p>
+      </div>
+
+      <!-- 既刊：Git3コマンド -->
+      <div class="card">
+        <div class="card-title">
+          <a href="/blog/git-3-commands/">Git入門：たった3コマンドで「変更を記録→戻せる」ようになる【2025年版】</a>
+          <span class="badge">Git</span><span class="badge">入門</span>
+        </div>
+        <div class="card-meta">URL: /blog/git-3-commands/ / 公開日: 2025-11-18</div>
+        <p>
+          覚えるのは <code>init</code>/<code>add</code>/<code>commit</code> の3つ。さらに
+          <code>restore</code>/<code>reset</code>/<code>reflog</code> で“やらかし”から戻る最短ルート。
+        </p>
+      </div>
+
+      <!-- 既刊：1時間サイト -->
+      <div class="card">
+        <div class="card-title">
+          <a href="/blog/one-hour-website/">1時間で作る“超軽量”個人サイト：無料ホスティング3択と最短公開手順【2025年版】</a>
+          <span class="badge">Web制作</span><span class="badge">入門</span>
+        </div>
+        <div class="card-meta">URL: /blog/one-hour-website/ / 公開日: 2025-11-18</div>
+        <p>
+          最小HTMLを用意して GitHub Pages / Cloudflare Pages / Netlify のいずれかで
+          60分以内に公開。独自ドメインの付け方も。
+        </p>
+      </div>
+
+      <!-- 既刊：捨てメアド比較 -->
+      <div class="card">
+        <div class="card-title">
+          <a href="/blog/disposable-mail-compare/">SNS登録に使える捨てメアド比較【2025年版】</a>
+          <span class="badge">比較</span><span class="badge">捨てメアド</span>
+        </div>
+        <div class="card-meta">URL: /blog/disposable-mail-compare/ / 公開日: 2025-11-15</div>
+        <p>
+          日本の <strong>tomy634.com</strong> と主要海外サービスを公式情報ベースで比較。
+          無料/有料・API・使い勝手・用途別の向き不向きを整理。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>📝 今後追加予定の記事（予定地）</h2>
+    <p>以下のテーマは、今後それぞれ独立した記事として追加していく予定です。</p>
+    <ul class="future-list">
+      <li>使い捨てメールとは？仕組み・用途・安全性を徹底解説【2025年版】</li>
+      <li>認証コードが届かない原因と対策【メール版チェックリスト】</li>
+      <li>捨てメアドのメリット・デメリットを徹底比較</li>
+      <li>一時メールサービスの「危険な運営」の見分け方</li>
+      <li>メールがスパム扱いされる理由と、送信側ができる対策</li>
+    </ul>
+  </section>
+</div>
+
+</body>
+</html>

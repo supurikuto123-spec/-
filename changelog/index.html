@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>更新履歴 | tomy634.com</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<style>
+:root{--bg:#0a0f12;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6;--line:rgba(116,255,207,.25);}
+*{box-sizing:border-box} body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:rgba(10,15,18,.95);border-bottom:1px solid var(--line);padding:10px 12px}
+.hbar{display:flex;align-items:center;gap:10px}
+.logo{width:34px;height:34px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center}
+.logo::after{content:"$";color:var(--accent);font-weight:700}
+h1{font-size:16px;margin:0;color:var(--accent)}
+.wrap{max-width:900px;margin:auto;padding:16px}
+.entry{border:1px solid var(--line);border-radius:10px;background:rgba(12,24,28,.8);padding:14px 16px;margin:12px 0}
+.header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tl{color:var(--accent);font-weight:700}
+.dt{color:var(--muted);font-size:12px}
+pre{white-space:pre-wrap;line-height:1.6;margin:8px 0 0;background:rgba(255,255,255,.03);border:1px dashed var(--line);border-radius:8px;padding:8px}
+a.back{color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 10px}
+a.back:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+<header><div class="hbar"><div class="logo"></div><h1>tomy634.com // 更新履歴</h1></div></header>
+<div class="wrap">
+  <p><a class="back" href="/">← 受信ボックスへ戻る</a></p>
+
+  <div class="entry">
+    <div class="header"><div class="tl">スマホ開閉バグ修正 / 点滅抑止</div><div class="dt">2025-12-01</div></div>
+    <pre>- 新着のみ上に追加（既存は再描画しない）
+- タイトルタップ時のみ開閉。選択/長押し/スワイプでは閉じない
+- 長いURLの折返し改善</pre>
+  </div>
+
+  <div class="entry">
+    <div class="header"><div class="tl">API v1 ベータ</div><div class="dt">2025-11-30</div></div>
+    <pre>- /api/v1/boxes/:box_id/messages
+- /api/v1/messages/:id
+- /api/v1/messages/:id/text</pre>
+  </div>
+</div>
+</body>
+</html>

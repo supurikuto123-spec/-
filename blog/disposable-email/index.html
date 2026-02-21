@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>今度は使い捨てメールとは？仕組み・用途・安全性を徹底解説【2025年版】 | tomy634.com</title>
+<meta name="description" content="使い捨てメール（捨てメアド）の基礎、仕組み、用途、リスクと安全な使い方を2025年版として徹底解説。通常のメールやエイリアス、転送型との違い、NGな使い所、法務・セキュリティ面の注意点まで。広告ゼロ・登録不要の一時メールサービス tomy634.com の活用例も紹介。">
+<style>
+:root{--bg:#0a0f12;--term:#0d1618;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6}
+body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(116,255,207,.2)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center}
+.logo::after{content:"$";color:var(--accent);font-weight:700}
+h1{font-size:18px;margin:0;color:var(--accent)}
+nav{display:flex;align-items:center;gap:10px}
+nav a{color:var(--muted);text-decoration:none;font-size:13px}
+nav a:hover{text-decoration:underline;color:var(--accent)}
+.nav-main{padding:4px 10px;border-radius:999px;border:1px solid rgba(116,255,207,.4);background:rgba(10,15,18,.8)}
+.nav-main:hover{background:rgba(116,255,207,.12)}
+.wrap{padding:20px;max-width:960px;margin:auto}
+h2{color:var(--accent);font-size:16px;margin:20px 0 6px}
+h3{color:var(--accent);font-size:14px;margin:14px 0 6px}
+p,li{color:var(--muted);line-height:1.8;font-size:13px}
+strong{color:#eafff5}
+.notice{border:1px solid rgba(116,255,207,.35);border-radius:10px;padding:12px 14px;background:rgba(12,24,28,.8);margin:10px 0}
+.index-links{font-size:13px;margin:10px 0 6px}
+.index-links a{margin-right:8px;color:#4dabff}
+a{color:#4dabff}
+a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid rgba(116,255,207,.25);margin:18px 0}
+ul.check>li{list-style:"✔ ";margin-left:12px}
+ul.cross>li{list-style:"✖ ";margin-left:12px}
+.grid{display:grid;gap:10px}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.box{border:1px solid rgba(116,255,207,.35);border-radius:10px;padding:12px;background:rgba(12,24,28,.8)}
+.badge{font-size:10px;border:1px solid rgba(116,255,207,.6);border-radius:999px;padding:2px 6px;margin-left:6px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border:1px solid rgba(116,255,207,.25);padding:8px;vertical-align:top}
+th{color:var(--accent);text-align:left;background:rgba(116,255,207,.05)}
+.cta-row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.item{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0;padding:8px 12px;border:1px solid rgba(116,255,207,.35);border-radius:999px;color:var(--muted);text-decoration:none}
+.item:hover{color:var(--accent);border-color:rgba(116,255,207,.6);background:rgba(116,255,207,.08)}
+.small{font-size:12px;color:var(--muted)}
+kbd{border:1px solid rgba(116,255,207,.35);padding:0 6px;border-radius:6px;background:rgba(12,24,28,.8);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <h1>tomy634.com // 今度は使い捨てメールとは？仕組み・用途・安全性を徹底解説【2025年版】</h1>
+  </div>
+  <nav>
+    <a href="/blog" class="nav-main">ブログホーム</a>
+    <a href="/">tomy634.com に戻る</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="notice">
+    <strong>この記事の要点（30秒で把握）</strong><br/>
+    使い捨てメールは「サイト登録や検証で一時的に受信できればOK」という用途に便利。ただし
+    <strong>重要アカウントやお金が絡むサービスでは非推奨</strong>。用途に合わせて、使い捨て／エイリアス／通常メールを使い分けましょう。
+  </div>
+
+  <h2 id="toc">目次</h2>
+  <p class="index-links">
+    <a href="#what">使い捨てメールとは</a> /
+    <a href="#how">仕組み</a> /
+    <a href="#types">種類と違い</a> /
+    <a href="#use">主な用途</a> /
+    <a href="#safety">安全性とリスク</a> /
+    <a href="#ng">使わない方がよい場面</a> /
+    <a href="#compare">比較表</a> /
+    <a href="#howto">tomy634.com の使い方</a> /
+    <a href="#api">APIで自動化</a> /
+    <a href="#faq">FAQ</a>
+  </p>
+  <hr/>
+
+  <h2 id="what">使い捨てメールとは？</h2>
+  <p>
+    使い捨てメール（捨てメアド／一時メール）は、<strong>短期間だけ受信できる仮のメールアドレス</strong>です。
+    サイト登録時の確認コード受信、アプリ検証、スパム回避などに使われます。多くは
+    <strong>登録不要・即時発行・Web上で受信確認</strong>が可能です。
+  </p>
+
+  <h2 id="how">仕組み</h2>
+  <div class="grid grid-2">
+    <div class="box">
+      <h3>① 一時アドレスの発行</h3>
+      <p>アクセス時にランダムなアドレス（例: <code>xxxx@temp.example</code>）を生成。エイリアス方式やキャッチオール方式が使われます。</p>
+    </div>
+    <div class="box">
+      <h3>② 受信と表示</h3>
+      <p>そのアドレス宛のメールを一時ストレージに保存し、ブラウザからリアルタイム表示（数秒ごと自動更新）。一定時間・件数で自動削除。</p>
+    </div>
+  </div>
+
+  <h2 id="types">種類と違い</h2>
+  <table>
+    <thead><tr><th>方式</th><th>概要</th><th>向いている用途</th><th>注意点</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>使い捨て（公開インボックス）</td>
+        <td>誰でも同じ受信箱を閲覧できる場合がある。登録不要で即利用。</td>
+        <td>検証・一回きりの登録確認</td>
+        <td>第三者も読める可能性。機密NG。</td>
+      </tr>
+      <tr>
+        <td>転送型（プライベート）</td>
+        <td>仮アドレス → 本アドレスへ転送。自分だけが受信。</td>
+        <td>ニュースレター試用、スパム分離</td>
+        <td>転送先の管理が必要。サービス側で禁止される場合あり。</td>
+      </tr>
+      <tr>
+        <td>エイリアス（通常メールの別名）</td>
+        <td>Gmail等の「+タグ」や独自ドメインの別名で受信箱を振り分け。</td>
+        <td>長期運用、ラベリング管理</td>
+        <td>本アドレスのドメインが相手に見える。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="use">主な用途</h2>
+  <ul class="check">
+    <li>会員登録・ダウンロード時の確認コード受信</li>
+    <li>新サービスの試用や価格調査</li>
+    <li>スパム回避・メールマーケからの切り分け</li>
+    <li>開発・テスト（サインアップ／通知動作の検証）</li>
+  </ul>
+
+  <h2 id="safety">安全性とリスク</h2>
+  <div class="grid grid-2">
+    <div class="box">
+      <h3>メリット</h3>
+      <ul class="check">
+        <li>本アドレスの露出を防ぎ、スパムを分離</li>
+        <li>登録不要・即時で手早い</li>
+        <li>テスト環境の再現が容易</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>リスク</h3>
+      <ul class="cross">
+        <li>公開インボックスの場合、<strong>第三者が閲覧可能</strong></li>
+        <li>運営側の保存期間・削除ポリシーに依存</li>
+        <li>パスワードリセット等に使うと<strong>乗っ取りリスク</strong></li>
+      </ul>
+    </div>
+  </div>
+  <p class="notice">
+    <strong>重要・金銭・本人確認が絡むサービスでは使用しない</strong>のが鉄則。二段階認証や銀行・EC本会員、政府手続き、クラウドの管理者権限などはNGです。
+  </p>
+
+  <h2 id="ng">使わない方がよい場面</h2>
+  <ul class="cross">
+    <li>金融・フリマ・決済・各種KYC（本人確認）が必要なサービス</li>
+    <li>仕事用の中核SaaS、クラウド管理者、ドメイン／証明書、課金主体のアカウント</li>
+    <li>長期にわたり受信履歴が必要な場面、法的通知の受領</li>
+  </ul>
+
+  <h2 id="compare">用途別のざっくり比較</h2>
+  <table>
+    <thead><tr><th>シーン</th><th>おすすめ</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>一回きりの登録確認</td><td>使い捨て</td><td>即時・後腐れなし</td></tr>
+      <tr><td>試し読み・ニュースレター分離</td><td>転送型/エイリアス</td><td>自分だけが受信・管理しやすい</td></tr>
+      <tr><td>長期で大事なお知らせ</td><td>通常メール</td><td>保存・検索・サポートの想定に合う</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="howto">tomy634.com の使い方</h2>
+  <div class="box">
+    <p><strong>tomy634.com</strong> は <span class="badge">広告ゼロ</span> <span class="badge">登録不要</span> <span class="badge">即時発行</span> の一時メールサービス。ページを開くと自動で仮アドレスが生成され、<strong>15秒ごとに自動更新</strong>で最大10件まで受信を確認できます。</p>
+    <div class="cta-row">
+      <a class="item" href="/" title="ツールへ">一時メールを今すぐ使う →</a>
+      <a class="item" href="/how-to-use" title="使い方">使い方ガイド</a>
+      <a class="item" href="/privacy" title="プライバシー">プライバシー</a>
+      <a class="item" href="/terms" title="利用規約">利用規約</a>
+    </div>
+    <p class="small">※機密用途や決済アカウントには使用しないでください。</p>
+  </div>
+
+  <h2 id="api">開発者向け：APIで自動化</h2>
+  <p>tomy634.com は <strong>REST API</strong> を用意しています（共有APIキー配布中）。検証フローやツール連携に便利です。</p>
+  <div class="box">
+    <h3>例：cURLで新しい一時アドレスを取得</h3>
+    <pre><code># 仮の例。API仕様に合わせてエンドポイントやパラメータを調整してください
+curl -X POST https://tomy634.com/api/v1/address \
+  -H "Authorization: Bearer &lt;YOUR_API_KEY&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{ "ttl": 3600 }'
+# → { "address": "abcd1234@tomy634.com", "expires_in": 3600 }</code></pre>
+
+    <h3>例：受信をポーリングする（Node.js）</h3>
+    <pre><code>import fetch from "node-fetch";
+
+const API = "https://tomy634.com/api/v1";
+const KEY = process.env.TOMY634_API_KEY;
+const addr = "abcd1234@tomy634.com";
+
+async function poll() {
+  const res = await fetch(`${API}/inbox?address=${encodeURIComponent(addr)}`, {
+    headers: { Authorization: `Bearer ${KEY}` }
+  });
+  const json = await res.json();
+  for (const mail of json.messages) {
+    console.log(mail.subject, mail.from, mail.receivedAt);
+  }
+}
+setInterval(poll, 15000);</code></pre>
+    <p class="small">※APIキーの取り扱いには注意し、クライアント側へ直埋めしないでください。</p>
+  </div>
+
+  <h2 id="faq">FAQ</h2>
+  <div class="grid grid-2">
+    <div class="box">
+      <h3>Q. どれくらい保存されますか？</h3>
+      <p>サービスのポリシーによります。tomy634.com は最大件数・時間でローテーションし、古いメールは消えます。長期保存が必要な内容は通常メールをご利用ください。</p>
+    </div>
+    <div class="box">
+      <h3>Q. 同じアドレスを後日も使えますか？</h3>
+      <p>原則として「一時的」です。恒常利用が必要なら転送型サービスやエイリアスをご検討ください。</p>
+    </div>
+    <div class="box">
+      <h3>Q. 一時メールは違法では？</h3>
+      <p>多くの国で一時メール自体は違法ではありません。ただし各サイトの規約で禁止されている場合があり、悪用は当然NGです。</p>
+    </div>
+    <div class="box">
+      <h3>Q. パスワード再発行に使ってもいい？</h3>
+      <p><strong>おすすめしません。</strong>第三者に閲覧されるリスクや、後から受け取れない可能性があります。重要アカウントは本アドレス＋多要素認証で守りましょう。</p>
+    </div>
+  </div>
+
+  <hr/>
+  <p class="small">公開日：2025-11-18 / 更新：2025-11-18</p>
+</div>
+
+<!-- FAQ構造化データ（SEO） -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "どれくらい保存されますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "サービスのポリシーによります。tomy634.com は最大件数・時間でローテーションし、古いメールは消えます。長期保存が必要な内容は通常メールをご利用ください。"
+    }
+  },{
+    "@type": "Question",
+    "name": "同じアドレスを後日も使えますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "原則として一時的です。恒常利用が必要なら転送型サービスやエイリアスをご検討ください。"
+    }
+  },{
+    "@type": "Question",
+    "name": "一時メールは違法では？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "多くの国で一時メール自体は違法ではありません。ただし各サイトの規約で禁止されている場合があり、悪用は当然NGです。"
+    }
+  },{
+    "@type": "Question",
+    "name": "パスワード再発行に使ってもいい？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "おすすめしません。第三者に閲覧されるリスクや、後から受け取れない可能性があります。重要アカウントは本アドレス＋多要素認証で守りましょう。"
+    }
+  }]
+}
+</script>
+</body>
+</html>

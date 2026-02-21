@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>文字数カウンター｜文字数・単語数・行数・バイト数を即時計測【無料】| tomy634.com</title>
+<link rel="canonical" href="https://tomy634.com/tools/char-counter/"/>
+<meta name="description" content="無料の文字数カウンター。テキストの文字数（全角/半角）、単語数、行数、UTF-8バイト数を即時計測。検索結果用のタイトル・説明文の文字数チェックにも使えます。"/>
+<meta name="keywords" content="文字数カウンター,文字数カウント,文字数,単語数,行数,バイト数,メタディスクリプション,タイトル"/>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="文字数カウンター｜文字数・単語数・行数・バイト数【無料】"/>
+<meta property="og:description" content="文字数/単語数/行数/UTF-8バイト数を即時計測。検索結果用のタイトル・説明文の長さチェックにも使えます。"/>
+<meta property="og:url" content="https://tomy634.com/tools/char-counter/"/>
+<meta property="og:site_name" content="tomy634.com"/>
+<meta name="twitter:card" content="summary"/>
+<style>
+:root{
+  --bg:#0a0f12;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6;
+  --line:rgba(116,255,207,.25);--warn:#ffd569;--bad:#ff7189;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:rgba(10,15,18,.95);border-bottom:1px solid var(--line);padding:10px 12px}
+.hbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{width:34px;height:34px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center}
+.logo::after{content:"$";color:var(--accent);font-weight:700}
+h1{font-size:16px;margin:0;color:var(--accent)}
+.wrap{max-width:1000px;margin:auto;padding:16px}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:960px){.grid{grid-template-columns:1.3fr .7fr}}
+.card{border:1px solid var(--line);border-radius:10px;background:rgba(12,24,28,.8);padding:14px 16px}
+label{font-size:12px;color:var(--muted)}
+textarea,input[type="text"]{width:100%;background:#0e1518;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px;font-family:inherit}
+textarea{word-break:break-word;overflow-wrap:anywhere;}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.chk{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--muted);user-select:none;cursor:pointer}
+.chk input{accent-color:#00e5a8}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.kv div{border:1px dashed var(--line);border-radius:8px;padding:8px 10px;color:#bfead4}
+.kv b{color:var(--accent)}
+ul{padding-left:18px;margin:8px 0;color:var(--muted);line-height:1.6}
+a{color:#4dabff;word-break:break-word;overflow-wrap:anywhere;}
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.nav a{color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 10px}
+.nav a:hover{color:var(--accent);border-color:var(--accent)}
+.small{font-size:12px;color:var(--muted)}
+.table{width:100%;border-collapse:separate;border-spacing:0 6px}
+.table td{border:1px solid var(--line);padding:8px 10px;border-radius:8px}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"文字数カウンター",
+  "url":"https://tomy634.com/tools/char-counter/",
+  "applicationCategory":"UtilitiesApplication",
+  "operatingSystem":"All",
+  "description":"文字数・単語数・行数・バイト数を即時計測。検索結果用のタイトル/説明文の文字数チェックにも使えます。",
+  "breadcrumb":{
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"ホーム","item":"https://tomy634.com/"},
+      {"@type":"ListItem","position":2,"name":"無料ツール","item":"https://tomy634.com/tools/"},
+      {"@type":"ListItem","position":3,"name":"文字数カウンター","item":"https://tomy634.com/tools/char-counter/"}
+    ]
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+ "@context":"https://schema.org",
+ "@type":"FAQPage",
+ "mainEntity":[
+  {
+    "@type":"Question",
+    "name":"何が測れますか？",
+    "acceptedAnswer":{
+      "@type":"Answer",
+      "text":"文字数、単語数（空白区切り）、行数、UTF-8バイト数、最長行の長さを計測できます。"
+    }
+  },
+  {
+    "@type":"Question",
+    "name":"日本語テキストでも使えますか？",
+    "acceptedAnswer":{
+      "@type":"Answer",
+      "text":"はい。日本語は主に文字数で確認する想定です。単語数は空白区切りでカウントします。"
+    }
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<header>
+  <div class="hbar">
+    <div class="logo"></div><h1>tomy634.com // 文字数カウンター</h1>
+    <nav class="nav">
+      <a href="/">ホーム</a>
+      <a href="/news/">お知らせ</a>
+      <a href="/status/">稼働状況</a>
+      <a href="/changelog/">更新履歴</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+    <!-- 左：入力 -->
+    <div class="card">
+      <label for="title">検索結果タイトル</label>
+      <input id="title" type="text" placeholder="例）無料 文字数カウンター | tomy634.com"/>
+      <div class="small" id="titleCount">0 文字</div>
+
+      <label for="desc" style="margin-top:12px;display:block">検索結果の説明文</label>
+      <input id="desc" type="text" placeholder="検索結果に表示される説明文をここに入力"/>
+      <div class="small" id="descCount">0 文字</div>
+
+      <label for="text" style="margin-top:12px;display:block">本文テキスト</label>
+      <textarea id="text" rows="12" placeholder="ここにテキストを貼り付けてください"></textarea>
+
+      <div class="controls">
+        <label class="chk"><input type="checkbox" id="ignoreNewlines"> 改行を除外</label>
+        <label class="chk"><input type="checkbox" id="trim"> 前後の空白を除去して計測</label>
+      </div>
+
+      <div class="controls">
+        <button class="chk" id="copy" type="button">コピー</button>
+        <button class="chk" id="clear" type="button">クリア</button>
+        <button class="chk" id="sample" type="button">サンプルを入れる</button>
+      </div>
+    </div>
+
+    <!-- 右：結果 -->
+    <div class="card">
+      <h2 style="margin:0 0 8px">計測結果</h2>
+      <div class="kv">
+        <div><b>文字数</b><div id="charsWith">0</div></div>
+        <div><b>単語数（空白区切り）</b><div id="words">0</div></div>
+        <div><b>行数</b><div id="lines">0</div></div>
+        <div><b>UTF-8 バイト数</b><div id="bytes">0</div></div>
+        <div><b>最長行の長さ</b><div id="maxline">0</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h2 style="margin:0 0 8px">使い方</h2>
+    <ul>
+      <li>テキストを貼り付けるだけで、文字数・単語数・行数・バイト数などを自動で集計します。</li>
+      <li>「改行を除外」「前後の空白を除去」のチェックで、カウント方針を調整できます。</li>
+      <li>上部の入力欄で、検索結果に使うタイトル・説明文の文字数も確認できます。</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const el = id => document.getElementById(id);
+
+  const title = el('title');
+  const desc  = el('desc');
+  const text  = el('text');
+
+  const ignoreNewlines = el('ignoreNewlines');
+  const trim = el('trim');
+
+  const charsWith = el('charsWith');
+  const words     = el('words');
+  const lines     = el('lines');
+  const bytes     = el('bytes');
+  const maxline   = el('maxline');
+
+  const titleCount = el('titleCount');
+  const descCount  = el('descCount');
+
+  function byteLengthUTF8(s){
+    try { return new Blob([s]).size; } catch(e) {
+      let len = 0;
+      for (let i=0;i<s.length;i++){
+        const code = s.charCodeAt(i);
+        if (code < 0x80) len += 1;
+        else if (code < 0x800) len += 2;
+        else if (code >= 0xD800 && code <= 0xDBFF){ len += 4; i++; }
+        else len += 3;
+      }
+      return len;
+    }
+  }
+
+  function countWordsBySpace(s){
+    const t = s.replace(/\s+/g,' ').trim();
+    if(!t) return 0;
+    return t.split(' ').length;
+  }
+
+  function update(){
+    let t = text.value || '';
+    if (trim.checked) t = t.trim();
+
+    let base = t;
+    if (ignoreNewlines.checked) base = base.replace(/\r?\n/g, '');
+
+    const len = base.length;
+    const wordCount = countWordsBySpace(base);
+
+    const linesArr = (t === '' ? [] : t.split(/\r?\n/));
+    const lineCount = linesArr.length;
+    const maxLineLen = linesArr.reduce((m,l)=>Math.max(m,l.length),0);
+
+    const blen = byteLengthUTF8(base);
+
+    charsWith.textContent = len.toLocaleString('ja-JP');
+    words.textContent     = wordCount.toLocaleString('ja-JP');
+    lines.textContent     = lineCount.toLocaleString('ja-JP');
+    bytes.textContent     = blen.toLocaleString('ja-JP');
+    maxline.textContent   = maxLineLen.toLocaleString('ja-JP');
+
+    const tl = (title.value||'').trim();
+    const dl = (desc.value||'').trim();
+    titleCount.textContent = tl.length + ' 文字';
+    descCount.textContent  = dl.length + ' 文字';
+  }
+
+  function copyText(){
+    const t = text.value || '';
+    const fallback = ()=>{
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.style.position='fixed'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).catch(fallback);
+    } else { fallback(); }
+  }
+
+  function clearText(){ text.value=''; update(); }
+
+  function putSample(){
+    text.value = 'これは文字数カウンターのサンプル文です。原稿や説明文の長さをざっくり確認したいときに使えます。URL（https://example.com/path?x=1）を含むテキストでもそのまま計測できます。';
+    title.value = '無料 文字数カウンター | tomy634.com';
+    desc.value  = '文字数・単語数・行数・UTF-8バイト数を計測するシンプルな文字数カウンターです。検索結果に使うタイトルや説明文の文字数チェックにも利用できます。';
+    update();
+  }
+
+  ['input','change','keyup','paste'].forEach(ev=>{
+    text.addEventListener(ev, update);
+    title.addEventListener(ev, update);
+    desc.addEventListener(ev, update);
+    ignoreNewlines.addEventListener(ev, update);
+    trim.addEventListener(ev, update);
+  });
+
+  el('copy').addEventListener('click', copyText);
+  el('clear').addEventListener('click', clearText);
+  el('sample').addEventListener('click', putSample);
+
+  update();
+})();
+</script>
+</body>
+</html>

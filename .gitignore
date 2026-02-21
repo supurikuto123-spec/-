@@ -1,0 +1,38 @@
+# メールデータ（大量）
+api/boxes/
+api/messages/
+
+# データベース
+*.db
+
+# ログファイル
+*.log
+*.log.*
+
+# バックアップ
+*.tar.gz
+*.bak
+*.bak.*
+*.bak-*
+*.bak_*
+*.backup-*
+*.before_*
+*.broken.*
+*.orig
+*.patch
+*.save
+index.html.dupfix-*
+index.html.jsfix-*
+index.html.mailhtml-*
+index.html.seo-*
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# 環境変数
+.env
+
+# wget
+wget.log

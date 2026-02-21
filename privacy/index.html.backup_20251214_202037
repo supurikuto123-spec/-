@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>プライバシーポリシー | tomy634.com</title>
+<style>
+:root{--bg:#0a0f12;--term:#0d1618;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6}
+body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(116,255,207,.2)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center}
+.logo::after{content:"$";color:var(--accent);font-weight:700}
+h1{font-size:18px;margin:0;color:var(--accent)}
+nav a{color:var(--muted);text-decoration:none;font-size:13px;margin-left:14px}
+nav a:hover{text-decoration:underline;color:var(--accent)}
+.wrap{padding:20px;max-width:900px;margin:auto}
+h2{color:var(--accent);font-size:16px;margin:14px 0 8px}
+p,li{color:var(--muted);line-height:1.9;font-size:13px}
+ol,ul{padding-left:18px}
+.notice{border:1px solid rgba(116,255,207,.35);border-radius:10px;padding:12px 14px;background:rgba(12,24,28,.8);margin:10px 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <h1>tomy634.com // プライバシーポリシー</h1>
+  </div>
+  <nav>
+    <a href="/">ホーム</a>
+    <a href="/blog">ブログ</a>
+    <a href="/how-to-use">使い方</a>
+    <a href="/faq">FAQ</a>
+    <a href="/tools">ツール</a>
+    <a href="/about">概要</a>
+    <a href="/terms">利用規約</a>
+    <a href="/privacy">プライバシー</a>
+    <a href="/contact">お問い合わせ</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="notice"><strong>最終更新日：</strong>2025-11-15</div>
+
+  <h2>1. 基本方針</h2>
+  <p>
+    本サイト（tomy634.com、以下「本サイト」）は、個人が運営する非商用ウェブサイトです。<br/>
+    本サイトでは、利用者のプライバシーを尊重し、必要最小限の情報のみを取得・利用し、
+    適用される法令に従って適正に取り扱います。
+  </p>
+  <p>
+    本プライバシーポリシー（以下「本ポリシー」）は、本サイトにおける利用者情報の取り扱いについて説明するものです。
+    本サイトを利用することで、本ポリシーおよび<a href="/terms">利用規約</a>の内容に同意したものとみなされます。
+  </p>
+
+  <h2>2. 取得する情報と利用目的</h2>
+  <p>本サイトが取得する情報と、その利用目的は以下のとおりです。</p>
+  <ol>
+    <li>
+      <strong>お問い合わせ時の情報</strong><br/>
+      利用者が本サイト宛にメール等でお問い合わせを行う場合、送信元メールアドレスおよび任意の記載内容（お名前等）が送信されます。<br/>
+      これらの情報は、問い合わせ対応および必要な連絡のためにのみ利用し、それ以外の目的で利用しません。
+    </li>
+    <li>
+      <strong>アクセスログ等の技術情報</strong><br/>
+      サーバーログとして、IPアドレス、ブラウザ種別、閲覧日時、リクエストURL、リファラ（参照元URL）等の情報が自動的に記録される場合があります。<br/>
+      これらの情報は、サーバーの運用状況の把握、不正アクセス対策、障害解析、統計的なアクセス解析（匿名集計）等の目的でのみ利用し、個人を特定する目的では利用しません。
+    </li>
+    <li>
+      <strong>一時メール機能に関連する情報</strong><br/>
+      本サービスの一時メール受信機能において、生成された一時メールアドレスおよびその受信内容（メール本文・ヘッダ情報等）がサーバー上に一時的に保存されます。<br/>
+      最新の一定件数（例：10件）のみを保持し、それ以前のメールは自動的に削除または上書きされます。
+      これらのデータはサービス提供のためにのみ利用し、運営者が任意に閲覧・利用することはありません（ただし、障害解析や不正利用調査等のやむを得ない場合を除きます）。
+    </li>
+  </ol>
+
+  <h2>3. Cookie と広告について</h2>
+  <p>
+    本サイトでは、ユーザー体験の向上や広告表示のために Cookie（クッキー）および類似技術を利用する場合があります。
+    Cookie は、利用者のブラウザに保存される小さなテキストファイルであり、個人を直接特定できる情報を含まない形で利用されます。
+  </p>
+
+  <h3>3-1. サイト機能における Cookie</h3>
+  <p>
+    本サービスの一時メール受信箱を識別するために、ブラウザ内に識別用 Cookie（例：<code>tm_box_id</code>）を保存することがあります。<br/>
+    この Cookie は、同一ブラウザから再アクセスした際に同じ受信箱を表示するためにのみ使用され、第三者に提供されません。
+    ブラウザの Cookie を削除すると、以前の受信箱にはアクセスできなくなります。
+  </p>
+
+  <h3>3-2. 広告配信（Google AdSense）における Cookie</h3>
+  <p>
+    本サイトは、第三者配信の広告サービスである「Google AdSense」を利用する場合があります。<br/>
+    <strong>第三者配信事業者（Google を含む）は、ユーザーの過去のアクセス情報に基づいて広告を配信するために Cookie を使用することがあります。</strong><br/>
+    これらの Cookie を用いることで、Google やそのパートナーは本サイトや他サイトへのアクセス情報に基づき、
+    利用者にとってより適切な広告（パーソナライズド広告）を表示することができます。
+  </p>
+  <p>
+    利用者は、Google の広告設定ページからパーソナライズド広告を無効にすることができます：<br/>
+    <a href="https://adssettings.google.com" target="_blank" rel="noopener">https://adssettings.google.com</a><br/>
+    また、aboutads.info のページにアクセスすることで、第三者配信事業者のパーソナライズド広告に使用される Cookie を一括して無効化することもできます：<br/>
+    <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">https://www.aboutads.info/choices/</a>
+  </p>
+  <p>
+    Google によるデータの利用方法については、以下のページも併せてご確認ください：<br/>
+    <a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener">
+      https://policies.google.com/technologies/ads?hl=ja
+    </a>
+  </p>
+  <p>
+    ブラウザの設定により、Cookie を無効化または削除することも可能です。ただし、Cookie を完全に無効化した場合、
+    本サイトの一部機能（受信箱の再表示など）が正常に動作しない可能性があります。
+  </p>
+
+  <h2>4. 第三者への提供</h2>
+  <p>
+    本サイトは、法令に基づく場合や不正行為への対処に必要な場合を除き、利用者の個人情報を第三者へ提供することはありません。<br/>
+    ただし、アクセス解析や広告配信において、個人を特定できない統計情報・匿名化データ等を、サービス向上の目的で第三者と共有する場合があります。
+  </p>
+
+  <h2>5. データの保存期間と安全管理</h2>
+  <ol>
+    <li>受信メールデータは、最新の一定件数（例：10件）のみを表示対象とし、それ以前のデータは自動的に削除または上書きされます。</li>
+    <li>サーバーログ等は、運用・セキュリティ・障害解析のために必要な期間のみ保存し、不要となったものから順次削除します。</li>
+    <li>本サイトは、SSL/TLS（HTTPS）による暗号化通信を利用し、第三者による盗聴や改ざんを防止するよう努めます。</li>
+    <li>不正アクセス防止、権限管理等の合理的な安全管理措置を講じますが、インターネットの性質上、完全な安全を保証するものではありません。</li>
+  </ol>
+
+  <h2>6. 子どものプライバシー</h2>
+  <p>
+    本サイトは、13歳未満の子どもを主な対象としておらず、そのようなユーザーから故意に個人情報を収集することはありません。<br/>
+    万一、13歳未満のユーザーから個人情報が提供されたことが判明した場合、速やかに削除するよう努めます。
+  </p>
+
+  <h2>7. 利用者の権利</h2>
+  <p>
+    本サイトは、取得する個人情報を最小限に抑えているため、通常は利用者を特定できる情報を大量に保持することはありません。<br/>
+    それでも、ご自身が過去に本サイトへ送信したお問い合わせメール等に関して、
+    「自分に関する情報の開示・訂正・削除」を希望される場合は、下記お問い合わせ先までご連絡ください。<br/>
+    ご本人からの依頼であることを確認できた場合、法令に反しない範囲で可能な限り対応いたします。
+  </p>
+
+  <h2>8. 本ポリシーの変更</h2>
+  <p>
+    本サイトは、法令やサービス内容の変更等に応じて、本ポリシーの内容を予告なく変更することがあります。<br/>
+    重要な変更がある場合は、本ページ上での掲示等により周知します。<br/>
+    変更後に利用者が本サイトを利用した場合、本ポリシーの変更内容に同意したものとみなされます。
+  </p>
+
+  <h2>9. お問い合わせ窓口</h2>
+  <p>
+    本ポリシーや個人情報の取り扱いに関するご質問・ご相談は、以下の連絡先までお問い合わせください。<br/>
+    運営者：<strong>xau_usdpt</strong><br/>
+    連絡先：<a href="mailto:admin@tomy634.com">admin@tomy634.com</a>
+  </p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Git入門：たった3コマンドで「変更を記録→戻せる」ようになる【2025年版】 | tomy634.com</title>
+<meta name="description" content="初心者でも今日から使えるGit入門。覚えるのは init / add / commit の3コマンドだけ。失敗した時の戻し方（restore/reset/reflog）や、最短のpush手順、ステージングの考え方まで図解で解説します。">
+<style>
+:root{--bg:#0a0f12;--term:#0d1618;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6;--link:#4dabff}
+body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(116,255,207,.2)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center;box-shadow:0 0 10px rgba(116,255,207,.25)}
+.logo::after{content:"$";color:var(--accent);font-weight:700}
+h1{font-size:18px;margin:0;color:var(--accent)}
+nav{display:flex;gap:10px;align-items:center}
+nav a{color:var(--muted);text-decoration:none;font-size:13px}
+nav a:hover{color:var(--accent);text-decoration:underline}
+.wrap{padding:20px;max-width:960px;margin:auto}
+.article-title{font-size:20px;color:var(--accent);margin:8px 0 4px}
+.meta{font-size:12px;color:var(--muted);opacity:.9;margin-bottom:12px}
+.badge{font-size:10px;border:1px solid rgba(116,255,207,.6);border-radius:999px;padding:2px 6px;margin-left:6px}
+p,li{color:var(--muted);line-height:1.9;font-size:13px}
+h2{color:var(--accent);font-size:16px;margin:18px 0 6px}
+h3{color:var(--accent);font-size:14px;margin:14px 0 6px}
+.notice,.panel{border:1px solid rgba(116,255,207,.35);border-radius:10px;padding:12px 14px;background:rgba(12,24,28,.85);margin:10px 0}
+code{background:#0b1115;border:1px solid rgba(116,255,207,.25);padding:2px 4px;border-radius:6px;color:#c7ffe6}
+pre{background:#0b1115;border:1px solid rgba(116,255,207,.25);padding:10px 12px;border-radius:10px;overflow:auto;color:#c7ffe6;font-size:12px;line-height:1.6}
+a{color:var(--link)}
+a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid rgba(116,255,207,.25);margin:18px 0}
+kbd{border:1px solid rgba(255,255,255,.2);border-bottom-width:2px;padding:1px 4px;border-radius:4px;background:#0a0f12;color:#fff;font-size:12px}
+.toc a{margin-right:10px}
+.tip{font-size:12px;color:#a7e7c7}
+blockquote{border-left:3px solid rgba(116,255,207,.35);margin:10px 0;padding:6px 10px;color:var(--muted);background:rgba(12,24,28,.6);border-radius:6px}
+.kbd-row{display:flex;gap:8px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <h1>tomy634.com // ブログ</h1>
+  </div>
+  <nav>
+    <a href="/blog" class="nav-main">ブログホーム</a>
+    <a href="/">tomy634.com に戻る</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <h1 class="article-title">Git入門：たった3コマンドで「変更を記録→戻せる」ようになる【2025年版】</h1>
+  <div class="meta">
+    公開日: 2025-11-18 / 更新日: 2025-11-18
+    <span class="badge">入門</span><span class="badge">Git</span><span class="badge">実務ですぐ使える</span>
+  </div>
+
+  <div class="notice">
+    <strong>この記事のゴール</strong><br/>
+    覚えるのは <code>git init</code> / <code>git add</code> / <code>git commit</code> の <strong>3コマンド</strong>。<br/>
+    さらに「やばい、間違えた！」のときの戻し方（<code>git restore</code> / <code>git reset</code> / <code>git reflog</code>）まで最短で身につけます。
+  </div>
+
+  <h2 id="why">なぜ3コマンドだけでいいの？</h2>
+  <p>
+    Gitは多機能ですが、日常の99%は「フォルダをGit化して」「変更をステージに載せ」「履歴として確定する」だけです。<br/>
+    つまり <strong>init → add → commit</strong> の3ステップ。push/pull/branchは後からでOK。最初は <em>正しく記録→戻せる</em> を最優先にしましょう。
+  </p>
+
+  <h2 id="setup">準備（最初の1回だけ）</h2>
+  <pre><code># Gitのユーザー名とメールを設定（コミット作者として残ります）
+git config --global user.name  "Your Name"
+git config --global user.email "you@example.com"
+
+# 表示を少し優しく
+git config --global init.defaultBranch main
+git config --global color.ui auto
+git config --global pull.rebase false
+</code></pre>
+
+  <h2 id="mental-model">最小のメンタルモデル</h2>
+  <pre><code>[作業ツリー] --(add)--&gt; [ステージ] --(commit)--&gt; [履歴(HEAD)]
+   編集中             提出物ボックス          確定（巻き戻し可能）</code></pre>
+  <ul>
+    <li><strong>作業ツリー</strong>：普段編集しているファイル郡</li>
+    <li><strong>ステージ</strong>：コミット候補に「選ぶ」場所（部分的に選べるのが強み）</li>
+    <li><strong>履歴（HEAD）</strong>：確定済みのスナップショット。ここまで来れば「いつでも戻れる」</li>
+  </ul>
+
+  <h2 id="3steps">3ステップで初コミット</h2>
+  <div class="panel">
+    <h3>1) フォルダをGit化する</h3>
+    <pre><code>mkdir hello-git && cd hello-git
+git init
+echo "&lt;h1&gt;Hello Git&lt;/h1&gt;" &gt; index.html
+</code></pre>
+    <p>これで、<code>.git</code> フォルダができ、プロジェクトが「記録可能」になりました。</p>
+  </div>
+
+  <div class="panel">
+    <h3>2) 変更をステージに載せる</h3>
+    <pre><code>git add index.html
+# まとめて載せるなら
+git add -A     # or git add .</code></pre>
+    <p>「この変更をコミット候補に入れる」という意思表示。<code>git status</code> で現在の状態を確認できます。</p>
+  </div>
+
+  <div class="panel">
+    <h3>3) 履歴として確定する</h3>
+    <pre><code>git commit -m "初めてのコミット: index.htmlを追加"</code></pre>
+    <p>これで <strong>戻せる履歴</strong> が1つできました。<code>git log --oneline</code> で確認してみましょう。</p>
+  </div>
+
+  <h2 id="daily">日常のワークフロー（最短版）</h2>
+  <pre><code># ファイルを編集 → 変更を確認
+git status
+
+# 変更済みをステージへ
+git add -A
+
+# メッセージを付けて確定
+git commit -m "〜を修正/追加/削除"
+</code></pre>
+  <p>この3行が“日常”。ブランチやpushを使い始めても、核はずっと同じです。</p>
+
+  <h2 id="push">（任意）GitHubに置く最短手順</h2>
+  <p>タイトルは「3コマンド」ですが、公開したい人向けに最短のpushも載せます。</p>
+  <pre><code># GitHubで空リポジトリを作成（例: yourname/hello-git）
+git branch -M main
+git remote add origin https://github.com/yourname/hello-git.git
+git push -u origin main
+</code></pre>
+  <p><code>-u</code> により次回から <code>git push</code> だけでOKになります。</p>
+
+  <h2 id="undo">間違えた時の“戻し方”クイックリファレンス</h2>
+  <blockquote>怖いのは「知らない」こと。戻し方を知っていれば、安心して編集できます。</blockquote>
+
+  <h3>ケースA：ステージに載せすぎた</h3>
+  <pre><code># ステージから外して編集に戻す
+git restore --staged path/to/file
+
+# すべて外す
+git restore --staged .</code></pre>
+
+  <h3>ケースB：編集内容を捨てたい（未コミット）</h3>
+  <pre><code># 作業ツリーの変更を捨てる（最新版に戻す）
+git restore path/to/file
+
+# 全部捨てる（未保存の編集は消えます）
+git restore .</code></pre>
+
+  <h3>ケースC：直前のコミットをやり直したい</h3>
+  <pre><code># メッセージやファイルを上書き（まだpushしていない前提）
+# 1) 直す → 2) add → 3) amend
+git add -A
+git commit --amend -m "コミットを修正"</code></pre>
+
+  <h3>ケースD：1つ前の状態に戻したい（履歴を動かす）</h3>
+  <pre><code># 作業ツリー＆ステージも含めて完全に戻す（破壊的・未push前提）
+git reset --hard HEAD^
+# もう一段戻すなら HEAD^^ （^ は1つ前）</code></pre>
+
+  <h3>ケースE：やらかした！けど履歴を救出したい</h3>
+  <pre><code># ほぼ最後の砦。移動履歴（reflog）からコミットを発見して戻る
+git reflog
+# 出てきたハッシュ（例 abc1234）へ戻す
+git reset --hard abc1234</code></pre>
+  <p>reflogはローカルの移動履歴。push済みのものはリモートの事情も絡むので注意。</p>
+
+  <h2 id="stage-power">ステージを“使いこなす”（部分コミット）</h2>
+  <p>ステージは「どの変更をコミットに含めるか」を選ぶ場所。ファイル単位だけでなく、行単位でも選べます。</p>
+  <pre><code># 対話的に、差分のhunkごとに add する
+git add -p
+
+# Vimなどで差分を開いてステージ編集（上級者）
+git add -e</code></pre>
+  <p>雑に全部コミットし続けると、後で履歴を読めません。論理的な単位で小さく積むのがコツ。</p>
+
+  <h2 id="log">履歴を“読む力”をつける（diffとlog）</h2>
+  <pre><code># 直近の変更を読む
+git log --oneline --graph --decorate -n 10
+git show HEAD                # 最新コミットの内容
+git diff                     # 未ステージの差分
+git diff --staged            # ステージ済みの差分</code></pre>
+
+  <h2 id="branch">（＋α）ブランチはこの2つだけ</h2>
+  <p>最初に覚えるなら <code>switch -c</code> と <code>merge</code> だけで十分。</p>
+  <pre><code># ブランチを作って切り替え（新機能を隔離）
+git switch -c feature/cool
+
+# 変更をコミットしたら main に取り込む（fast-forward想定）
+git switch main
+git merge feature/cool
+# 使い終えたら消す
+git branch -d feature/cool</code></pre>
+
+  <h2 id="ignore">.gitignore の最小例</h2>
+  <pre><code># OS / エディタ
+.DS_Store
+Thumbs.db
+.vscode/
+
+# 依存物（例：node）
+node_modules/
+dist/
+.env</code></pre>
+  <p>最初に置いておくと、ゴミが履歴に混ざりません。</p>
+
+  <h2 id="faq">FAQ：つまずきに即答</h2>
+  <h3>Q. どのタイミングでコミットすればいい？</h3>
+  <p>「意味のある最小単位」。同じファイルでも機能A/Bは分けてコミットすると、後で戻しやすくなります。</p>
+
+  <h3>Q. メッセージは日本語でもいい？</h3>
+  <p>OK。チーム文化に合わせるのが大事。先頭に <code>fix:</code> / <code>feat:</code> などのプレフィックスを付けると検索性が上がります。</p>
+
+  <h3>Q. push 後にミスに気づいた！</h3>
+  <p>公開履歴を書き換えるのは慎重に。新コミットで修正するのが基本。どうしても消すならチーム同意の上 <code>git revert</code> を使いましょう。</p>
+
+  <h2 id="cheatsheet">チートシート（保存推奨）</h2>
+  <pre><code># 3コマンド
+git init
+git add -A
+git commit -m "msg"
+
+# よく使う確認
+git status
+git log --oneline
+git diff / git diff --staged
+
+# 戻す系
+git restore --staged .
+git restore .
+git commit --amend
+git reset --hard HEAD^
+git reflog</code></pre>
+
+  <hr/>
+  <div class="panel">
+    <strong>まとめ</strong><br/>
+    まずは <code>init → add → commit</code> の3手だけ。<br/>
+    戻し方（<code>restore/reset/reflog</code>）を“おまもり”として覚えれば、怖くありません。慣れてきたら push / branch を追加しましょう。
+  </div>
+
+  <div class="notice">
+    <strong>関連：</strong>
+    <a href="/blog/one-hour-website/">1時間で作る“超軽量”個人サイト</a> /
+    <a href="/tools/charcount/">文字数カウンター</a> /
+    <a href="/tools/password/">パスワード生成</a>
+    <br/>
+    テスト用の受信が必要なら、広告ゼロの一時メール <a href="/">tomy634.com</a> が手早いです。
+  </div>
+</div>
+
+</body>
+</html>

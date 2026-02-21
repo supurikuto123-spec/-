@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>demo@tomy634.com // MAIL LOG</title>
+  <meta name="description" content="demo@tomy634.com に届いたメールの一覧表示デモ。自動更新に対応。"/>
+  <style>
+    :root{
+      --bg:#0a0f12;
+      --term:#0d1618;
+      --text:#d7ffe8;
+      --accent:#74ffcf;
+      --muted:#89bfa6;
+      --danger:#ff7189;
+      --ok:#7dffb3;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:ui-monospace,Consolas,monospace;
+      background:radial-gradient(circle at top,#172730 0,#05080b 60%);
+      color:var(--text);
+    }
+    header{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:16px 20px;
+      border-bottom:1px solid rgba(116,255,207,.25);
+      background:rgba(5,10,14,.96);
+      backdrop-filter:blur(10px);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    .logo{
+      width:36px;height:36px;
+      border:1px solid var(--accent);
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      box-shadow:0 0 14px rgba(116,255,207,.5), inset 0 0 20px rgba(116,255,207,.12);
+    }
+    .logo::after{
+      content:"$";
+      color:var(--accent);
+      font-weight:700;
+    }
+    .head-text h1{
+      margin:0;
+      font-size:18px;
+      color:var(--accent);
+    }
+    .head-text .sub{
+      margin:2px 0 0;
+      font-size:11px;
+      color:var(--muted);
+    }
+    .status{
+      margin-left:auto;
+      font-size:11px;
+      color:var(--muted);
+    }
+    .status span{
+      color:var(--accent);
+    }
+    .wrap{
+      padding:18px 16px 28px;
+      max-width:960px;
+      margin:auto;
+    }
+    .notice{
+      font-size:11px;
+      color:var(--muted);
+      margin-bottom:10px;
+    }
+    .mail-item{
+      border:1px solid rgba(116,255,207,.3);
+      border-radius:10px;
+      padding:12px 14px;
+      margin-bottom:12px;
+      background:rgba(12,24,28,.7);
+      cursor:pointer;
+      transition:all .18s;
+    }
+    .mail-item:hover{
+      background:rgba(20,40,44,.9);
+    }
+    .mail-item.open{
+      border-color:var(--accent);
+      box-shadow:0 0 12px rgba(116,255,207,.4);
+    }
+    .from{color:var(--ok);font-size:13px;margin-top:2px;}
+    .subject{color:var(--accent);font-weight:bold;font-size:14px;}
+    .date{color:var(--muted);font-size:11px;margin-top:2px;}
+    .body{
+      display:none;
+      margin-top:10px;
+      white-space:pre-wrap;
+      border-top:1px dashed rgba(116,255,207,.4);
+      padding-top:8px;
+      font-size:12px;
+    }
+    .body a{
+      color:#64aaff;
+      text-decoration:underline;
+    }
+    .empty{
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+      padding:16px;
+      border-radius:10px;
+      border:1px dashed rgba(116,255,207,.4);
+      margin-top:12px;
+    }
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+      font-size:11px;
+      color:var(--muted);
+    }
+    button{
+      font:inherit;
+      font-size:11px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(116,255,207,.6);
+      background:linear-gradient(135deg,#142832,#071219);
+      color:var(--text);
+      cursor:pointer;
+    }
+    button:hover{
+      box-shadow:0 0 10px rgba(116,255,207,.5);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"></div>
+    <div class="head-text">
+      <h1>demo@tomy634.com // MAIL LOG</h1>
+      <div class="sub">このページは demo 用メールボックスの受信ログを表示する実験UIです。</div>
+    </div>
+    <div class="status">STATUS: <span id="status">loading...</span></div>
+  </header>
+
+  <div class="wrap">
+    <div class="toolbar">
+      <div>最新の受信10件まで表示されます（新着があれば自動更新: <span id="sec">15</span>s）</div>
+      <div><button id="btnReload">手動更新</button></div>
+    </div>
+    <div class="notice">
+      ※ この demo メールボックスは公開ログです。demo@tomy634.com 宛のメールは誰でも閲覧できます。<br/>
+      個人情報・重要情報は送信しないでください。
+    </div>
+
+    <div id="mails"></div>
+    <div id="empty" class="empty" style="display:none;">まだメールは届いていません。</div>
+  </div>
+
+  <script>
+    const API_URL = '/api/demo-mails.json';
+    const AUTO_SEC = 15;
+    document.getElementById('sec').textContent = AUTO_SEC;
+
+    const statusEl = document.getElementById('status');
+    const listEl   = document.getElementById('mails');
+    const emptyEl  = document.getElementById('empty');
+
+    // ★ 開いているメールの“キー”を保存しておく Set
+    // demo 用 JSON には id がない想定なので、
+    // [date, from, subject] を組み合わせてキーにする
+    const openKeys = new Set();
+
+    function setStatus(text){
+      statusEl.textContent = text;
+    }
+
+    function jpTime(iso){
+      if(!iso) return '(日時不明)';
+      const d = new Date(iso);
+      if(isNaN(d)) return iso;
+      return d.toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',hour12:false});
+    }
+
+    function linkify(text){
+      const re = /(https?:\/\/[^\s<>"']+)/g;
+      const frag = document.createDocumentFragment();
+      let lastIndex = 0;
+      let m;
+      const pushText = s => frag.appendChild(document.createTextNode(s));
+      while((m = re.exec(text)) !== null){
+        pushText(text.slice(lastIndex, m.index));
+        const a = document.createElement('a');
+        a.href = m[1];
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = m[1];
+        frag.appendChild(a);
+        lastIndex = m.index + m[0].length;
+      }
+      pushText(text.slice(lastIndex));
+      return frag;
+    }
+
+    function renderMails(mails){
+      listEl.innerHTML = '';
+
+      if(!mails || !mails.length){
+        emptyEl.style.display = 'block';
+        return;
+      }
+      emptyEl.style.display = 'none';
+
+      mails.forEach(m => {
+        const from = m.from || '(unknown)';
+        const subject = m.subject || '(no subject)';
+        const date = m.date || '';
+        const body = m.body || '';
+
+        const key = [date, from, subject].join('|');
+        const isOpen = openKeys.has(key);
+
+        const div = document.createElement('div');
+        div.className = 'mail-item';
+        if(isOpen) div.classList.add('open');
+
+        div.innerHTML = `
+          <div class="subject"></div>
+          <div class="from"></div>
+          <div class="date"></div>
+          <div class="body"></div>
+        `;
+        div.querySelector('.subject').textContent = subject;
+        div.querySelector('.from').textContent    = 'From: ' + from;
+        div.querySelector('.date').textContent    = '日時: ' + jpTime(date);
+
+        const bodyEl = div.querySelector('.body');
+        bodyEl.appendChild(linkify(body));
+
+        if(isOpen){
+          bodyEl.style.display = 'block';
+        }
+
+        div.addEventListener('click', () => {
+          const nowOpen = bodyEl.style.display === 'block';
+          if(nowOpen){
+            bodyEl.style.display = 'none';
+            div.classList.remove('open');
+            openKeys.delete(key);
+          }else{
+            bodyEl.style.display = 'block';
+            div.classList.add('open');
+            openKeys.add(key);
+          }
+        });
+
+        listEl.appendChild(div);
+      });
+    }
+
+    async function fetchMails(){
+      try{
+        setStatus('updating');
+        const res = await fetch(API_URL,{cache:'no-store'});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+        // data は配列想定: [{from, subject, date, body}, ...]
+        renderMails(data);
+        setStatus('online');
+      }catch(e){
+        console.error(e);
+        setStatus('error');
+      }
+    }
+
+    document.getElementById('btnReload').addEventListener('click', fetchMails);
+
+    // 初回ロード
+    fetchMails();
+    // ★ 15秒ごとに再取得。ただし openKeys は維持されるので、
+    //   再描画しても開いていた本文は開いたまま
+    setInterval(fetchMails, AUTO_SEC * 1000);
+  </script>
+</body>
+</html>
