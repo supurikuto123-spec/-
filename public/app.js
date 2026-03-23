@@ -75,8 +75,8 @@ const i18n = {
     strengthWeak: '弱い',
     strengthMedium: '普通',
     strengthStrong: '強い',
-    newAddress: '新規作成',
-    createNewAddressConfirm: '新しいアドレスを作成しますか？現在のアドレスはログアウトされます。',
+    newAddress: '新しいメールアドレスを作成',
+    createNewAddressConfirm: 'ログイン情報を保存していない場合、現在のアドレスにはアクセスできなくなります。今後利用しない場合はアドレスを削除してください。\n\n新しいメールアドレスを作成しますか？',
     passwordWarningTitle: 'パスワードを保存してください',
     passwordWarningMessage: '再度アクセスするために、必ずパスワードを保存してください。',
     understood: '了解しました'
@@ -151,8 +151,8 @@ const i18n = {
     strengthWeak: 'Weak',
     strengthMedium: 'Medium',
     strengthStrong: 'Strong',
-    newAddress: 'New Address',
-    createNewAddressConfirm: 'Create a new address? You will be logged out of your current address.',
+    newAddress: 'Create New Address',
+    createNewAddressConfirm: 'If you have not saved your login info, you will lose access to the current address. Delete the address first if you no longer need it.\n\nCreate a new email address?',
     passwordWarningTitle: 'Please Save Your Password',
     passwordWarningMessage: 'To access this address later, please save your password.',
     understood: 'I Understand'
@@ -536,7 +536,11 @@ function renderMailList(mails) {
   const mailList = document.getElementById('mail-list');
   const mailCount = document.getElementById('mail-count');
   
-  mailCount.textContent = mails.length;
+  // 未読数を表示
+  const unreadCount = (mails || []).filter(m => !m.read).length;
+  mailCount.textContent = unreadCount > 0 ? unreadCount : (mails ? mails.length : 0);
+  mailCount.title = unreadCount > 0 ? `${unreadCount}件未読` : `${mails ? mails.length : 0}件`;
+  mailCount.classList.toggle('has-unread', unreadCount > 0);
   
   if (!mails || mails.length === 0) {
     mailList.innerHTML = `
@@ -554,8 +558,7 @@ function renderMailList(mails) {
   
   // Sort by date, newest first
   const sortedMails = [...mails].sort((a, b) => b.receivedAt - a.receivedAt);
-  
-  mailList.innerHTML = sortedMails.map(mail => `
+  const newHTML = sortedMails.map(mail => `
     <div class="mail-item ${!mail.read ? 'unread' : ''}" data-id="${mail.id}">
       <div class="mail-header">
         <span class="mail-subject">${escapeHtml(mail.subject || '(no subject)')}</span>
@@ -565,11 +568,14 @@ function renderMailList(mails) {
       <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}${mail.body.length > 100 ? '...' : ''}</div>
     </div>
   `).join('');
-  
-  // Add click handlers
-  mailList.querySelectorAll('.mail-item').forEach(item => {
-    item.addEventListener('click', () => openMailModal(item.dataset.id));
-  });
+
+  // 差分更新：内容が変わった時だけ DOM を更新してちらつき防止
+  if (mailList.innerHTML !== newHTML) {
+    mailList.innerHTML = newHTML;
+    mailList.querySelectorAll('.mail-item').forEach(item => {
+      item.addEventListener('click', () => openMailModal(item.dataset.id));
+    });
+  }
   
   updateNavBadge();
 }
@@ -701,6 +707,8 @@ function closeSettingsModal() {
 // ===== Change Password Modal =====
 function openChangePasswordModal() {
   document.getElementById('change-password-form').reset();
+  document.getElementById('pw-strength-wrap').style.display = 'none';
+  document.getElementById('pw-match-msg').textContent = '';
   document.getElementById('change-password-modal').classList.add('active');
 }
 
@@ -708,36 +716,59 @@ function closeChangePasswordModal() {
   document.getElementById('change-password-modal').classList.remove('active');
 }
 
+function calcPasswordStrength(pw) {
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  return score;
+}
+
+function checkPwMatch(pw, confirm) {
+  const msg = document.getElementById('pw-match-msg');
+  if (!msg) return;
+  if (!confirm) { msg.textContent = ''; return; }
+  if (pw === confirm) {
+    msg.textContent = '✓ 一致しています';
+    msg.className = 'pw-match-msg match';
+  } else {
+    msg.textContent = '✗ パスワードが一致しません';
+    msg.className = 'pw-match-msg no-match';
+  }
+}
+
 async function handleChangePassword(e) {
   e.preventDefault();
-  const currentPw = document.getElementById('current-password').value;
   const newPw = document.getElementById('new-password').value;
+  const confirmPw = document.getElementById('confirm-new-password').value;
   const submitBtn = document.getElementById('change-password-submit-btn');
 
-  if (!currentPw || !newPw) {
-    showToast(t('invalidCredentials'), 'error');
+  if (newPw !== confirmPw) {
+    showToast(t('passwordsNotMatch'), 'error');
     return;
   }
   if (newPw.length < 4) {
-    showToast(t('newPassword') + ': 4文字以上必要です', 'error');
+    showToast(t('passwordTooShort'), 'error');
     return;
   }
 
   try {
     submitBtn.disabled = true;
-    const res = await api.changePassword(state.currentAddress, currentPw, newPw);
+    // API: currentPassword に現在のパスワードを渡す（サーバー仕様）
+    const res = await api.changePassword(state.currentAddress, state.currentPassword, newPw);
     if (res.success) {
-      // セッション更新
       state.currentPassword = newPw;
       saveSession(state.currentAddress, newPw);
       updateAddressDisplay(state.currentAddress, newPw);
       closeChangePasswordModal();
-      showToast(t('changePassword') + ': OK', 'success');
+      showToast(t('passwordChanged'), 'success');
     } else {
-      showToast(res.error || t('currentPasswordWrong'), 'error');
+      showToast(res.error || t('passwordChangeFailed'), 'error');
     }
   } catch (err) {
-    showToast(t('errorOccurred') || 'エラーが発生しました', 'error');
+    showToast(t('passwordChangeFailed'), 'error');
   } finally {
     submitBtn.disabled = false;
   }
@@ -772,16 +803,14 @@ function markPasswordWarningSeen() {
 
 // ===== New Address =====
 function handleNewAddress() {
-  // Confirm with user before creating new address
   showConfirm(
-    t('newAddress') || '新規作成',
-    t('createNewAddressConfirm') || '新しいアドレスを作成しますか？現在のアドレスはログアウトされます。',
+    t('newAddress'),
+    t('createNewAddressConfirm'),
     async () => {
-      // Clear current session and create new address
       clearSession();
       await autoCreateAddress(true);
     },
-    'info'
+    'warning'
   );
 }
 
@@ -877,12 +906,11 @@ async function refreshMailbox() {
   
   try {
     refreshBtn.disabled = true;
-    refreshBtn.innerHTML = `<span>${t('processing') || '処理中...'}</span>`;
+    refreshBtn.classList.add('spinning');
     
     const res = await api.getMailbox(state.currentAddress, state.currentPassword);
     
     if (res.success) {
-      // Preserve read status
       const readIds = new Set(state.mails.filter(m => m.read).map(m => m.id));
       state.mails = (res.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
       renderMailList(state.mails);
@@ -891,7 +919,7 @@ async function refreshMailbox() {
     console.error('Failed to refresh mailbox:', err);
   } finally {
     refreshBtn.disabled = false;
-    refreshBtn.innerHTML = `<span>${t('refresh') || '更新'}</span>`;
+    refreshBtn.classList.remove('spinning');
   }
 }
 
@@ -1071,14 +1099,48 @@ function initEventListeners() {
     closeSettingsModal();
     openChangePasswordModal();
   });
+  // info-card のパスワード欄横の鉛筆ボタン
+  document.getElementById('change-password-inline-btn').addEventListener('click', openChangePasswordModal);
 
-  // Change password form submit
+  // Change password form
   document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
+  document.getElementById('change-password-modal-close').addEventListener('click', closeChangePasswordModal);
 
-  // Change password visibility toggles
-  ['toggle-current-password', 'toggle-new-password'].forEach(id => {
+  // 強度メーター
+  document.getElementById('new-password').addEventListener('input', function() {
+    const pw = this.value;
+    const wrap = document.getElementById('pw-strength-wrap');
+    const fill = document.getElementById('pw-strength-fill');
+    const label = document.getElementById('pw-strength-label');
+    if (!pw) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'flex';
+    const score = calcPasswordStrength(pw);
+    const levels = [
+      { pct: 20, cls: 'weak',   text: t('strengthWeak')   || '弱い'  },
+      { pct: 40, cls: 'weak',   text: t('strengthWeak')   || '弱い'  },
+      { pct: 60, cls: 'medium', text: t('strengthMedium') || '普通'  },
+      { pct: 80, cls: 'strong', text: t('strengthStrong') || '強い'  },
+      { pct: 100,cls: 'strong', text: t('strengthStrong') || '強い'  },
+    ];
+    const lv = levels[Math.min(score, 4)];
+    fill.style.width = lv.pct + '%';
+    fill.className = 'pw-strength-fill ' + lv.cls;
+    label.textContent = lv.text;
+    label.className = 'pw-strength-label ' + lv.cls;
+    // 確認欄チェック
+    const confirmPw = document.getElementById('confirm-new-password').value;
+    if (confirmPw) checkPwMatch(pw, confirmPw);
+  });
+
+  // 確認フィールド一致チェック
+  document.getElementById('confirm-new-password').addEventListener('input', function() {
+    checkPwMatch(document.getElementById('new-password').value, this.value);
+  });
+
+  // パスワード表示トグル（変更モーダル）
+  ['toggle-new-password', 'toggle-confirm-password'].forEach(id => {
     document.getElementById(id)?.addEventListener('click', function() {
-      const targetId = id === 'toggle-current-password' ? 'current-password' : 'new-password';
+      const targetId = id === 'toggle-new-password' ? 'new-password' : 'confirm-new-password';
       const input = document.getElementById(targetId);
       const svg = this.querySelector('svg');
       if (input.type === 'password') {
