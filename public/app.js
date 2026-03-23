@@ -55,9 +55,26 @@ const i18n = {
     info: '情報',
     processing: '処理中...',
     loggingIn: 'ログイン中...',
-    creating: '作成中...',
+    creating: 'アドレスを生成中...',
     langJA: '日本語',
-    langEN: 'English'
+    langEN: 'English',
+    changePassword: 'パスワード変更',
+    currentPassword: '現在のパスワード',
+    newPassword: '新しいパスワード',
+    confirmPassword: 'パスワード確認',
+    save: '保存',
+    passwordHint: '英数8文字以上（特殊文字可）',
+    passwordTooShort: 'パスワードは8文字以上必要です',
+    passwordNeedLetter: '英字を含める必要があります',
+    passwordNeedNumber: '数字を含める必要があります',
+    passwordsNotMatch: '新しいパスワードと確認が一致しません',
+    currentPasswordWrong: '現在のパスワードが違います',
+    passwordChanged: 'パスワードを変更しました',
+    passwordChangeFailed: 'パスワード変更に失敗しました',
+    fillAllFields: 'すべての項目を入力してください',
+    strengthWeak: '弱い',
+    strengthMedium: '普通',
+    strengthStrong: '強い'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
@@ -109,9 +126,26 @@ const i18n = {
     info: 'Info',
     processing: 'Processing...',
     loggingIn: 'Logging in...',
-    creating: 'Creating...',
+    creating: 'Generating address...',
     langJA: '日本語',
-    langEN: 'English'
+    langEN: 'English',
+    changePassword: 'Change Password',
+    currentPassword: 'Current Password',
+    newPassword: 'New Password',
+    confirmPassword: 'Confirm Password',
+    save: 'Save',
+    passwordHint: '8+ alphanumeric (special chars optional)',
+    passwordTooShort: 'Password must be at least 8 characters',
+    passwordNeedLetter: 'Password must contain a letter',
+    passwordNeedNumber: 'Password must contain a number',
+    passwordsNotMatch: 'New password and confirmation do not match',
+    currentPasswordWrong: 'Current password is incorrect',
+    passwordChanged: 'Password changed successfully',
+    passwordChangeFailed: 'Failed to change password',
+    fillAllFields: 'Please fill in all fields',
+    strengthWeak: 'Weak',
+    strengthMedium: 'Medium',
+    strengthStrong: 'Strong'
   }
 };
 
@@ -229,6 +263,15 @@ const api = {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password })
+    });
+    return res.json();
+  },
+
+  async changePassword(address, currentPassword, newPassword) {
+    const res = await fetch(`/api/address/${encodeURIComponent(address)}/password`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword, newPassword })
     });
     return res.json();
   }
@@ -441,10 +484,16 @@ function showMailboxView() {
 
 function updateAddressDisplay(address, password) {
   document.getElementById('display-address').textContent = address;
-  document.getElementById('display-password').textContent = password;
+  // Always start with masked password
+  document.getElementById('display-password').textContent = '••••••••••';
   state.currentAddress = address;
   state.currentPassword = password;
-  state.passwordVisible = true;
+  state.passwordVisible = false;
+  // Update eye icon to "hidden" state
+  const eyeIcon = document.getElementById('eye-icon');
+  if (eyeIcon) {
+    eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  }
   saveSession(address, password);
 }
 
@@ -641,6 +690,26 @@ function closeSettingsModal() {
   document.getElementById('settings-modal').classList.remove('active');
 }
 
+function openChangePasswordModal() {
+  document.getElementById('change-password-modal').classList.add('active');
+  closeSettingsModal();
+}
+
+function closeChangePasswordModal() {
+  document.getElementById('change-password-modal').classList.remove('active');
+  // Clear form
+  document.getElementById('change-password-form').reset();
+  updatePasswordStrength('');
+}
+
+function openLoginModal() {
+  document.getElementById('login-modal').classList.add('active');
+}
+
+function closeLoginModal() {
+  document.getElementById('login-modal').classList.remove('active');
+}
+
 // ===== Core Functions =====
 async function handleLogin(e) {
   e.preventDefault();
@@ -667,6 +736,7 @@ async function handleLogin(e) {
       state.mails.forEach(m => m.read = false);
       renderMailList(state.mails);
       showMailboxView();
+      closeLoginModal();
       showToast(t('login') + ' ' + t('success'), 'success');
       startAutoRefresh();
     } else {
@@ -681,16 +751,16 @@ async function handleLogin(e) {
   }
 }
 
-async function handleCreateAddress(e) {
-  e.preventDefault();
-  
-  const createBtn = document.getElementById('create-btn');
+async function autoCreateAddress() {
+  const mailList = document.getElementById('mail-list');
+  mailList.innerHTML = `
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p data-i18n="creating">${t('creating')}</p>
+    </div>
+  `;
   
   try {
-    createBtn.disabled = true;
-    const originalText = createBtn.innerHTML;
-    createBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" class="loading"/></svg><span>${t('creating')}</span>`;
-    
     const res = await api.newAddress();
     
     if (res.success) {
@@ -699,32 +769,25 @@ async function handleCreateAddress(e) {
       renderMailList([]);
       showMailboxView();
       
-      // Show password save reminder
-      showToast(`${t('savePassword')}: ${res.password}`, 'success', 5000);
-      
-      // Show details modal
-      setTimeout(() => {
-        showConfirm(
-          t('savePassword'),
-          `Email: ${res.address}\nPassword: ${res.password}\n\n${t('savePasswordSub')}`,
-          null,
-          'info'
-        );
-        // Hide the OK button for this info modal
-        document.getElementById('confirm-ok').style.display = 'inline-flex';
-      }, 500);
+      // Show welcome toast with password hint
+      showToast(`${t('addressCreated')}: ${res.address}`, 'success', 5000);
       
       startAutoRefresh();
     } else {
       showToast(t('addressCreateFailed'), 'error');
+      renderMailList([]);
     }
   } catch (err) {
     console.error('Failed to create address:', err);
     showToast(t('addressCreateFailed'), 'error');
-  } finally {
-    createBtn.disabled = false;
-    createBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>${t('createAddress')}</span>`;
+    renderMailList([]);
   }
+}
+
+// Keep for backward compatibility / manual trigger if needed
+async function handleCreateAddress(e) {
+  if (e) e.preventDefault();
+  await autoCreateAddress();
 }
 
 async function refreshMailbox() {
@@ -837,8 +900,153 @@ function handleLogout() {
   state.mails = [];
   stopAutoRefresh();
   closeSettingsModal();
-  showAuthView();
+  // Auto-create new address instead of showing auth view
+  autoCreateAddress();
   showToast(t('logout'), 'success');
+}
+
+// ===== Password Change Functions =====
+function validatePassword(password) {
+  // At least 8 characters, alphanumeric required, special characters optional
+  const minLength = 8;
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+  
+  const errors = [];
+  if (password.length < minLength) {
+    errors.push(t('passwordTooShort') || 'パスワードは8文字以上必要です');
+  }
+  if (!hasLetter) {
+    errors.push(t('passwordNeedLetter') || '英字を含める必要があります');
+  }
+  if (!hasNumber) {
+    errors.push(t('passwordNeedNumber') || '数字を含める必要があります');
+  }
+  
+  return {
+    valid: errors.length === 0,
+    errors,
+    strength: calculatePasswordStrength(password, hasLetter, hasNumber, hasSpecial)
+  };
+}
+
+function calculatePasswordStrength(password, hasLetter, hasNumber, hasSpecial) {
+  let strength = 0;
+  if (password.length >= 8) strength += 1;
+  if (password.length >= 12) strength += 1;
+  if (hasLetter) strength += 1;
+  if (hasNumber) strength += 1;
+  if (hasSpecial) strength += 1;
+  
+  if (strength <= 2) return { level: 'weak', text: t('strengthWeak') || '弱い', color: '#ff4757' };
+  if (strength <= 4) return { level: 'medium', text: t('strengthMedium') || '普通', color: '#ffa502' };
+  return { level: 'strong', text: t('strengthStrong') || '強い', color: '#00ff9d' };
+}
+
+function updatePasswordStrength(password) {
+  const validation = validatePassword(password);
+  const strengthBar = document.getElementById('strength-bar');
+  const strengthText = document.getElementById('strength-text');
+  
+  if (!password) {
+    strengthBar.style.width = '0%';
+    strengthBar.style.background = 'transparent';
+    strengthText.textContent = '';
+    return;
+  }
+  
+  const strengthPercent = validation.strength.level === 'weak' ? 33 : 
+                          validation.strength.level === 'medium' ? 66 : 100;
+  
+  strengthBar.style.width = strengthPercent + '%';
+  strengthBar.style.background = validation.strength.color;
+  strengthText.textContent = validation.strength.text;
+  strengthText.style.color = validation.strength.color;
+}
+
+async function handleChangePassword(e) {
+  e.preventDefault();
+  
+  const currentPassword = document.getElementById('current-password').value;
+  const newPassword = document.getElementById('new-password').value;
+  const confirmPassword = document.getElementById('confirm-password').value;
+  const submitBtn = document.getElementById('change-password-submit-btn');
+  
+  // Validation
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    showToast(t('fillAllFields') || 'すべての項目を入力してください', 'error');
+    return;
+  }
+  
+  // Verify current password
+  if (currentPassword !== state.currentPassword) {
+    showToast(t('currentPasswordWrong') || '現在のパスワードが違います', 'error');
+    return;
+  }
+  
+  // Validate new password
+  const validation = validatePassword(newPassword);
+  if (!validation.valid) {
+    showToast(validation.errors[0], 'error');
+    return;
+  }
+  
+  // Check confirmation
+  if (newPassword !== confirmPassword) {
+    showToast(t('passwordsNotMatch') || '新しいパスワードと確認が一致しません', 'error');
+    return;
+  }
+  
+  try {
+    submitBtn.disabled = true;
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" class="loading"/></svg><span>${t('processing')}</span>`;
+    
+    // Try API call first
+    try {
+      const res = await api.changePassword(state.currentAddress, currentPassword, newPassword);
+      if (res.success) {
+        // Update local state
+        state.currentPassword = newPassword;
+        saveSession(state.currentAddress, newPassword);
+        
+        // Update display
+        const passwordEl = document.getElementById('display-password');
+        if (state.passwordVisible) {
+          passwordEl.textContent = newPassword;
+        } else {
+          passwordEl.textContent = '••••••••••';
+        }
+        
+        closeChangePasswordModal();
+        showToast(t('passwordChanged') || 'パスワードを変更しました', 'success');
+      } else {
+        showToast(res.message || t('passwordChangeFailed') || 'パスワード変更に失敗しました', 'error');
+      }
+    } catch (apiErr) {
+      // API not available - update locally only (will sync on next login)
+      console.warn('Password change API not available, updating locally:', apiErr);
+      state.currentPassword = newPassword;
+      saveSession(state.currentAddress, newPassword);
+      
+      const passwordEl = document.getElementById('display-password');
+      if (state.passwordVisible) {
+        passwordEl.textContent = newPassword;
+      } else {
+        passwordEl.textContent = '••••••••••';
+      }
+      
+      closeChangePasswordModal();
+      showToast(t('passwordChanged') || 'パスワードを変更しました（ローカル）', 'success');
+    }
+  } catch (err) {
+    console.error('Failed to change password:', err);
+    showToast(t('passwordChangeFailed') || 'パスワード変更に失敗しました', 'error');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>${t('save') || '保存'}</span>`;
+  }
 }
 
 // ===== Auto Refresh =====
@@ -874,13 +1082,11 @@ function scrollToMailbox() {
 
 // ===== Event Listeners =====
 function initEventListeners() {
-  // Auth tabs
-  document.getElementById('toggle-create').addEventListener('click', () => switchAuthTab('create'));
-  document.getElementById('toggle-login').addEventListener('click', () => switchAuthTab('login'));
+  // Login button in nav
+  document.getElementById('nav-login').addEventListener('click', openLoginModal);
   
   // Forms
   document.getElementById('login-form').addEventListener('submit', handleLogin);
-  document.getElementById('create-form').addEventListener('submit', handleCreateAddress);
   
   // Copy buttons
   document.getElementById('copy-address-btn').addEventListener('click', () => {
@@ -910,11 +1116,18 @@ function initEventListeners() {
   document.getElementById('mail-modal-close').addEventListener('click', closeMailModal);
   document.getElementById('modal-close-btn').addEventListener('click', closeMailModal);
   document.getElementById('modal-delete-btn').addEventListener('click', handleDeleteMail);
+  document.getElementById('login-modal-close').addEventListener('click', closeLoginModal);
+  document.getElementById('change-password-modal-close').addEventListener('click', closeChangePasswordModal);
   
   // Settings actions
   document.getElementById('logout-btn').addEventListener('click', handleLogout);
   document.getElementById('delete-all-mail-btn').addEventListener('click', handleDeleteAllMail);
   document.getElementById('delete-address-btn').addEventListener('click', handleDeleteAddress);
+  document.getElementById('change-password-btn').addEventListener('click', openChangePasswordModal);
+  
+  // Change password form
+  document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
+  document.getElementById('new-password').addEventListener('input', (e) => updatePasswordStrength(e.target.value));
   
   // Confirm modal
   document.getElementById('confirm-cancel').addEventListener('click', closeConfirm);
@@ -953,7 +1166,7 @@ async function init() {
   // Init event listeners
   initEventListeners();
   
-  // Try restore session
+  // Try restore session or create new address
   const session = loadSession();
   if (session && session.address && session.password) {
     try {
@@ -966,14 +1179,17 @@ async function init() {
         startAutoRefresh();
       } else {
         clearSession();
-        showAuthView();
+        // Auto-create new address instead of showing auth view
+        await autoCreateAddress();
       }
     } catch (err) {
       clearSession();
-      showAuthView();
+      // Auto-create new address instead of showing auth view
+      await autoCreateAddress();
     }
   } else {
-    showAuthView();
+    // No session - auto create new address
+    await autoCreateAddress();
   }
   
   console.log('🚀 Sutemeado initialized');
