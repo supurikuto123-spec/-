@@ -717,6 +717,27 @@ function closeChangePasswordModal() {
   // Reset visibility of current password field
   const currentPwGroup = document.getElementById('current-password')?.closest('.form-group');
   if (currentPwGroup) currentPwGroup.style.display = 'block';
+  
+  // Reset password visibility toggles and button states
+  ['current-password', 'new-password', 'confirm-password'].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) input.type = 'password';
+  });
+  
+  // Reset eye icons
+  document.querySelectorAll('[id^="toggle-"]').forEach(btn => {
+    const svg = btn.querySelector('svg');
+    if (svg) {
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+  });
+  
+  // Re-enable submit button if it was disabled
+  const submitBtn = document.getElementById('change-password-submit-btn');
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>${t('save') || '保存'}</span>`;
+  }
 }
 
 function openLoginModal() {
@@ -1154,7 +1175,52 @@ function initEventListeners() {
   
   // Change password form
   document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
+  document.getElementById('change-password-submit-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const form = document.getElementById('change-password-form');
+    // Trigger form submit event manually
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+    form.dispatchEvent(submitEvent);
+  });
   document.getElementById('new-password').addEventListener('input', (e) => updatePasswordStrength(e.target.value));
+  
+  // Password visibility toggles for change password modal
+  document.getElementById('toggle-current-password')?.addEventListener('click', function() {
+    const input = document.getElementById('current-password');
+    const svg = this.querySelector('svg');
+    if (input.type === 'password') {
+      input.type = 'text';
+      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+      input.type = 'password';
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+  });
+  
+  document.getElementById('toggle-new-password')?.addEventListener('click', function() {
+    const input = document.getElementById('new-password');
+    const svg = this.querySelector('svg');
+    if (input.type === 'password') {
+      input.type = 'text';
+      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+      input.type = 'password';
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+  });
+  
+  document.getElementById('toggle-confirm-password')?.addEventListener('click', function() {
+    const input = document.getElementById('confirm-password');
+    const svg = this.querySelector('svg');
+    if (input.type === 'password') {
+      input.type = 'text';
+      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+      input.type = 'password';
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+  });
   
   // Confirm modal
   document.getElementById('confirm-cancel').addEventListener('click', closeConfirm);

@@ -1158,7 +1158,7 @@ section {
   padding: var(--spacing-sm) var(--spacing-md);
 }
 
-#password-display {
+#display-password {
   flex: 1;
   font-family: var(--font-mono);
   font-size: 1rem;
@@ -1608,6 +1608,17 @@ section {
   height: 18px;
 }
 
+.btn-icon-sm {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.btn-icon-sm svg {
+  width: 16px;
+  height: 16px;
+}
+
 .btn-danger {
   background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
   color: var(--text-primary);
@@ -1638,12 +1649,17 @@ section {
   border-radius: var(--radius-lg);
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .info-section {
-  flex: 1;
-  min-width: 280px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.info-section:first-child {
+  flex: 2 1 auto;
 }
 
 .info-label {
@@ -1671,11 +1687,10 @@ section {
 .info-value {
   flex: 1;
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: 0.9375rem;
   color: var(--neon-cyan);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
   min-width: 0;
 }
 
@@ -1690,6 +1705,14 @@ section {
 }
 
 @media (max-width: 768px) {
+  .info-card {
+    flex-wrap: wrap;
+  }
+  
+  .info-section {
+    min-width: 100%;
+  }
+  
   .info-divider {
     width: 100%;
     height: 1px;
