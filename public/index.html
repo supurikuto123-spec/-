@@ -14,33 +14,19 @@
   <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-brand">
-      <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-        <polyline points="22,6 12,13 2,6"/>
-      </svg>
+      <div class="nav-logo-wrap">
+        <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
       <span class="nav-title">Sutemeado</span>
     </div>
     
     <div class="nav-menu" id="nav-menu">
-      <button class="nav-item" id="nav-api">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-        </svg>
-        <span data-i18n="apiDocs">API</span>
-      </button>
-      
-      <button class="nav-item" id="nav-new-address" style="display: none;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 11.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7"/>
-          <polyline points="21 11.5 21 6 3 6"/>
-          <line x1="16" y1="19" x2="22" y2="19"/>
-          <line x1="19" y1="16" x2="19" y2="22"/>
-        </svg>
-        <span data-i18n="newAddress">新規作成</span>
-      </button>
-      
+      <!-- ログイン前のみ表示 -->
       <button class="nav-item" id="nav-login">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
           <polyline points="10,17 15,12 10,7"/>
           <line x1="15" y1="12" x2="3" y2="12"/>
@@ -48,14 +34,28 @@
         <span data-i18n="login">ログイン</span>
       </button>
       
+      <!-- ログイン後のみ表示 -->
+      <button class="nav-item" id="nav-new-address" style="display: none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        <span data-i18n="newAddress">新規作成</span>
+      </button>
+
       <div class="nav-divider"></div>
-      
-      <button class="nav-item" id="nav-settings">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+      <button class="nav-item" id="nav-api">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+        </svg>
+        <span data-i18n="apiDocs">API</span>
+      </button>
+
+      <button class="nav-item nav-item-icon" id="nav-settings" title="設定">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="3"/>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
         </svg>
-        <span data-i18n="settings">設定</span>
       </button>
       
       <div class="lang-switch">
@@ -67,7 +67,6 @@
 
   <!-- Main Content -->
   <main class="main">
-    <!-- Mailbox View (Default - always visible) -->
     <div class="mailbox-container" id="mailbox-view">
       <!-- Address Info Card -->
       <div class="info-card">
@@ -76,7 +75,7 @@
           <div class="info-value-box">
             <code id="display-address" class="info-value">-</code>
             <button class="icon-btn" id="copy-address-btn" title="Copy">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
               </svg>
@@ -90,16 +89,16 @@
           <label class="info-label" data-i18n="yourPassword">パスワード</label>
           <div class="info-value-box">
             <code id="display-password" class="info-value info-value-password">••••••••••</code>
-            <button class="icon-btn" id="copy-password-btn" title="Copy">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-              </svg>
-            </button>
             <button class="icon-btn" id="toggle-password-btn" title="Show/Hide">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eye-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eye-icon">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                 <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+            <button class="icon-btn" id="copy-password-btn" title="Copy">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
               </svg>
             </button>
           </div>
@@ -142,9 +141,8 @@
       <div class="modal-header">
         <h3 data-i18n="login">ログイン</h3>
         <button class="modal-close" id="login-modal-close">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </div>
@@ -153,28 +151,13 @@
           <div class="form-group">
             <label class="form-label" data-i18n="emailAddress">メールアドレス</label>
             <div class="input-wrapper">
-              <input
-                type="email"
-                id="login-address"
-                class="form-input"
-                placeholder="xxxxxx@sutemeado.com"
-                required
-                style="min-width: 0;"
-              >
+              <input type="email" id="login-address" class="form-input" placeholder="xxxxxx@sutemeado.com" required style="min-width: 0;">
             </div>
           </div>
-          
           <div class="form-group">
             <label class="form-label" data-i18n="password">パスワード</label>
             <div class="input-wrapper">
-              <input
-                type="password"
-                id="login-password"
-                class="form-input"
-                placeholder="••••••••"
-                required
-                style="min-width: 0;"
-              >
+              <input type="password" id="login-password" class="form-input" placeholder="••••••••" required style="min-width: 0;">
               <button type="button" class="btn-icon btn-icon-sm" id="toggle-login-password" title="Show/Hide">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -183,7 +166,6 @@
               </button>
             </div>
           </div>
-          
           <button type="submit" class="btn btn-primary btn-large" id="login-btn">
             <span data-i18n="loginBtn">ログイン</span>
           </button>
@@ -199,47 +181,31 @@
       <div class="modal-header">
         <h3 data-i18n="apiDocs">API Documentation</h3>
         <button class="modal-close" id="api-modal-close">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </div>
       <div class="modal-body">
         <div class="api-list">
           <div class="api-entry">
-            <div class="api-meta">
-              <span class="api-method get">GET</span>
-              <code>/api/new-address</code>
-            </div>
+            <div class="api-meta"><span class="api-method get">GET</span><code>/api/new-address</code></div>
             <p data-i18n="apiGetAddress">新規アドレスを作成</p>
           </div>
           <div class="api-entry">
-            <div class="api-meta">
-              <span class="api-method post">POST</span>
-              <code>/api/login</code>
-            </div>
+            <div class="api-meta"><span class="api-method post">POST</span><code>/api/login</code></div>
             <p data-i18n="apiLogin">ログイン</p>
           </div>
           <div class="api-entry">
-            <div class="api-meta">
-              <span class="api-method post">POST</span>
-              <code>/api/mailbox/:address</code>
-            </div>
+            <div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address</code></div>
             <p data-i18n="apiGetMails">メール一覧を取得</p>
           </div>
           <div class="api-entry">
-            <div class="api-meta">
-              <span class="api-method delete">DELETE</span>
-              <code>/api/mailbox/:address/:mailId</code>
-            </div>
+            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address/:mailId</code></div>
             <p data-i18n="apiDeleteMail">メールを削除</p>
           </div>
           <div class="api-entry">
-            <div class="api-meta">
-              <span class="api-method delete">DELETE</span>
-              <code>/api/address/:address</code>
-            </div>
+            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/address/:address</code></div>
             <p data-i18n="apiDeleteAddress">アドレスを削除</p>
           </div>
         </div>
@@ -254,24 +220,24 @@
       <div class="modal-header">
         <h3 data-i18n="settings">設定</h3>
         <button class="modal-close" id="settings-modal-close">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </div>
       <div class="modal-body">
         <div class="settings-list">
-          <button class="settings-item" id="nav-new-address-settings">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 11.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7"/>
-              <polyline points="21 11.5 21 6 3 6"/>
-              <line x1="16" y1="19" x2="22" y2="19"/>
-              <line x1="19" y1="16" x2="19" y2="22"/>
+
+          <!-- パスワード変更 -->
+          <button class="settings-item" id="change-password-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
             </svg>
-            <span data-i18n="newAddress">新規作成</span>
+            <span data-i18n="changePassword">パスワード変更</span>
           </button>
 
+          <!-- ログアウト -->
           <button class="settings-item" id="logout-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -280,7 +246,8 @@
             </svg>
             <span data-i18n="logout">ログアウト</span>
           </button>
-          
+
+          <!-- 全メール削除 -->
           <button class="settings-item" id="delete-all-mail-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3,6 5,6 21,6"/>
@@ -288,9 +255,10 @@
             </svg>
             <span data-i18n="deleteAllMail">全メールを削除</span>
           </button>
-          
+
           <div class="settings-divider"></div>
-          
+
+          <!-- アドレス削除（危険） -->
           <button class="settings-item settings-item-danger" id="delete-address-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3,6 5,6 21,6"/>
@@ -305,7 +273,51 @@
     </div>
   </div>
 
-  <!-- Change Password Modal Removed -->
+  <!-- Change Password Modal -->
+  <div class="modal" id="change-password-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-sm">
+      <div class="modal-header">
+        <h3 data-i18n="changePassword">パスワード変更</h3>
+        <button class="modal-close" id="change-password-modal-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="auth-form" id="change-password-form">
+          <div class="form-group">
+            <label class="form-label" data-i18n="currentPassword">現在のパスワード</label>
+            <div class="input-wrapper">
+              <input type="password" id="current-password" class="form-input" placeholder="••••••••" required style="min-width:0;">
+              <button type="button" class="btn-icon btn-icon-sm" id="toggle-current-password" title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="newPassword">新しいパスワード</label>
+            <div class="input-wrapper">
+              <input type="password" id="new-password" class="form-input" placeholder="••••••••" required style="min-width:0;">
+              <button type="button" class="btn-icon btn-icon-sm" id="toggle-new-password" title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-large" id="change-password-submit-btn">
+            <span data-i18n="changePassword">パスワード変更</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- Mail Detail Modal -->
   <div class="modal" id="mail-modal">
@@ -314,9 +326,8 @@
       <div class="modal-header">
         <h3 id="modal-subject">-</h3>
         <button class="modal-close" id="mail-modal-close">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </div>
@@ -335,9 +346,7 @@
             <span id="modal-date" class="meta-value">-</span>
           </div>
         </div>
-        <div class="mail-detail-body" id="modal-body-content">
-          <!-- Content here -->
-        </div>
+        <div class="mail-detail-body" id="modal-body-content"></div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-danger" id="modal-delete-btn">
@@ -361,7 +370,7 @@
     <span class="toast-message" id="toast-message">Message</span>
   </div>
 
-  <!-- Password Warning Modal (shown once on first visit) -->
+  <!-- Password Warning Modal -->
   <div class="modal" id="password-warning-modal">
     <div class="modal-overlay"></div>
     <div class="modal-content modal-content-sm">
@@ -374,25 +383,23 @@
           </svg>
         </div>
         <h4 data-i18n="passwordWarningTitle" style="margin-top: 0;">パスワードを保存してください</h4>
-        <p data-i18n="passwordWarningMessage" style="text-align: left; margin: 1rem 0;">
+        <p data-i18n="passwordWarningMessage" style="text-align: left; margin: 0.75rem 0;">
           再度アクセスするために、必ずパスワードを保存してください。
         </p>
-        
-        <div style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: left; margin-bottom: 1rem;">
-          <div style="margin-bottom: 8px;">
-            <label style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 4px;">アドレス</label>
-            <code id="warning-address-display" style="color: var(--neon-cyan); word-break: break-all; font-size: 14px;"></code>
+        <div class="password-save-box">
+          <div class="password-save-row">
+            <span class="password-save-label" data-i18n="yourAddress">アドレス</span>
+            <code id="warning-address-display" class="password-save-value"></code>
           </div>
-          <div>
-            <label style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 4px;">パスワード</label>
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <code id="warning-password-display" style="color: var(--neon-cyan); letter-spacing: 1px; font-size: 14px;"></code>
-              <button class="btn btn-secondary btn-sm" id="warning-copy-btn" style="padding: 4px 8px; font-size: 12px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+          <div class="password-save-row">
+            <span class="password-save-label" data-i18n="yourPassword">パスワード</span>
+            <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+              <code id="warning-password-display" class="password-save-value"></code>
+              <button class="icon-btn" id="warning-copy-btn" title="Copy Password">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                 </svg>
-                Copy
               </button>
             </div>
           </div>

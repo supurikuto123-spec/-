@@ -698,7 +698,50 @@ function closeSettingsModal() {
   document.getElementById('settings-modal').classList.remove('active');
 }
 
-// Password Change Modal Logic Removed
+// ===== Change Password Modal =====
+function openChangePasswordModal() {
+  document.getElementById('change-password-form').reset();
+  document.getElementById('change-password-modal').classList.add('active');
+}
+
+function closeChangePasswordModal() {
+  document.getElementById('change-password-modal').classList.remove('active');
+}
+
+async function handleChangePassword(e) {
+  e.preventDefault();
+  const currentPw = document.getElementById('current-password').value;
+  const newPw = document.getElementById('new-password').value;
+  const submitBtn = document.getElementById('change-password-submit-btn');
+
+  if (!currentPw || !newPw) {
+    showToast(t('invalidCredentials'), 'error');
+    return;
+  }
+  if (newPw.length < 4) {
+    showToast(t('newPassword') + ': 4文字以上必要です', 'error');
+    return;
+  }
+
+  try {
+    submitBtn.disabled = true;
+    const res = await api.changePassword(state.currentAddress, currentPw, newPw);
+    if (res.success) {
+      // セッション更新
+      state.currentPassword = newPw;
+      saveSession(state.currentAddress, newPw);
+      updateAddressDisplay(state.currentAddress, newPw);
+      closeChangePasswordModal();
+      showToast(t('changePassword') + ': OK', 'success');
+    } else {
+      showToast(res.error || t('currentPasswordWrong'), 'error');
+    }
+  } catch (err) {
+    showToast(t('errorOccurred') || 'エラーが発生しました', 'error');
+  } finally {
+    submitBtn.disabled = false;
+  }
+}
 
 function openLoginModal() {
   document.getElementById('login-modal').classList.add('active');
@@ -1018,15 +1061,34 @@ function initEventListeners() {
   document.getElementById('modal-close-btn').addEventListener('click', closeMailModal);
   document.getElementById('modal-delete-btn').addEventListener('click', handleDeleteMail);
   document.getElementById('login-modal-close').addEventListener('click', closeLoginModal);
-  
+  document.getElementById('change-password-modal-close').addEventListener('click', closeChangePasswordModal);
+
   // Settings actions
   document.getElementById('logout-btn').addEventListener('click', handleLogout);
   document.getElementById('delete-all-mail-btn').addEventListener('click', handleDeleteAllMail);
   document.getElementById('delete-address-btn').addEventListener('click', handleDeleteAddress);
-  // Settings new address btn
-  document.getElementById('nav-new-address-settings')?.addEventListener('click', () => {
+  document.getElementById('change-password-btn').addEventListener('click', () => {
     closeSettingsModal();
-    handleNewAddress();
+    openChangePasswordModal();
+  });
+
+  // Change password form submit
+  document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
+
+  // Change password visibility toggles
+  ['toggle-current-password', 'toggle-new-password'].forEach(id => {
+    document.getElementById(id)?.addEventListener('click', function() {
+      const targetId = id === 'toggle-current-password' ? 'current-password' : 'new-password';
+      const input = document.getElementById(targetId);
+      const svg = this.querySelector('svg');
+      if (input.type === 'password') {
+        input.type = 'text';
+        svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        input.type = 'password';
+        svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      }
+    });
   });
   
   // Login password visibility toggle
