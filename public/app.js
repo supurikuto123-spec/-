@@ -1,6 +1,6 @@
 /**
- * Sutemeado - Temporary Email Service with Login
- * Frontend JavaScript with i18n and API menu
+ * Sutemeado - Temporary Email Service
+ * Completely rewritten for proper UX and UI consistency
  */
 
 // ===== i18n Translations =====
@@ -14,104 +14,104 @@ const i18n = {
     emailAddress: 'メールアドレス',
     password: 'パスワード',
     loginBtn: 'ログイン',
-    createBtn: '作成',
-    yourAddress: 'YOUR MAIL ADDRESS',
-    yourPassword: 'YOUR PASSWORD',
+    createAddress: 'アドレスを作成',
+    yourAddress: 'あなたのアドレス',
+    yourPassword: 'パスワード',
     copy: 'コピー',
-    copyPassword: 'パスワードをコピー',
-    copyAddress: 'アドレスをコピー',
-    newAddress: '新規作成',
+    copied: 'コピーしました',
+    copyFailed: 'コピーに失敗しました',
     refresh: '更新',
-    inbox: 'INBOX',
+    inbox: '受信箱',
     autoRefresh: '自動更新',
     noMail: 'メールはまだ届いていません',
     noMailSub: 'アドレスをコピーして登録・確認に使ってください',
     delete: '削除',
     close: '閉じる',
-    copied: 'コピーしました',
-    copyFailed: 'コピーに失敗しました',
+    cancel: 'キャンセル',
+    confirm: '確認',
+    savePassword: 'パスワードを保存してください',
+    savePasswordSub: 'このパスワードは再表示できません',
     addressCreated: 'アドレスを作成しました',
     addressCreateFailed: 'アドレス作成に失敗しました',
     loginFailed: 'ログインに失敗しました',
     invalidCredentials: 'メールアドレスまたはパスワードが正しくありません',
-    addressDeleted: 'メールを削除しました',
+    mailDeleted: 'メールを削除しました',
     deleteFailed: '削除に失敗しました',
-    autoRefreshOn: '自動更新をオンにしました',
-    autoRefreshOff: '自動更新をオフにしました',
+    deleteAllMailConfirm: 'すべてのメールを削除しますか？この操作は元に戻せません。',
+    deleteAddressConfirm: 'このアドレスを削除しますか？すべてのメールが削除され、アドレスは使用できなくなります。',
+    deleteAllMail: '全メール削除',
+    deleteAddress: 'アドレスを削除',
+    logout: 'ログアウト',
+    settings: '設定',
+    apiDocs: 'API',
     from: 'From:',
     to: 'To:',
+    date: '日時:',
     subject: '件名',
-    dateFormat: 'ja-JP',
-    savePassword: 'パスワードを保存してください',
-    savePasswordSub: 'このパスワードは再表示できません',
-    apiDocs: 'API',
-    apiGetAddress: 'GET /api/new-address - 新規アドレス作成',
-    apiLogin: 'POST /api/login - ログイン',
-    apiGetMails: 'POST /api/mailbox/:address - メール取得',
-    apiDeleteMail: 'DELETE /api/mailbox/:address/:mailId - メール削除',
-    apiDeleteAddress: 'DELETE /api/address/:address - アドレス削除',
-    logout: 'ログアウト',
-    deleteAllMail: '全メール削除',
-    deleteAddress: 'アドレス削除',
-    deleteAddressConfirm: 'このアドレスを削除しますか？すべてのメールが削除されます',
-    deleteAllMailConfirm: 'すべてのメールを削除しますか？',
-    deleteAddressSuccess: 'アドレスを削除しました',
-    deleteAllMailSuccess: 'すべてのメールを削除しました',
-    menu: 'メニュー'
+    unread: '未読',
+    error: 'エラー',
+    success: '成功',
+    warning: '警告',
+    info: '情報',
+    processing: '処理中...',
+    loggingIn: 'ログイン中...',
+    creating: '作成中...',
+    langJA: '日本語',
+    langEN: 'English'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
-    description: 'No registration required. Access anytime with your password.',
+    description: 'No registration. Access anytime with your password.',
     statusOnline: 'System Online',
     login: 'Login',
     createNew: 'Create New',
     emailAddress: 'Email Address',
     password: 'Password',
     loginBtn: 'Login',
-    createBtn: 'Create',
-    yourAddress: 'YOUR MAIL ADDRESS',
-    yourPassword: 'YOUR PASSWORD',
+    createAddress: 'Create Address',
+    yourAddress: 'Your Address',
+    yourPassword: 'Password',
     copy: 'Copy',
-    copyPassword: 'Copy Password',
-    copyAddress: 'Copy Address',
-    newAddress: 'Create New',
+    copied: 'Copied',
+    copyFailed: 'Copy failed',
     refresh: 'Refresh',
-    inbox: 'INBOX',
+    inbox: 'Inbox',
     autoRefresh: 'Auto Refresh',
     noMail: 'No emails yet',
     noMailSub: 'Copy the address to use for registration',
     delete: 'Delete',
     close: 'Close',
-    copied: 'Copied to clipboard',
-    copyFailed: 'Failed to copy',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    savePassword: 'Please save your password',
+    savePasswordSub: 'This password cannot be displayed again',
     addressCreated: 'Address created successfully',
     addressCreateFailed: 'Failed to create address',
     loginFailed: 'Login failed',
     invalidCredentials: 'Invalid email address or password',
-    addressDeleted: 'Email deleted',
+    mailDeleted: 'Email deleted',
     deleteFailed: 'Failed to delete',
-    autoRefreshOn: 'Auto refresh enabled',
-    autoRefreshOff: 'Auto refresh disabled',
-    from: 'From:',
-    to: 'To:',
-    subject: 'Subject',
-    dateFormat: 'en-US',
-    savePassword: 'Please save your password',
-    savePasswordSub: 'This password cannot be displayed again',
-    apiDocs: 'API',
-    apiGetAddress: 'GET /api/new-address - Create new address',
-    apiLogin: 'POST /api/login - Login',
-    apiGetMails: 'POST /api/mailbox/:address - Get mails',
-    apiDeleteMail: 'DELETE /api/mailbox/:address/:mailId - Delete mail',
-    apiDeleteAddress: 'DELETE /api/address/:address - Delete address',
-    logout: 'Logout',
+    deleteAllMailConfirm: 'Delete all emails? This cannot be undone.',
+    deleteAddressConfirm: 'Delete this address? All emails will be removed and the address will no longer be available.',
     deleteAllMail: 'Delete All Mail',
     deleteAddress: 'Delete Address',
-    deleteAddressConfirm: 'Delete this address? All mails will be removed.',
-    deleteAllMailConfirm: 'Delete all mails?',
-    deleteAddressSuccess: 'Address deleted',
-    deleteAllMailSuccess: 'All mails deleted',
-    menu: 'Menu'
+    logout: 'Logout',
+    settings: 'Settings',
+    apiDocs: 'API',
+    from: 'From:',
+    to: 'To:',
+    date: 'Date:',
+    subject: 'Subject',
+    unread: 'Unread',
+    error: 'Error',
+    success: 'Success',
+    warning: 'Warning',
+    info: 'Info',
+    processing: 'Processing...',
+    loggingIn: 'Logging in...',
+    creating: 'Creating...',
+    langJA: '日本語',
+    langEN: 'English'
   }
 };
 
@@ -123,7 +123,7 @@ const CONFIG = {
   LANG_KEY: 'sutemeado_lang'
 };
 
-// ===== State Management =====
+// ===== State =====
 const state = {
   currentAddress: null,
   currentPassword: null,
@@ -132,71 +132,23 @@ const state = {
   refreshTimer: null,
   selectedMail: null,
   currentLang: 'ja',
-  showApiMenu: false
+  passwordVisible: false
 };
 
-// ===== DOM Elements =====
-const elements = {
-  // Login/Create
-  loginForm: document.getElementById('login-form'),
-  createForm: document.getElementById('create-form'),
-  authSection: document.getElementById('auth-section'),
-  mainSection: document.getElementById('main-section'),
-  loginAddress: document.getElementById('login-address'),
-  loginPassword: document.getElementById('login-password'),
-  loginBtn: document.getElementById('login-btn'),
-  newAddressBtn: document.getElementById('new-address-btn'),
-  
-  // Address display
-  emailAddress: document.getElementById('email-address'),
-  passwordDisplay: document.getElementById('password-display'),
-  copyAddressBtn: document.getElementById('copy-address-btn'),
-  copyPasswordBtn: document.getElementById('copy-password-btn'),
-  
-  // Mailbox
-  mailList: document.getElementById('mail-list'),
-  mailCount: document.getElementById('mail-count'),
-  refreshBtn: document.getElementById('refresh-btn'),
-  autoRefreshToggle: document.getElementById('auto-refresh'),
-  
-  // Modal
-  modal: document.getElementById('mail-modal'),
-  modalSubject: document.getElementById('modal-subject'),
-  modalFrom: document.getElementById('modal-from'),
-  modalTo: document.getElementById('modal-to'),
-  modalDate: document.getElementById('modal-date'),
-  modalBody: document.getElementById('modal-body'),
-  modalClose: document.getElementById('modal-close'),
-  modalCloseBtn: document.getElementById('modal-close-btn'),
-  modalDelete: document.getElementById('modal-delete'),
-  
-  // API Menu
-  apiMenuBtn: document.getElementById('api-menu-btn'),
-  apiMenu: document.getElementById('api-menu'),
-  apiMenuClose: document.getElementById('api-menu-close'),
-  
-  // Settings Menu
-  settingsBtn: document.getElementById('settings-btn'),
-  settingsMenu: document.getElementById('settings-menu'),
-  settingsMenuClose: document.getElementById('settings-menu-close'),
-  logoutBtn: document.getElementById('logout-btn'),
-  deleteAllMailBtn: document.getElementById('delete-all-mail-btn'),
-  deleteAddressBtn: document.getElementById('delete-address-btn'),
-  
-  // Toast
-  toast: document.getElementById('toast'),
-  langBtns: document.querySelectorAll('.lang-btn')
-};
+// ===== DOM Elements Cache =====
+let elements = {};
 
 // ===== i18n Functions =====
+function t(key) {
+  return i18n[state.currentLang][key] || key;
+}
+
 function setLanguage(lang) {
   state.currentLang = lang;
   localStorage.setItem(CONFIG.LANG_KEY, lang);
+  document.documentElement.lang = lang;
   
-  elements.langBtns.forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
-  });
-  
+  // Update all elements with data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     if (i18n[lang][key]) {
@@ -208,21 +160,16 @@ function setLanguage(lang) {
     }
   });
   
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    const key = el.dataset.i18nPlaceholder;
-    if (i18n[lang][key]) {
-      el.placeholder = i18n[lang][key];
-    }
+  // Update language buttons
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
   });
   
+  // Update meta description
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && i18n[lang].description) {
     metaDesc.content = i18n[lang].description;
   }
-}
-
-function t(key) {
-  return i18n[state.currentLang][key] || key;
 }
 
 // ===== API Functions =====
@@ -287,16 +234,83 @@ const api = {
   }
 };
 
-// ===== Utility Functions =====
-function showToast(message, type = 'info') {
-  elements.toast.textContent = message;
-  elements.toast.className = `toast show ${type}`;
+// ===== Toast Notification =====
+function showToast(message, type = 'info', duration = 3000) {
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toast-message');
+  const toastIcon = toast.querySelector('.toast-icon');
   
+  // Set message
+  toastMessage.textContent = message;
+  
+  // Set icon based on type
+  const icons = {
+    success: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+    error: '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+    warning: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+    info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+  };
+  
+  toastIcon.innerHTML = icons[type] || icons.info;
+  
+  // Remove all type classes and add current
+  toast.className = 'toast show ' + type;
+  
+  // Auto hide
   setTimeout(() => {
-    elements.toast.classList.remove('show');
-  }, 3000);
+    toast.classList.remove('show');
+  }, duration);
 }
 
+// ===== Custom Confirm Modal =====
+let confirmCallback = null;
+
+function showConfirm(title, message, onConfirm, type = 'warning') {
+  const modal = document.getElementById('confirm-modal');
+  const titleEl = document.getElementById('confirm-title');
+  const messageEl = document.getElementById('confirm-message');
+  const iconEl = modal.querySelector('.confirm-icon');
+  const okBtn = document.getElementById('confirm-ok');
+  
+  // Set content
+  titleEl.textContent = title;
+  messageEl.textContent = message;
+  
+  // Set icon based on type
+  const icons = {
+    warning: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+    danger: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+    info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+  };
+  
+  iconEl.innerHTML = icons[type] || icons.warning;
+  iconEl.className = 'confirm-icon ' + type;
+  
+  // Update button text
+  okBtn.textContent = t('confirm');
+  document.getElementById('confirm-cancel').textContent = t('cancel');
+  
+  // Set callback
+  confirmCallback = onConfirm;
+  
+  // Show modal
+  modal.classList.add('active');
+}
+
+function closeConfirm() {
+  const modal = document.getElementById('confirm-modal');
+  modal.classList.remove('active');
+  confirmCallback = null;
+}
+
+function handleConfirmOk() {
+  if (confirmCallback) {
+    confirmCallback();
+  }
+  closeConfirm();
+}
+
+// ===== Utility Functions =====
 function copyToClipboard(text) {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
@@ -333,7 +347,7 @@ function formatDate(timestamp) {
   const diff = now - date;
   
   if (diff < 60000) {
-    return state.currentLang === 'ja' ? '刚刚' : 'Just now';
+    return state.currentLang === 'ja' ? 'たった今' : 'Just now';
   }
   if (diff < 3600000) {
     const mins = Math.floor(diff / 60000);
@@ -344,17 +358,12 @@ function formatDate(timestamp) {
     return state.currentLang === 'ja' ? `${hours}時間前` : `${hours}h ago`;
   }
   
-  return date.toLocaleString(i18n[state.currentLang].dateFormat, {
+  return date.toLocaleString(state.currentLang === 'ja' ? 'ja-JP' : 'en-US', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit'
   });
-}
-
-function linkify(text) {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
 }
 
 function escapeHtml(text) {
@@ -363,22 +372,23 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+function linkify(text) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+}
+
 // ===== Session Management =====
 function saveSession(address, password) {
-  const data = { address, password };
-  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify({ address, password }));
 }
 
 function loadSession() {
-  const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      return null;
-    }
+  try {
+    const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
+    return saved ? JSON.parse(saved) : null;
+  } catch (e) {
+    return null;
   }
-  return null;
 }
 
 function clearSession() {
@@ -386,64 +396,127 @@ function clearSession() {
 }
 
 // ===== UI Update Functions =====
-function showAuthSection() {
-  elements.authSection.style.display = 'block';
-  elements.mainSection.style.display = 'none';
+function switchAuthTab(tab) {
+  const createForm = document.getElementById('create-form');
+  const loginForm = document.getElementById('login-form');
+  const toggleCreate = document.getElementById('toggle-create');
+  const toggleLogin = document.getElementById('toggle-login');
+  
+  if (tab === 'create') {
+    createForm.style.display = 'block';
+    loginForm.style.display = 'none';
+    toggleCreate.classList.add('active');
+    toggleLogin.classList.remove('active');
+  } else {
+    createForm.style.display = 'none';
+    loginForm.style.display = 'block';
+    toggleCreate.classList.remove('active');
+    toggleLogin.classList.add('active');
+    // Focus on email input
+    setTimeout(() => document.getElementById('login-address').focus(), 100);
+  }
 }
 
-function showMainSection() {
-  elements.authSection.style.display = 'none';
-  elements.mainSection.style.display = 'block';
+function showAuthView() {
+  document.getElementById('auth-view').style.display = 'flex';
+  document.getElementById('mailbox-view').style.display = 'none';
+  
+  // Hide nav items that require login
+  document.getElementById('nav-inbox').style.display = 'none';
+  document.getElementById('nav-api').style.display = 'none';
+  document.getElementById('nav-settings').style.display = 'none';
+  document.getElementById('nav-badge').style.display = 'none';
+}
+
+function showMailboxView() {
+  document.getElementById('auth-view').style.display = 'none';
+  document.getElementById('mailbox-view').style.display = 'block';
+  
+  // Show nav items
+  document.getElementById('nav-inbox').style.display = 'flex';
+  document.getElementById('nav-api').style.display = 'flex';
+  document.getElementById('nav-settings').style.display = 'flex';
+  updateNavBadge();
 }
 
 function updateAddressDisplay(address, password) {
-  elements.emailAddress.textContent = address;
-  elements.passwordDisplay.textContent = password;
+  document.getElementById('display-address').textContent = address;
+  document.getElementById('display-password').textContent = password;
   state.currentAddress = address;
   state.currentPassword = password;
+  state.passwordVisible = true;
   saveSession(address, password);
 }
 
+function togglePasswordVisibility() {
+  const passwordEl = document.getElementById('display-password');
+  const eyeIcon = document.getElementById('eye-icon');
+  
+  state.passwordVisible = !state.passwordVisible;
+  
+  if (state.passwordVisible) {
+    passwordEl.textContent = state.currentPassword;
+    eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  } else {
+    passwordEl.textContent = '••••••••••';
+    eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  }
+}
+
+function updateNavBadge() {
+  const badge = document.getElementById('nav-badge');
+  const unreadCount = state.mails.filter(m => !m.read).length;
+  
+  if (unreadCount > 0) {
+    badge.textContent = unreadCount;
+    badge.style.display = 'inline-flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
 function renderMailList(mails) {
+  const mailList = document.getElementById('mail-list');
+  const mailCount = document.getElementById('mail-count');
+  
+  mailCount.textContent = mails.length;
+  
   if (!mails || mails.length === 0) {
-    elements.mailList.innerHTML = `
+    mailList.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-          </svg>
-        </div>
-        <p>${t('noMail')}</p>
-        <p class="empty-sub">${t('noMailSub')}</p>
+        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <p data-i18n="noMail">${t('noMail')}</p>
+        <span data-i18n="noMailSub">${t('noMailSub')}</span>
       </div>
     `;
-    elements.mailCount.textContent = '0';
     return;
   }
-
-  elements.mailCount.textContent = mails.length;
   
-  elements.mailList.innerHTML = mails.map(mail => `
+  // Sort by date, newest first
+  const sortedMails = [...mails].sort((a, b) => b.receivedAt - a.receivedAt);
+  
+  mailList.innerHTML = sortedMails.map(mail => `
     <div class="mail-item ${!mail.read ? 'unread' : ''}" data-id="${mail.id}">
       <div class="mail-header">
-        <span class="mail-subject">${escapeHtml(mail.subject)}</span>
+        <span class="mail-subject">${escapeHtml(mail.subject || '(no subject)')}</span>
         <span class="mail-time">${formatDate(mail.receivedAt)}</span>
       </div>
       <div class="mail-from">${escapeHtml(mail.from)}</div>
-      <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}...</div>
+      <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}${mail.body.length > 100 ? '...' : ''}</div>
     </div>
   `).join('');
-
-  document.querySelectorAll('.mail-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const mailId = item.dataset.id;
-      openMailModal(mailId);
-    });
+  
+  // Add click handlers
+  mailList.querySelectorAll('.mail-item').forEach(item => {
+    item.addEventListener('click', () => openMailModal(item.dataset.id));
   });
+  
+  updateNavBadge();
 }
 
-// ===== HTML Mail Handling =====
 function createSandboxFrame(htmlContent) {
   const frame = document.createElement('iframe');
   frame.className = 'mail-frame';
@@ -454,12 +527,12 @@ function createSandboxFrame(htmlContent) {
   frame.style.border = '1px solid var(--border-color)';
   frame.style.borderRadius = 'var(--radius-md)';
   frame.style.background = '#fff';
-
+  
   const sanitizedHtml = htmlContent
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     .replace(/javascript:/gi, 'void(0);')
     .replace(/on\w+\s*=/gi, 'data-blocked-event=');
-
+  
   const docContent = `
     <!DOCTYPE html>
     <html>
@@ -493,76 +566,88 @@ function createSandboxFrame(htmlContent) {
     <body>${sanitizedHtml}</body>
     </html>
   `;
-
+  
   frame.srcdoc = docContent;
-
+  
   frame.addEventListener('load', () => {
     try {
       const doc = frame.contentDocument || frame.contentWindow.document;
-      if (doc) {
+      if (doc && doc.body) {
         const height = Math.max(
           doc.body.scrollHeight,
           doc.body.offsetHeight,
-          doc.documentElement.scrollHeight,
-          doc.documentElement.offsetHeight
+          doc.documentElement?.scrollHeight || 0,
+          doc.documentElement?.offsetHeight || 0
         );
         frame.style.height = Math.min(Math.max(height + 20, 200), 600) + 'px';
-
-        const imgs = doc.querySelectorAll('img');
-        imgs.forEach(img => {
-          img.addEventListener('load', () => {
-            const newHeight = Math.max(
-              doc.body.scrollHeight,
-              doc.body.offsetHeight,
-              doc.documentElement.scrollHeight,
-              doc.documentElement.offsetHeight
-            );
-            frame.style.height = Math.min(Math.max(newHeight + 20, 200), 600) + 'px';
-          });
-        });
       }
     } catch (e) {
       console.log('Iframe resize error:', e);
     }
   });
-
+  
   return frame;
 }
 
-// ===== Modal Functions =====
-async function openMailModal(mailId) {
+function openMailModal(mailId) {
   const mail = state.mails.find(m => m.id === mailId);
   if (!mail) return;
-
+  
   state.selectedMail = mail;
-
-  elements.modalSubject.textContent = mail.subject;
-  elements.modalFrom.textContent = mail.from;
-  elements.modalTo.textContent = state.currentAddress;
-  elements.modalDate.textContent = new Date(mail.receivedAt).toLocaleString(i18n[state.currentLang].dateFormat);
-
-  elements.modalBody.innerHTML = '';
+  
+  document.getElementById('modal-subject').textContent = mail.subject || '(no subject)';
+  document.getElementById('modal-from').textContent = mail.from;
+  document.getElementById('modal-to').textContent = state.currentAddress;
+  document.getElementById('modal-date').textContent = new Date(mail.receivedAt).toLocaleString(state.currentLang === 'ja' ? 'ja-JP' : 'en-US');
+  
+  const bodyContainer = document.getElementById('modal-body-content');
+  bodyContainer.innerHTML = '';
+  
   if (mail.html && mail.html.trim().length > 0) {
     const frame = createSandboxFrame(mail.html);
-    elements.modalBody.appendChild(frame);
+    bodyContainer.appendChild(frame);
   } else {
-    elements.modalBody.innerHTML = linkify(escapeHtml(mail.body));
+    bodyContainer.innerHTML = `<div class="mail-body-text">${linkify(escapeHtml(mail.body))}</div>`;
   }
-
-  elements.modal.classList.add('active');
-  mail.read = true;
-  renderMailList(state.mails);
+  
+  document.getElementById('mail-modal').classList.add('active');
+  
+  // Mark as read
+  if (!mail.read) {
+    mail.read = true;
+    renderMailList(state.mails);
+  }
 }
 
 function closeMailModal() {
-  elements.modal.classList.remove('active');
+  document.getElementById('mail-modal').classList.remove('active');
   state.selectedMail = null;
 }
 
+// ===== Modal Management =====
+function openApiModal() {
+  document.getElementById('api-modal').classList.add('active');
+}
+
+function closeApiModal() {
+  document.getElementById('api-modal').classList.remove('active');
+}
+
+function openSettingsModal() {
+  document.getElementById('settings-modal').classList.add('active');
+}
+
+function closeSettingsModal() {
+  document.getElementById('settings-modal').classList.remove('active');
+}
+
 // ===== Core Functions =====
-async function login() {
-  const address = elements.loginAddress.value.trim();
-  const password = elements.loginPassword.value.trim();
+async function handleLogin(e) {
+  e.preventDefault();
+  
+  const address = document.getElementById('login-address').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  const loginBtn = document.getElementById('login-btn');
   
   if (!address || !password) {
     showToast(t('invalidCredentials'), 'error');
@@ -570,18 +655,20 @@ async function login() {
   }
   
   try {
-    elements.loginBtn.disabled = true;
-    elements.loginBtn.textContent = state.currentLang === 'ja' ? 'ログイン中...' : 'Logging in...';
+    loginBtn.disabled = true;
+    const originalText = loginBtn.innerHTML;
+    loginBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" class="loading"/></svg><span>${t('loggingIn')}</span>`;
     
     const res = await api.login(address, password);
     
     if (res.success) {
       updateAddressDisplay(address, password);
       state.mails = res.mails || [];
+      state.mails.forEach(m => m.read = false);
       renderMailList(state.mails);
-      showMainSection();
+      showMailboxView();
+      showToast(t('login') + ' ' + t('success'), 'success');
       startAutoRefresh();
-      showToast(t('login'), 'success');
     } else {
       showToast(t('invalidCredentials'), 'error');
     }
@@ -589,15 +676,20 @@ async function login() {
     console.error('Login failed:', err);
     showToast(t('loginFailed'), 'error');
   } finally {
-    elements.loginBtn.disabled = false;
-    elements.loginBtn.textContent = t('loginBtn');
+    loginBtn.disabled = false;
+    loginBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg><span>${t('loginBtn')}</span>`;
   }
 }
 
-async function createNewAddress() {
+async function handleCreateAddress(e) {
+  e.preventDefault();
+  
+  const createBtn = document.getElementById('create-btn');
+  
   try {
-    elements.newAddressBtn.disabled = true;
-    elements.newAddressBtn.textContent = state.currentLang === 'ja' ? '作成中...' : 'Creating...';
+    createBtn.disabled = true;
+    const originalText = createBtn.innerHTML;
+    createBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" class="loading"/></svg><span>${t('creating')}</span>`;
     
     const res = await api.newAddress();
     
@@ -605,13 +697,22 @@ async function createNewAddress() {
       updateAddressDisplay(res.address, res.password);
       state.mails = [];
       renderMailList([]);
-      showMainSection();
+      showMailboxView();
       
-      // Show password warning
-      showToast(`${t('savePassword')}: ${res.password}`, 'success');
+      // Show password save reminder
+      showToast(`${t('savePassword')}: ${res.password}`, 'success', 5000);
+      
+      // Show details modal
       setTimeout(() => {
-        alert(`${t('savePassword')}\n${t('savePasswordSub')}\n\nEmail: ${res.address}\nPassword: ${res.password}`);
-      }, 100);
+        showConfirm(
+          t('savePassword'),
+          `Email: ${res.address}\nPassword: ${res.password}\n\n${t('savePasswordSub')}`,
+          null,
+          'info'
+        );
+        // Hide the OK button for this info modal
+        document.getElementById('confirm-ok').style.display = 'inline-flex';
+      }, 500);
       
       startAutoRefresh();
     } else {
@@ -621,32 +722,37 @@ async function createNewAddress() {
     console.error('Failed to create address:', err);
     showToast(t('addressCreateFailed'), 'error');
   } finally {
-    elements.newAddressBtn.disabled = false;
-    elements.newAddressBtn.textContent = t('createBtn');
+    createBtn.disabled = false;
+    createBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>${t('createAddress')}</span>`;
   }
 }
 
 async function refreshMailbox() {
   if (!state.currentAddress || !state.currentPassword) return;
   
+  const refreshBtn = document.getElementById('refresh-btn');
+  
   try {
-    elements.refreshBtn.disabled = true;
+    refreshBtn.disabled = true;
+    refreshBtn.querySelector('svg').classList.add('loading');
     
     const res = await api.getMailbox(state.currentAddress, state.currentPassword);
     
     if (res.success) {
+      // Preserve read status
       const readIds = new Set(state.mails.filter(m => m.read).map(m => m.id));
-      state.mails = res.mails.map(m => ({ ...m, read: readIds.has(m.id) || m.read }));
+      state.mails = (res.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
       renderMailList(state.mails);
     }
   } catch (err) {
     console.error('Failed to refresh mailbox:', err);
   } finally {
-    elements.refreshBtn.disabled = false;
+    refreshBtn.disabled = false;
+    refreshBtn.querySelector('svg').classList.remove('loading');
   }
 }
 
-async function deleteCurrentMail() {
+async function handleDeleteMail() {
   if (!state.selectedMail || !state.currentAddress || !state.currentPassword) return;
   
   try {
@@ -656,7 +762,9 @@ async function deleteCurrentMail() {
       state.mails = state.mails.filter(m => m.id !== state.selectedMail.id);
       renderMailList(state.mails);
       closeMailModal();
-      showToast(t('addressDeleted'), 'success');
+      showToast(t('mailDeleted'), 'success');
+    } else {
+      showToast(t('deleteFailed'), 'error');
     }
   } catch (err) {
     console.error('Failed to delete mail:', err);
@@ -664,85 +772,78 @@ async function deleteCurrentMail() {
   }
 }
 
-async function deleteAllMail() {
+function handleDeleteAllMail() {
   if (!state.currentAddress || !state.currentPassword) return;
   
-  if (!confirm(t('deleteAllMailConfirm'))) return;
-  
-  try {
-    const res = await api.clearMails(state.currentAddress, state.currentPassword);
-    
-    if (res.success) {
-      state.mails = [];
-      renderMailList([]);
-      closeSettingsMenu();
-      showToast(t('deleteAllMailSuccess'), 'success');
-    }
-  } catch (err) {
-    console.error('Failed to delete all mails:', err);
-    showToast(t('deleteFailed'), 'error');
-  }
+  showConfirm(
+    t('deleteAllMail'),
+    t('deleteAllMailConfirm'),
+    async () => {
+      try {
+        const res = await api.clearMails(state.currentAddress, state.currentPassword);
+        
+        if (res.success) {
+          state.mails = [];
+          renderMailList([]);
+          closeSettingsModal();
+          showToast(t('deleteAllMail'), 'success');
+        } else {
+          showToast(t('deleteFailed'), 'error');
+        }
+      } catch (err) {
+        console.error('Failed to delete all mails:', err);
+        showToast(t('deleteFailed'), 'error');
+      }
+    },
+    'danger'
+  );
 }
 
-async function deleteAddress() {
+function handleDeleteAddress() {
   if (!state.currentAddress || !state.currentPassword) return;
   
-  if (!confirm(t('deleteAddressConfirm'))) return;
-  
-  try {
-    const res = await api.deleteAddress(state.currentAddress, state.currentPassword);
-    
-    if (res.success) {
-      clearSession();
-      state.currentAddress = null;
-      state.currentPassword = null;
-      state.mails = [];
-      stopAutoRefresh();
-      closeSettingsMenu();
-      showAuthSection();
-      showToast(t('deleteAddressSuccess'), 'success');
-    }
-  } catch (err) {
-    console.error('Failed to delete address:', err);
-    showToast(t('deleteFailed'), 'error');
-  }
+  showConfirm(
+    t('deleteAddress'),
+    t('deleteAddressConfirm'),
+    async () => {
+      try {
+        const res = await api.deleteAddress(state.currentAddress, state.currentPassword);
+        
+        if (res.success) {
+          clearSession();
+          state.currentAddress = null;
+          state.currentPassword = null;
+          state.mails = [];
+          stopAutoRefresh();
+          closeSettingsModal();
+          showAuthView();
+          showToast(t('deleteAddress'), 'success');
+        } else {
+          showToast(t('deleteFailed'), 'error');
+        }
+      } catch (err) {
+        console.error('Failed to delete address:', err);
+        showToast(t('deleteFailed'), 'error');
+      }
+    },
+    'danger'
+  );
 }
 
-function logout() {
+function handleLogout() {
   clearSession();
   state.currentAddress = null;
   state.currentPassword = null;
   state.mails = [];
   stopAutoRefresh();
-  closeSettingsMenu();
-  showAuthSection();
-}
-
-// ===== Menu Functions =====
-function toggleApiMenu() {
-  state.showApiMenu = !state.showApiMenu;
-  elements.apiMenu.classList.toggle('active', state.showApiMenu);
-}
-
-function closeApiMenu() {
-  state.showApiMenu = false;
-  elements.apiMenu.classList.remove('active');
-}
-
-function toggleSettingsMenu() {
-  elements.settingsMenu.classList.toggle('active');
-}
-
-function closeSettingsMenu() {
-  elements.settingsMenu.classList.remove('active');
+  closeSettingsModal();
+  showAuthView();
+  showToast(t('logout'), 'success');
 }
 
 // ===== Auto Refresh =====
 function startAutoRefresh() {
-  if (state.refreshTimer) {
-    clearInterval(state.refreshTimer);
-  }
-  
+  stopAutoRefresh();
   if (state.autoRefresh) {
     state.refreshTimer = setInterval(refreshMailbox, CONFIG.REFRESH_INTERVAL);
   }
@@ -755,148 +856,130 @@ function stopAutoRefresh() {
   }
 }
 
+function toggleAutoRefresh(e) {
+  state.autoRefresh = e.target.checked;
+  if (state.autoRefresh) {
+    startAutoRefresh();
+    showToast(t('autoRefresh') + ' ON', 'info');
+  } else {
+    stopAutoRefresh();
+    showToast(t('autoRefresh') + ' OFF', 'info');
+  }
+}
+
+// ===== Navigation =====
+function scrollToMailbox() {
+  document.getElementById('mailbox-view').scrollIntoView({ behavior: 'smooth' });
+}
+
 // ===== Event Listeners =====
 function initEventListeners() {
-  // Login
-  elements.loginBtn.addEventListener('click', login);
-  elements.loginPassword.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') login();
-  });
+  // Auth tabs
+  document.getElementById('toggle-create').addEventListener('click', () => switchAuthTab('create'));
+  document.getElementById('toggle-login').addEventListener('click', () => switchAuthTab('login'));
   
-  // Create new address
-  elements.newAddressBtn.addEventListener('click', createNewAddress);
-  
-  // Auth tabs switching
-  const loginTab = document.getElementById('login-tab');
-  const createTab = document.getElementById('create-tab');
-  const loginForm = document.getElementById('login-form');
-  const createForm = document.getElementById('create-form');
-  
-  if (loginTab && createTab) {
-    loginTab.addEventListener('click', () => {
-      loginTab.classList.add('active');
-      createTab.classList.remove('active');
-      loginForm.style.display = 'block';
-      createForm.style.display = 'none';
-    });
-    
-    createTab.addEventListener('click', () => {
-      createTab.classList.add('active');
-      loginTab.classList.remove('active');
-      createForm.style.display = 'block';
-      loginForm.style.display = 'none';
-    });
-  }
+  // Forms
+  document.getElementById('login-form').addEventListener('submit', handleLogin);
+  document.getElementById('create-form').addEventListener('submit', handleCreateAddress);
   
   // Copy buttons
-  elements.copyAddressBtn.addEventListener('click', () => {
-    if (state.currentAddress) {
-      copyToClipboard(state.currentAddress);
-    }
+  document.getElementById('copy-address-btn').addEventListener('click', () => {
+    if (state.currentAddress) copyToClipboard(state.currentAddress);
   });
   
-  elements.copyPasswordBtn.addEventListener('click', () => {
-    if (state.currentPassword) {
-      copyToClipboard(state.currentPassword);
-    }
+  document.getElementById('copy-password-btn').addEventListener('click', () => {
+    if (state.currentPassword) copyToClipboard(state.currentPassword);
   });
+  
+  document.getElementById('toggle-password-btn').addEventListener('click', togglePasswordVisibility);
   
   // Refresh
-  elements.refreshBtn.addEventListener('click', refreshMailbox);
+  document.getElementById('refresh-btn').addEventListener('click', refreshMailbox);
   
   // Auto refresh toggle
-  elements.autoRefreshToggle.addEventListener('change', (e) => {
-    state.autoRefresh = e.target.checked;
-    if (state.autoRefresh) {
-      startAutoRefresh();
-      showToast(t('autoRefreshOn'), 'success');
-    } else {
-      stopAutoRefresh();
-      showToast(t('autoRefreshOff'), 'info');
-    }
+  document.getElementById('auto-refresh').addEventListener('change', toggleAutoRefresh);
+  
+  // Nav items
+  document.getElementById('nav-inbox').addEventListener('click', scrollToMailbox);
+  document.getElementById('nav-api').addEventListener('click', openApiModal);
+  document.getElementById('nav-settings').addEventListener('click', openSettingsModal);
+  
+  // Modal closes
+  document.getElementById('api-modal-close').addEventListener('click', closeApiModal);
+  document.getElementById('settings-modal-close').addEventListener('click', closeSettingsModal);
+  document.getElementById('mail-modal-close').addEventListener('click', closeMailModal);
+  document.getElementById('modal-close-btn').addEventListener('click', closeMailModal);
+  document.getElementById('modal-delete-btn').addEventListener('click', handleDeleteMail);
+  
+  // Settings actions
+  document.getElementById('logout-btn').addEventListener('click', handleLogout);
+  document.getElementById('delete-all-mail-btn').addEventListener('click', handleDeleteAllMail);
+  document.getElementById('delete-address-btn').addEventListener('click', handleDeleteAddress);
+  
+  // Confirm modal
+  document.getElementById('confirm-cancel').addEventListener('click', closeConfirm);
+  document.getElementById('confirm-ok').addEventListener('click', handleConfirmOk);
+  
+  // Language switch
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
   });
   
-  // Modal
-  elements.modalClose.addEventListener('click', closeMailModal);
-  elements.modalCloseBtn.addEventListener('click', closeMailModal);
-  elements.modalDelete.addEventListener('click', deleteCurrentMail);
-  
-  // API Menu
-  elements.apiMenuBtn.addEventListener('click', toggleApiMenu);
-  elements.apiMenuClose.addEventListener('click', closeApiMenu);
-  
-  // Settings Menu
-  elements.settingsBtn.addEventListener('click', toggleSettingsMenu);
-  elements.settingsMenuClose.addEventListener('click', closeSettingsMenu);
-  elements.logoutBtn.addEventListener('click', logout);
-  elements.deleteAllMailBtn.addEventListener('click', deleteAllMail);
-  elements.deleteAddressBtn.addEventListener('click', deleteAddress);
-  
-  // Modal outside click
-  elements.modal.addEventListener('click', (e) => {
-    if (e.target === elements.modal) {
-      closeMailModal();
-    }
+  // Close modals on overlay click
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal || e.target.classList.contains('modal-overlay')) {
+        modal.classList.remove('active');
+      }
+    });
   });
   
-  // ESC key
+  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (elements.modal.classList.contains('active')) {
-        closeMailModal();
-      }
-      if (elements.apiMenu.classList.contains('active')) {
-        closeApiMenu();
-      }
-      if (elements.settingsMenu.classList.contains('active')) {
-        closeSettingsMenu();
-      }
+      document.querySelectorAll('.modal.active').forEach(modal => {
+        modal.classList.remove('active');
+      });
     }
-  });
-  
-  // Language toggle
-  elements.langBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      setLanguage(btn.dataset.lang);
-    });
   });
 }
 
 // ===== Initialization =====
 async function init() {
-  initEventListeners();
-  
-  // Load language preference
+  // Load language
   const savedLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';
   setLanguage(savedLang);
   
-  // Try to restore session
+  // Init event listeners
+  initEventListeners();
+  
+  // Try restore session
   const session = loadSession();
   if (session && session.address && session.password) {
     try {
       const res = await api.login(session.address, session.password);
       if (res.success) {
         updateAddressDisplay(session.address, session.password);
-        state.mails = res.mails || [];
+        state.mails = (res.mails || []).map(m => ({ ...m, read: false }));
         renderMailList(state.mails);
-        showMainSection();
+        showMailboxView();
         startAutoRefresh();
       } else {
         clearSession();
-        showAuthSection();
+        showAuthView();
       }
     } catch (err) {
       clearSession();
-      showAuthSection();
+      showAuthView();
     }
   } else {
-    showAuthSection();
+    showAuthView();
   }
   
   console.log('🚀 Sutemeado initialized');
 }
 
-// Initialize when DOM is ready
+// Start when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {

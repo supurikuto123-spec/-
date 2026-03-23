@@ -3,304 +3,397 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="title">Sutemeado - シンプルな一時メール</title>
-  <meta name="description" data-i18n="description" content="登録不要、パスワードでいつでもアクセスできる一時メールサービス">
+  <title data-i18n="title">Sutemeado - 一時メール</title>
+  <meta name="description" content="登録不要、パスワードでいつでもアクセスできる一時メールサービス">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="ambient-light"></div>
-  
-  <header class="header">
-    <div class="logo">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-          <polyline points="22,6 12,13 2,6"></polyline>
-        </svg>
-      </div>
-      <span class="logo-text">Sutemeado</span>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6"/>
+      </svg>
+      <span class="nav-title">Sutemeado</span>
     </div>
-    <div style="display: flex; align-items: center; gap: 1rem;">
-      <div class="lang-toggle">
+    
+    <div class="nav-menu" id="nav-menu">
+      <button class="nav-item" id="nav-inbox" style="display: none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span data-i18n="inbox">受信箱</span>
+        <span class="nav-badge" id="nav-badge">0</span>
+      </button>
+      
+      <button class="nav-item" id="nav-api" style="display: none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+        </svg>
+        <span data-i18n="apiDocs">API</span>
+      </button>
+      
+      <div class="nav-divider"></div>
+      
+      <button class="nav-item" id="nav-settings" style="display: none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span data-i18n="settings">設定</span>
+      </button>
+      
+      <div class="lang-switch">
         <button class="lang-btn active" data-lang="ja">JA</button>
         <button class="lang-btn" data-lang="en">EN</button>
       </div>
-      <div class="header-status">
-        <span class="status-indicator online"></span>
-        <span class="status-text" data-i18n="statusOnline">システム正常</span>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Auth View -->
+    <div class="auth-container" id="auth-view">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1 data-i18n="welcome">ようこそ</h1>
+          <p data-i18n="authSubtitle">メールアドレスを作成するか、既存のアドレスにログイン</p>
+        </div>
+        
+        <div class="auth-toggle">
+          <button class="auth-toggle-btn active" id="toggle-create" data-i18n="createNew">新規作成</button>
+          <button class="auth-toggle-btn" id="toggle-login" data-i18n="login">ログイン</button>
+        </div>
+        
+        <!-- Create Form -->
+        <form class="auth-form" id="create-form">
+          <div class="form-notice">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div>
+              <p data-i18n="savePassword">パスワードを必ず保存してください</p>
+              <span data-i18n="savePasswordSub">このパスワードは再表示できません</span>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-large" id="create-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <span data-i18n="createAddress">アドレスを作成</span>
+          </button>
+        </form>
+        
+        <!-- Login Form -->
+        <form class="auth-form" id="login-form" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" data-i18n="emailAddress">メールアドレス</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <input 
+                type="email" 
+                id="login-address" 
+                class="form-input" 
+                placeholder="xxxxxx@sutemeado.com"
+                required
+              >
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" data-i18n="password">パスワード</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <input 
+                type="password" 
+                id="login-password" 
+                class="form-input" 
+                placeholder="••••••••••"
+                required
+              >
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-large" id="login-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10,17 15,12 10,7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            <span data-i18n="loginBtn">ログイン</span>
+          </button>
+        </form>
       </div>
     </div>
-  </header>
 
-  <main class="container">
-    <!-- Auth Section (Login/Create) -->
-    <section id="auth-section" class="auth-section">
-      <div class="auth-tabs">
-        <div class="auth-tab active" id="login-tab" data-i18n="login">ログイン</div>
-        <div class="auth-tab" id="create-tab" data-i18n="createNew">新規作成</div>
-      </div>
-      
-      <!-- Login Form -->
-      <div id="login-form" class="auth-form">
-        <div class="form-group">
-          <label class="form-label" data-i18n="emailAddress">メールアドレス</label>
-          <input 
-            type="email" 
-            id="login-address" 
-            class="form-input" 
-            data-i18n-placeholder="emailAddress"
-            placeholder="example@sutemeado.com"
-          >
-        </div>
-        <div class="form-group">
-          <label class="form-label" data-i18n="password">パスワード</label>
-          <input 
-            type="password" 
-            id="login-password" 
-            class="form-input" 
-            data-i18n-placeholder="password"
-            placeholder="Password"
-          >
-        </div>
-        <button id="login-btn" class="btn btn-primary btn-full" data-i18n="loginBtn">ログイン</button>
-      </div>
-      
-      <!-- Create Form -->
-      <div id="create-form" class="auth-form" style="display: none;">
-        <div class="create-info">
-          <p data-i18n="savePassword">パスワードを保存してください</p>
-          <p class="text-small text-muted" data-i18n="savePasswordSub">このパスワードは再表示できません</p>
-        </div>
-        <button id="new-address-btn" class="btn btn-primary btn-full" data-i18n="createBtn">作成</button>
-      </div>
-    </section>
-
-    <!-- Main Section (After Login) -->
-    <section id="main-section" style="display: none;">
-      <!-- Address Section -->
-      <section class="address-card">
-        <div class="address-header">
-          <h1 class="section-title" data-i18n="yourAddress">YOUR MAIL ADDRESS</h1>
-          <div class="address-actions-top">
-            <button class="icon-btn" id="api-menu-btn" title="API">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-              </svg>
-            </button>
-            <button class="icon-btn" id="settings-btn" title="Settings">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    <!-- Mailbox View -->
+    <div class="mailbox-container" id="mailbox-view" style="display: none;">
+      <!-- Address Info Card -->
+      <div class="info-card">
+        <div class="info-section">
+          <label class="info-label" data-i18n="yourAddress">あなたのアドレス</label>
+          <div class="info-value-box">
+            <code id="display-address" class="info-value">-</code>
+            <button class="icon-btn" id="copy-address-btn" title="Copy">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
               </svg>
             </button>
           </div>
         </div>
         
-        <!-- Address Display -->
-        <div class="address-display">
-          <div class="address-box">
-            <span id="email-address">loading...</span>
-            <button class="icon-btn" id="copy-address-btn" title="Copy Address">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
+        <div class="info-divider"></div>
         
-        <!-- Password Display -->
-        <div class="password-section">
-          <label class="form-label" data-i18n="yourPassword">YOUR PASSWORD</label>
-          <div class="password-box">
-            <span id="password-display">****</span>
-            <button class="icon-btn" id="copy-password-btn" title="Copy Password">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        <div class="info-section">
+          <label class="info-label" data-i18n="yourPassword">パスワード</label>
+          <div class="info-value-box">
+            <code id="display-password" class="info-value info-value-password">••••••••••</code>
+            <button class="icon-btn" id="copy-password-btn" title="Copy">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+            <button class="icon-btn" id="toggle-password-btn" title="Show/Hide">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eye-icon">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
               </svg>
             </button>
           </div>
         </div>
+      </div>
 
-        <div class="address-actions">
-          <button class="btn btn-secondary" id="refresh-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="23,4 23,10 17,10"></polyline>
-              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-            </svg>
-            <span data-i18n="refresh">更新</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- Mail List Section -->
-      <section class="mailbox-section">
-        <div class="section-header">
-          <h2 class="section-title">
-            <span data-i18n="inbox">INBOX</span>
-            <span class="badge" id="mail-count">0</span>
+      <!-- Mail List -->
+      <div class="mail-card">
+        <div class="mail-header-bar">
+          <h2 class="mail-title">
+            <span data-i18n="inbox">受信箱</span>
+            <span class="mail-count" id="mail-count">0</span>
           </h2>
-          <div class="auto-refresh">
-            <label class="toggle">
+          <div class="mail-actions">
+            <label class="toggle-sm">
               <input type="checkbox" id="auto-refresh" checked>
-              <span class="toggle-slider"></span>
-              <span class="toggle-label" data-i18n="autoRefresh">自動更新</span>
+              <span class="toggle-slider-sm"></span>
+              <span data-i18n="autoRefresh">自動更新</span>
             </label>
+            <button class="btn btn-icon" id="refresh-btn" title="Refresh">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"/>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+              </svg>
+            </button>
           </div>
         </div>
-
+        
         <div class="mail-list" id="mail-list">
           <div class="empty-state">
-            <div class="empty-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-            </div>
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
             <p data-i18n="noMail">メールはまだ届いていません</p>
-            <p class="empty-sub" data-i18n="noMailSub">アドレスをコピーして登録・確認に使ってください</p>
+            <span data-i18n="noMailSub">アドレスをコピーしてサービスに登録してください</span>
           </div>
         </div>
-      </section>
-    </section>
+      </div>
+    </div>
   </main>
 
-  <footer class="footer">
-    <p>© 2024 Sutemeado - Simple Temporary Email Service</p>
-  </footer>
-
-  <!-- API Menu Sidebar -->
-  <div class="sidebar" id="api-menu">
-    <div class="sidebar-header">
-      <h3 data-i18n="apiDocs">API</h3>
-      <button class="icon-btn" id="api-menu-close">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-    <div class="sidebar-content">
-      <div class="api-item">
-        <code class="api-method">GET</code>
-        <code class="api-endpoint">/api/new-address</code>
-        <p class="api-desc" data-i18n="apiGetAddress">新規アドレス作成</p>
+  <!-- API Modal -->
+  <div class="modal" id="api-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 data-i18n="apiDocs">API Documentation</h3>
+        <button class="modal-close" id="api-modal-close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
-      <div class="api-item">
-        <code class="api-method">POST</code>
-        <code class="api-endpoint">/api/login</code>
-        <p class="api-desc" data-i18n="apiLogin">ログイン</p>
+      <div class="modal-body">
+        <div class="api-list">
+          <div class="api-entry">
+            <div class="api-meta">
+              <span class="api-method get">GET</span>
+              <code>/api/new-address</code>
+            </div>
+            <p data-i18n="apiGetAddress">新規アドレスを作成</p>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta">
+              <span class="api-method post">POST</span>
+              <code>/api/login</code>
+            </div>
+            <p data-i18n="apiLogin">ログイン</p>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta">
+              <span class="api-method post">POST</span>
+              <code>/api/mailbox/:address</code>
+            </div>
+            <p data-i18n="apiGetMails">メール一覧を取得</p>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta">
+              <span class="api-method delete">DELETE</span>
+              <code>/api/mailbox/:address/:mailId</code>
+            </div>
+            <p data-i18n="apiDeleteMail">メールを削除</p>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta">
+              <span class="api-method delete">DELETE</span>
+              <code>/api/address/:address</code>
+            </div>
+            <p data-i18n="apiDeleteAddress">アドレスを削除</p>
+          </div>
+        </div>
       </div>
-      <div class="api-item">
-        <code class="api-method">POST</code>
-        <code class="api-endpoint">/api/mailbox/:address</code>
-        <p class="api-desc" data-i18n="apiGetMails">メール取得</p>
-      </div>
-      <div class="api-item">
-        <code class="api-method">DELETE</code>
-        <code class="api-endpoint">/api/mailbox/:address/:mailId</code>
-        <p class="api-desc" data-i18n="apiDeleteMail">メール削除</p>
-      </div>
-      <div class="api-item">
-        <code class="api-method">DELETE</code>
-        <code class="api-endpoint">/api/address/:address</code>
-        <p class="api-desc" data-i18n="apiDeleteAddress">アドレス削除</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Settings Menu Sidebar -->
-  <div class="sidebar" id="settings-menu">
-    <div class="sidebar-header">
-      <h3 data-i18n="menu">メニュー</h3>
-      <button class="icon-btn" id="settings-menu-close">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-    <div class="sidebar-content">
-      <button class="menu-item" id="logout-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-          <polyline points="16,17 21,12 16,7"></polyline>
-          <line x1="21" y1="12" x2="9" y2="12"></line>
-        </svg>
-        <span data-i18n="logout">ログアウト</span>
-      </button>
-      <button class="menu-item" id="delete-all-mail-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="3,6 5,6 21,6"></polyline>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-        </svg>
-        <span data-i18n="deleteAllMail">全メール削除</span>
-      </button>
-      <button class="menu-item menu-item-danger" id="delete-address-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="3,6 5,6 21,6"></polyline>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          <line x1="10" y1="11" x2="10" y2="17"></line>
-          <line x1="14" y1="11" x2="14" y2="17"></line>
-        </svg>
-        <span data-i18n="deleteAddress">アドレス削除</span>
-      </button>
     </div>
   </div>
 
-  <!-- Overlay -->
-  <div class="overlay" id="overlay"></div>
+  <!-- Settings Modal -->
+  <div class="modal" id="settings-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-sm">
+      <div class="modal-header">
+        <h3 data-i18n="settings">設定</h3>
+        <button class="modal-close" id="settings-modal-close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-list">
+          <button class="settings-item" id="logout-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16,17 21,12 16,7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span data-i18n="logout">ログアウト</span>
+          </button>
+          
+          <button class="settings-item" id="delete-all-mail-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3,6 5,6 21,6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            <span data-i18n="deleteAllMail">全メールを削除</span>
+          </button>
+          
+          <div class="settings-divider"></div>
+          
+          <button class="settings-item settings-item-danger" id="delete-address-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3,6 5,6 21,6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              <line x1="10" y1="11" x2="10" y2="17"/>
+              <line x1="14" y1="11" x2="14" y2="17"/>
+            </svg>
+            <span data-i18n="deleteAddress">アドレスを削除</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Mail Detail Modal -->
   <div class="modal" id="mail-modal">
-    <div class="modal-content">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-lg">
       <div class="modal-header">
-        <h3 id="modal-subject">Subject</h3>
-        <button class="modal-close" id="modal-close">&times;</button>
+        <h3 id="modal-subject">-</h3>
+        <button class="modal-close" id="mail-modal-close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
       <div class="modal-body">
-        <div class="mail-meta">
-          <div class="meta-row">
+        <div class="mail-detail-meta">
+          <div class="meta-item">
             <span class="meta-label" data-i18n="from">From:</span>
-            <span id="modal-from">sender@example.com</span>
+            <span id="modal-from" class="meta-value">-</span>
           </div>
-          <div class="meta-row">
-            <span class="meta-label" data-i18n="subject">件名:</span>
-            <span id="modal-subject-display">Subject</span>
+          <div class="meta-item">
+            <span class="meta-label" data-i18n="to">To:</span>
+            <span id="modal-to" class="meta-value">-</span>
           </div>
-          <div class="meta-row">
-            <span class="meta-label">To:</span>
-            <span id="modal-to">address@sutemeado.com</span>
-          </div>
-          <div class="meta-row">
-            <span class="meta-label">Date:</span>
-            <span id="modal-date">2024/01/01 00:00:00</span>
+          <div class="meta-item">
+            <span class="meta-label" data-i18n="date">Date:</span>
+            <span id="modal-date" class="meta-value">-</span>
           </div>
         </div>
-        <div class="mail-body" id="modal-body">
-          Message body
+        <div class="mail-detail-body" id="modal-body">
+          <!-- Content here -->
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="modal-delete">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3,6 5,6 21,6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <button class="btn btn-danger" id="modal-delete-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
           </svg>
           <span data-i18n="delete">削除</span>
         </button>
-        <button class="btn btn-primary" id="modal-close-btn" data-i18n="close">閉じる</button>
+        <button class="btn btn-secondary" id="modal-close-btn" data-i18n="close">閉じる</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div class="toast" id="toast"></div>
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <span class="toast-message" id="toast-message">Message</span>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal" id="confirm-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-xs">
+      <div class="modal-body modal-body-center">
+        <div class="confirm-icon warning">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h4 id="confirm-title">Confirm</h4>
+        <p id="confirm-message">Are you sure?</p>
+      </div>
+      <div class="modal-footer modal-footer-center">
+        <button class="btn btn-secondary" id="confirm-cancel" data-i18n="cancel">キャンセル</button>
+        <button class="btn btn-danger" id="confirm-ok" data-i18n="delete">削除</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
