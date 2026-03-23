@@ -439,43 +439,31 @@ function clearSession() {
 }
 
 // ===== UI Update Functions =====
-function switchAuthTab(tab) {
-  const createForm = document.getElementById('create-form');
-  const loginForm = document.getElementById('login-form');
-  const toggleCreate = document.getElementById('toggle-create');
-  const toggleLogin = document.getElementById('toggle-login');
-  
-  if (tab === 'create') {
-    createForm.style.display = 'block';
-    loginForm.style.display = 'none';
-    toggleCreate.classList.add('active');
-    toggleLogin.classList.remove('active');
-  } else {
-    createForm.style.display = 'none';
-    loginForm.style.display = 'block';
-    toggleCreate.classList.remove('active');
-    toggleLogin.classList.add('active');
-    // Focus on email input
-    setTimeout(() => document.getElementById('login-address').focus(), 100);
-  }
-}
+// Auth view removed - app uses modal for login
 
 function showAuthView() {
-  document.getElementById('auth-view').style.display = 'flex';
-  document.getElementById('mailbox-view').style.display = 'none';
+  // Auth view removed - app uses modal for login
+  // Just hide mailbox and show nav login button
+  const mailboxView = document.getElementById('mailbox-view');
+  if (mailboxView) mailboxView.style.display = 'none';
   
   // Hide nav items that require login
-  document.getElementById('nav-api').style.display = 'none';
-  document.getElementById('nav-settings').style.display = 'none';
+  const navApi = document.getElementById('nav-api');
+  const navSettings = document.getElementById('nav-settings');
+  if (navApi) navApi.style.display = 'none';
+  if (navSettings) navSettings.style.display = 'none';
 }
 
 function showMailboxView() {
-  document.getElementById('auth-view').style.display = 'none';
-  document.getElementById('mailbox-view').style.display = 'block';
+  const mailboxView = document.getElementById('mailbox-view');
+  const navApi = document.getElementById('nav-api');
+  const navSettings = document.getElementById('nav-settings');
+  
+  if (mailboxView) mailboxView.style.display = 'block';
   
   // Show nav items
-  document.getElementById('nav-api').style.display = 'flex';
-  document.getElementById('nav-settings').style.display = 'flex';
+  if (navApi) navApi.style.display = 'flex';
+  if (navSettings) navSettings.style.display = 'flex';
   updateNavBadge();
 }
 
@@ -1130,7 +1118,7 @@ function initEventListeners() {
   document.getElementById('nav-login').addEventListener('click', openLoginModal);
   
   // Forms
-  document.getElementById('login-form').addEventListener('submit', handleLogin);
+  document.getElementById('modal-login-form').addEventListener('submit', handleLogin);
   
   // Copy buttons
   document.getElementById('copy-address-btn').addEventListener('click', () => {
@@ -1301,6 +1289,11 @@ async function init() {
 
 // Start when DOM is ready
 if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+te === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
