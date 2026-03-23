@@ -1,502 +1,230 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>とみーメールJP｜一時メール・使い捨てメールアドレスサービス</title>
-  <link rel="icon" type="image/png" href="/favicon.png">
-  <meta name="description" content="とみーメールJP は、ブラウザだけで一時メールアドレス（使い捨てメール）を発行し、その場で受信内容を確認できるサービスです。会員登録不要で、フォーム動作確認や認証コードの受信などに便利です。"/>
-  <meta name="robots" content="index,follow"/>
-  <link rel="canonical" href="https://tomy634.com/"/>
-  <meta name="keywords" content="tomy634, 一時メール, 使い捨てメール, 捨てメアド, temp mail, 仮登録, 認証メール"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:title" content="tomy634.com｜一時メール・使い捨てメールアドレスサービス"/>
-  <meta property="og:description" content="ブラウザだけで一時メールアドレス（使い捨てメール）を発行し、その場で受信内容を確認できます。登録不要。フォームテストや認証コードの受信に。"/>
-  <meta property="og:url" content="https://tomy634.com/"/>
-  <meta property="og:site_name" content="とみーメールJP TEMP MAIL"/>
-  <meta property="og:locale" content="ja_JP"/>
-  <meta name="twitter:card" content="summary"/>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7460737380045616" crossorigin="anonymous"></script>
-  <style>
-    :root{
-      --bg:#0a0f12;--term:#0d1618;--text:#d7ffe8;--accent:#74ffcf;--muted:#89bfa6;
-      --danger:#ff7189;--ok:#7dffb3;--warn:#ffd569;--link:#4dabff;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:ui-monospace,Consolas,monospace;background:var(--bg);color:var(--text)}
-    header{
-      position:sticky;top:0;z-index:10;background:rgba(10,15,18,.95);backdrop-filter:saturate(120%) blur(6px);
-      border-bottom:1px solid rgba(116,255,207,.2);padding:10px 12px;
-    }
-    .bar{display:flex;align-items:center;gap:10px}
-    .brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
-    .logo{width:34px;height:34px;border:1px solid var(--accent);border-radius:8px;display:grid;place-items:center;box-shadow:0 0 12px rgba(116,255,207,.3)}
-    .logo::after{content:"$";color:var(--accent);font-weight:700}
-    h1{font-size:16px;margin:0;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .notice{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:6px}
-    .badge{color:var(--accent);text-decoration:none;font-size:12px;border:1px solid rgba(116,255,207,.35);padding:4px 8px;border-radius:999px;white-space:nowrap}
-    .badge:hover{background:rgba(116,255,207,.08)}
-    /* nav */
-    .navwrap{display:flex;align-items:center;gap:8px}
-    .nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .nav a{color:var(--muted);text-decoration:none;font-size:13px;white-space:nowrap}
-    .nav a:hover{text-decoration:underline;color:var(--accent)}
-    .menu-btn{display:none;border:1px solid rgba(116,255,207,.6);color:var(--accent);background:transparent;border-radius:8px;padding:6px 10px;font-size:12px}
-    .menu{display:none;padding:8px 10px;border-top:1px solid rgba(116,255,207,.2)}
-    .menu a{display:block;padding:8px 4px;color:var(--muted);text-decoration:none;font-size:14px}
-    .menu a:hover{color:var(--accent)}
-    .wrap{padding:16px;max-width:900px;margin:auto}
-    .intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
-    .panel{border:1px solid rgba(116,255,207,.35);border-radius:10px;padding:12px 14px;background:rgba(12,24,28,.8);margin-bottom:12px}
-    .addr-label{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .addr-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .addr-value{font-size:16px;font-weight:700;color:var(--accent);word-break:break-all}
-    .btn{font-family:inherit;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid rgba(116,255,207,.6);background:transparent;color:var(--accent);cursor:pointer}
-    .btn:hover{background:rgba(116,255,207,.12)}
-    .status-line{font-size:12px;color:var(--muted);margin:8px 0 12px}
-    .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ok);margin-right:6px;box-shadow:0 0 6px rgba(125,255,179,.8)}
-    .dot.err{background:var(--danger);box-shadow:0 0 6px rgba(255,113,137,.8)}
-    .mail-item{border:1px solid rgba(116,255,207,.3);border-radius:10px;padding:12px 14px;margin-bottom:12px;background:rgba(12,24,28,.6)}
-    .from{color:var(--ok);font-size:13px}
-    .subject{color:var(--accent);font-weight:bold;cursor:pointer}
-    .date{color:var(--muted);font-size:12px}
-    .body{
-      display:none;margin-top:10px;border-top:1px dashed rgba(116,255,207,.3);padding-top:10px;font-size:13px;
-      white-space:pre-wrap;line-height:1.5;
-    }
-    .body a{
-      color:var(--link);text-decoration:underline;
-      word-break:normal;overflow-wrap:anywhere;line-break:anywhere;
-    }
-    .empty{font-size:13px;color:var(--muted);margin:10px 0}
-    footer{border-top:1px solid rgba(116,255,207,.2);margin-top:18px;padding:12px 16px;color:var(--muted);font-size:13px}
-    .contacts{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .icon{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;border:1px solid rgba(116,255,207,.25);padding:6px 10px;border-radius:999px}
-    .icon:hover{color:var(--accent);border-color:rgba(116,255,207,.6);background:rgba(116,255,207,.08)}
-    .icon svg{width:16px;height:16px;display:block}
-    .mail-frame{width:100%;min-height:80px;max-height:600px;border:1px solid rgba(116,255,207,.4);background:#fff;border-radius:6px}
-
-    /* モバイル最適化 */
-    @media (max-width: 860px){
-      .nav{display:none}
-      .menu-btn{display:inline-block}
-      .notice{gap:6px}
-      h1{font-size:15px}
-      .badge{padding:3px 7px;font-size:11px}
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title">Sutemeado - シンプルな一時メール</title>
+  <meta name="description" data-i18n="description" content="登録不要、シンプルな一時メールサービス。24時間限定の使い捨てメールアドレスを即座に発行。">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<header>
-  <div class="bar">
-    <div class="brand">
-      <div class="logo"></div>
-      <h1>tomy634.com // TEMP MAIL</h1>
-      <div class="notice">
-        <a class="badge" href="/news" title="お知らせ">お知らせ</a>
-        <a class="badge" href="/status" title="稼働状況">稼働状況</a>
-        <a class="badge" href="/changelog" title="更新履歴">更新履歴</a>
+  <div class="ambient-light"></div>
+  
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+      </div>
+      <span class="logo-text">Sutemeado</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="ja">JA</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <div class="header-status">
+        <span class="status-indicator online"></span>
+        <span class="status-text" data-i18n="statusOnline">システム正常</span>
       </div>
     </div>
-    <div class="navwrap">
-      <nav class="nav" aria-label="メイン">
-        <a href="/">ホーム</a>
-        <a href="/blog">ブログ</a>
-        <a href="/how-to-use">使い方</a>
-        <a href="/faq">FAQ</a>
-        <a href="/tools">ツール</a>
-        <a href="/about">概要</a>
-        <a href="/terms">利用規約</a>
-        <a href="/privacy">プライバシー</a>
-        <a href="/contact">お問い合わせ</a>
-        <a href="/api">API</a>
-      </nav>
-      <button id="menu-toggle" class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">メニュー</button>
-    </div>
-  </div>
-  <div id="menu" class="menu" hidden>
-    <a href="/">ホーム</a>
-    <a href="/blog">ブログ</a>
-    <a href="/how-to-use">使い方</a>
-    <a href="/faq">FAQ</a>
-    <a href="/tools">ツール</a>
-    <a href="/about">概要</a>
-    <a href="/terms">利用規約</a>
-    <a href="/privacy">プライバシー</a>
-    <a href="/contact">お問い合わせ</a>
-    <a href="/api">API</a>
-  </div>
-</header>
+  </header>
 
-<div class="wrap">
-  <div class="intro">
-    このページでは、<strong>一時メールアドレス</strong>を発行して受信内容を確認できます。フォームの動作確認や登録メールの受け取りにご利用ください。重要アカウントの登録には使用しないでください。
-  </div>
+  <main class="container">
+    <!-- Address Section -->
+    <section class="address-card">
+      <h1 class="section-title" data-i18n="yourAddress">YOUR TEMPORARY ADDRESS</h1>
+      
+      <!-- Custom Address Input -->
+      <div class="address-input-group" id="custom-address-group">
+        <input 
+          type="text" 
+          class="address-input" 
+          id="custom-address-input" 
+          data-i18n-placeholder="customAddressPlaceholder"
+          placeholder="任意のアドレス名を入力"
+          maxlength="20"
+        >
+        <span class="domain-suffix">@sutemeado.com</span>
+        <button class="btn btn-primary" id="use-custom-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20,6 9,17 4,12"></polyline>
+          </svg>
+          <span data-i18n="useThisAddress">適用</span>
+        </button>
+      </div>
+      
+      <div class="address-display">
+        <div class="address-box">
+          <span id="email-address">loading...</span>
+          <button class="icon-btn" id="copy-btn" title="Copy">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="address-hint" data-i18n="addressHint">24時間有効 / 自動削除</p>
+      </div>
 
-  <div class="panel">
-    <div class="addr-label">現在の一時メールアドレス</div>
-    <div class="addr-row">
-      <div id="current-address" class="addr-value">loading...</div>
-      <button id="copy-btn" class="btn" type="button">コピー</button>
-      <button id="new-btn" class="btn" type="button">新しいアドレスを生成</button>
-      <button id="refresh-btn" class="btn" type="button">更新</button>
-    </div>
-    <div class="addr-label" style="margin-top:6px;">このアドレス宛の新着メールは順次以下に表示されます。</div>
-  </div>
+      <div class="address-actions">
+        <button class="btn btn-primary" id="new-address-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+          <span data-i18n="newAddress">新規生成</span>
+        </button>
+        <button class="btn btn-secondary" id="refresh-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23,4 23,10 17,10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          <span data-i18n="refresh">更新</span>
+        </button>
+        <button class="btn btn-secondary" id="toggle-custom-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span data-i18n="customAddress">カスタム</span>
+        </button>
+      </div>
+    </section>
 
-  <div id="status" class="status-line"><span class="dot"></span>受信ボックスを監視中...</div>
-  <div id="empty" class="empty" style="display:none;">まだメールはありません。上のアドレス宛に送ってください。</div>
-  <div id="mails" aria-live="polite"></div>
+    <!-- Mail List Section -->
+    <section class="mailbox-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span data-i18n="inbox">INBOX</span>
+          <span class="badge" id="mail-count">0</span>
+        </h2>
+        <div class="auto-refresh">
+          <label class="toggle">
+            <input type="checkbox" id="auto-refresh" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label" data-i18n="autoRefresh">自動更新</span>
+          </label>
+        </div>
+      </div>
 
-  <div class="panel" style="margin-top:16px">
-    <div class="addr-label"><strong>注意事項</strong></div>
-    <div class="addr-label">
-      ・重要なアカウントの登録には使用しないでください。<br/>
-      ・本文内リンクの開封は自己責任でお願いします。<br/>
-    </div>
-  </div>
+      <div class="mail-list" id="mail-list">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <p data-i18n="noMail">メールはまだ届いていません</p>
+          <p class="empty-sub" data-i18n="noMailSub">アドレスをコピーして登録・確認に使ってください</p>
+        </div>
+      </div>
+    </section>
 
-  <footer>
-    <div class="contacts">
-      <span>サポート（毎日 08:00–24:00 JST）:</span>
-      <a class="icon" href="mailto:admin@tomy634.com" title="Email">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18v12H3z" stroke="currentColor"/><path d="M3 7l9 6 9-6" stroke="currentColor"/></svg>
-        admin@tomy634.com
-      </a>
-      <a class="icon" href="https://instagram.com/xau_usdpt" target="_blank" rel="noopener" title="Instagram @xau_usdpt">
-        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor"/><circle cx="12" cy="12" r="4" stroke="currentColor"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
-        @xau_usdpt
-      </a>
-      <a class="icon" href="https://discord.com/users/xm0g" target="_blank" rel="noopener" title="Discord @xm0g">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M7 7c2-1 4-1 5-1s3 0 5 1c1 2 2 4 2 6 0 5-4 6-7 6s-7-1-7-6c0-2 1-4 2-6z" stroke="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/></svg>
-        @xm0g
-      </a>
-    </div>
+    <!-- API Info Section -->
+    <section class="info-section">
+      <h2 class="section-title" data-i18n="apiAccess">API ACCESS</h2>
+      <div style="background: var(--bg-secondary); border-radius: var(--radius-md); padding: var(--spacing-md); margin-top: var(--spacing-md);">
+        <code style="font-family: var(--font-mono); font-size: 0.875rem; color: var(--neon-cyan); display: block; margin-bottom: var(--spacing-sm);">
+          GET /api/new-address
+        </code>
+        <code style="font-family: var(--font-mono); font-size: 0.875rem; color: var(--neon-cyan); display: block; margin-bottom: var(--spacing-sm);">
+          GET /api/mailbox/:address
+        </code>
+        <code style="font-family: var(--font-mono); font-size: 0.875rem; color: var(--neon-cyan); display: block; margin-bottom: var(--spacing-sm);">
+          GET /api/mailbox/:address/:mailId
+        </code>
+        <code style="font-family: var(--font-mono); font-size: 0.875rem; color: var(--neon-cyan); display: block;">
+          POST /api/mailbox/:address/:mailId/reply
+        </code>
+        <p style="margin-top: var(--spacing-md); font-size: 0.8125rem; color: var(--text-tertiary);" data-i18n="apiDocs">
+          全機能無料でご利用いただけます。レート制限: 100req/min
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2024 Sutemeado - Simple Temporary Email Service</p>
+    <p class="footer-hint" data-i18n="footerHint">メールは24時間後に自動削除されます</p>
   </footer>
-</div>
 
-<script>
-(function () {
-  'use strict';
+  <!-- Mail Detail Modal -->
+  <div class="modal" id="mail-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-subject">Subject</h3>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="mail-meta">
+          <div class="meta-row">
+            <span class="meta-label">From:</span>
+            <span id="modal-from">sender@example.com</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label" data-i18n="receivedAt">受信日時:</span>
+            <span id="modal-date">2024/01/01 00:00:00</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">To:</span>
+            <span id="modal-to">address@sutemeado.com</span>
+          </div>
+        </div>
+        <div class="mail-body" id="modal-body">
+          Message body
+        </div>
+        
+        <!-- Reply Section -->
+        <div class="reply-section" id="reply-section">
+          <div class="reply-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9,14 4,9 9,4"></polyline>
+              <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+            </svg>
+            <span data-i18n="replyToThis">返信する</span>
+          </div>
+          <textarea 
+            class="reply-input" 
+            id="reply-input" 
+            data-i18n-placeholder="replyPlaceholder"
+            placeholder="返信内容を入力してください..."
+          ></textarea>
+          <div class="reply-actions">
+            <button class="btn btn-secondary" id="reply-cancel" data-i18n="cancel">キャンセル</button>
+            <button class="btn btn-primary" id="reply-send">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+              <span data-i18n="sendReply">送信</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modal-delete">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          <span data-i18n="delete">削除</span>
+        </button>
+        <button class="btn btn-primary" id="modal-close-btn" data-i18n="close">閉じる</button>
+      </div>
+    </div>
+  </div>
 
-  /* ===== ヘッダ（スマホメニュー） ===== */
-  (function headerMenu(){
-    var btn = document.getElementById('menu-toggle');
-    var menu = document.getElementById('menu');
-    if(!btn || !menu) return;
-    function set(open){
-      if(open){
-        menu.hidden = false;
-        menu.style.display = 'block';
-        btn.setAttribute('aria-expanded','true');
-      }else{
-        menu.hidden = true;
-        menu.style.display = 'none';
-        btn.setAttribute('aria-expanded','false');
-      }
-    }
-    btn.addEventListener('click', function(){
-      var open = btn.getAttribute('aria-expanded') === 'true';
-      set(!open);
-    });
-  })();
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
 
-  /* ===== 既存ロジック（点滅防止：append-only） ===== */
-  var DOMAIN = 'tomy634.com';
-  var COOKIE = 'tm_box_id';
-  var DEFAULT_ID_LEN = 8;
-  var REFRESH_MS = 1000;
-  var HARD_LIMIT = 100;
-
-  var boxId = null;
-  var openIds = Object.create(null);
-
-  var press = {downAt:0, moved:false, long:false, timer:null};
-
-  function markOpen(id, on){ if(!id) return; if(on) openIds[id]=true; else delete openIds[id]; }
-  function isOpen(id){ return !!openIds[id]; }
-
-  function getCookie(name){
-    var parts = document.cookie.split(';');
-    for(var i=0;i<parts.length;i++){
-      var kv = parts[i].trim(); if(!kv) continue;
-      var p = kv.indexOf('='); if(p===-1) continue;
-      var k = kv.substring(0,p);
-      if(k===name) return decodeURIComponent(kv.substring(p+1));
-    }
-    return null;
-  }
-  function setCookie(n,v,days){
-    var ex=''; if(days){ var d=new Date(); d.setTime(d.getTime()+days*24*60*60*1000); ex='; expires='+d.toUTCString(); }
-    document.cookie = n+'='+encodeURIComponent(v)+ex+'; path=/';
-  }
-  function rid(len){
-    len = len || DEFAULT_ID_LEN;
-    var chars='abcdefghijklmnopqrstuvwxyz0123456789', out='';
-    if(window.crypto && window.crypto.getRandomValues){
-      var a=new Uint32Array(len); window.crypto.getRandomValues(a);
-      for(var i=0;i<len;i++) out+=chars[a[i]%chars.length];
-    } else {
-      for(var j=0;j<len;j++) out+=chars.charAt(Math.random()*chars.length|0);
-    }
-    return out;
-  }
-  function ensureBox(){
-    try{
-      var v=getCookie(COOKIE);
-      if(!v || !/^[a-z0-9]{8,16}$/.test(v)){
-        v = rid(DEFAULT_ID_LEN);
-        setCookie(COOKIE, v, 7);
-      }
-      boxId = v.toLowerCase();
-    }catch(e){
-      boxId = rid(DEFAULT_ID_LEN);
-    }
-    var el=document.getElementById('current-address');
-    if(el) el.textContent = boxId + '@' + DOMAIN;
-  }
-  function keyOf(m){
-    if(m && m.id!=null) return String(m.id);
-    var d=(m&&m.date)||'', f=(m&&m.from)||'', s=(m&&m.subject)||'';
-    return d+'|'+f+'|'+s;
-  }
-  function esc(s){
-    return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  }
-  function softWrapUrl(u){
-    var disp = u.replace(/([\/._\-?&=:#])/g, '$1\u200b');
-    disp = disp.replace(/([A-Za-z0-9]{30})(?=[A-Za-z0-9])/g, '$1\u200b');
-    return disp;
-  }
-  function linkify(text){
-    var safe = esc(text || '');
-    return safe.replace(/https?:\/\/[^\s]+/g, function(u){
-      var disp = softWrapUrl(u);
-      return '<a href="'+u+'" target="_blank" rel="noopener noreferrer">'+disp+'</a>';
-    });
-  }
-  function patchHtmlLinks(html){
-    if(!html) return '';
-    return String(html).replace(/<a\b([^>]*?)>/gi,function(all,attrs){
-      var res = '<a'+attrs;
-      if(!/target\s*=\s*(['"])_blank\1/i.test(attrs)){ res += ' target="_blank"'; }
-      if(!/rel\s*=/i.test(attrs)){ res += ' rel="noopener noreferrer"'; }
-      res += '>';
-      return res;
-    });
-  }
-  function fitFrameHeight(frame){
-    try{
-      var doc=frame.contentDocument||frame.contentWindow.document; if(!doc) return;
-      var body=doc.body, html=doc.documentElement, h=0;
-      if(body) h=Math.max(h, body.scrollHeight||0, body.offsetHeight||0);
-      if(html) h=Math.max(h, html.scrollHeight||0, html.offsetHeight||0);
-      if(!h||h<80) h=80; if(h>600) h=600; frame.style.height=h+'px';
-    }catch(e){}
-  }
-
-  function buildCard(m){
-    var id = keyOf(m);
-    var wrap=document.createElement('div');
-    wrap.className='mail-item';
-    wrap.setAttribute('data-mid', id);
-
-    var s=document.createElement('div'); s.className='subject'; s.textContent=m.subject||'(no subject)';
-    var f=document.createElement('div'); f.className='from'; f.textContent='From: '+(m.from||'(unknown)');
-    var dt=document.createElement('div'); dt.className='date';
-    try{
-      if(m.date) dt.textContent='日時: '+ new Date(m.date).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'});
-      else dt.textContent='日時: (no date)';
-    }catch(e){ dt.textContent='日時: (invalid date)'; }
-
-    var body=document.createElement('div'); body.className='body';
-
-    if(m.html && typeof m.html==='string' && m.html.trim().length>0){
-      var html=patchHtmlLinks(m.html);
-      var frame=document.createElement('iframe');
-      frame.className='mail-frame';
-      frame.setAttribute('sandbox','allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
-      frame.setAttribute('referrerpolicy','no-referrer');
-      frame.srcdoc=html;
-      frame.addEventListener('load',function(ev){
-        var fr=ev.currentTarget; fitFrameHeight(fr);
-        try{
-          var d=fr.contentDocument||fr.contentWindow.document; if(!d) return;
-          var imgs=d.images||[];
-          for(var j=0;j<imgs.length;j++){
-            imgs[j].addEventListener('load',function(){fitFrameHeight(fr);});
-            imgs[j].addEventListener('error',function(){fitFrameHeight(fr);});
-          }
-        }catch(e){}
-        setTimeout(function(){fitFrameHeight(fr);},800);
-        setTimeout(function(){fitFrameHeight(fr);},2000);
-      });
-      body.appendChild(frame);
-    }else{
-      body.innerHTML=linkify(m.body||'');
-    }
-
-    // ===== タイトルのみ開閉（クリック/タップ） =====
-    (function(mailId, bodyEl, subjectEl){
-      function hasSelection(){
-        var sel = window.getSelection && window.getSelection();
-        return sel && String(sel).length>0;
-      }
-      function toggle(){
-        var on = bodyEl.style.display==='block';
-        bodyEl.style.display = on ? 'none' : 'block';
-        markOpen(mailId, !on);
-      }
-      // クリック（PC/モバイル両方で発火する保険）
-      subjectEl.addEventListener('click', function(ev){
-        // 直前の長押し/スワイプ/選択時は無視
-        if(press.long || press.moved || hasSelection()) return;
-        toggle();
-      });
-      // 詳細な抑止（PCドラッグ選択）
-      subjectEl.addEventListener('mousedown', function(){
-        press.downAt=Date.now(); press.moved=false; press.long=false; clearTimeout(press.timer);
-      });
-      subjectEl.addEventListener('mousemove', function(){ press.moved=true; });
-      subjectEl.addEventListener('mouseup', function(){
-        var dur = Date.now()-press.downAt;
-        if(press.moved || dur>500 || hasSelection()) return;
-        // clickで処理するのでここでは何もしない
-      });
-      // タッチ（長押し/スワイプ無視）
-      subjectEl.addEventListener('touchstart', function(){
-        press.downAt=Date.now(); press.moved=false; press.long=false; clearTimeout(press.timer);
-        press.timer=setTimeout(function(){ press.long=true; },450);
-      }, {passive:true});
-      subjectEl.addEventListener('touchmove', function(){ press.moved=true; }, {passive:true});
-      subjectEl.addEventListener('touchend', function(){
-        clearTimeout(press.timer);
-        // click に任せる
-      }, {passive:true});
-      subjectEl.setAttribute('tabindex','0');
-      subjectEl.addEventListener('keydown', function(ev){
-        if(ev.key==='Enter' || ev.key===' '){
-          ev.preventDefault(); toggle();
-        }
-      });
-    })(id, body, s);
-
-    if(isOpen(id)) body.style.display='block';
-
-    wrap.appendChild(s); wrap.appendChild(f); wrap.appendChild(dt); wrap.appendChild(body);
-    return wrap;
-  }
-
-  function currentIdSet(container){
-    var set = new Set();
-    var nodes = container.querySelectorAll('[data-mid]');
-    for(var i=0;i<nodes.length;i++) set.add(nodes[i].getAttribute('data-mid'));
-    return set;
-  }
-
-  function appendOnlyNew(list){
-    var M=document.getElementById('mails');
-    var E=document.getElementById('empty');
-    if(!M) return;
-
-    var arr = Array.isArray(list) ? list : [];
-
-    if(arr.length===0){
-      if(M.children.length===0 && E) E.style.display='block';
-      return;
-    } else if(E){ E.style.display='none'; }
-
-    var exist = currentIdSet(M);
-
-    // サーバは新→旧で返す想定。古い方から順に prepend して結果として「新しいのが上」になる。
-    for(var i=arr.length-1;i>=0;i--){
-      var m  = arr[i];
-      var id = keyOf(m); if(!id) continue;
-      if(exist.has(id)) continue; // 既存は一切触らない
-      var card = buildCard(m);
-      M.insertBefore(card, M.firstChild);
-      exist.add(id);
-    }
-
-    while(M.children.length > HARD_LIMIT){
-      var last = M.lastElementChild;
-      if(!last) break;
-      var lid = last.getAttribute('data-mid');
-      if(lid && isOpen(lid)){
-        var prev = last.previousElementSibling;
-        if(!prev) break;
-        M.removeChild(prev);
-      }else{
-        M.removeChild(last);
-      }
-    }
-  }
-
-  function load(){
-    if(!boxId) ensureBox();
-    var st=document.getElementById('status');
-    var url='/api/boxes/'+encodeURIComponent(boxId)+'.json?t='+Date.now();
-
-    if(st){ st.innerHTML='<span class="dot"></span>'+boxId+'@'+DOMAIN+' // 監視中'; }
-
-    fetch(url,{cache:'no-store'})
-      .then(function(r){
-        if(r.status===404) return [];
-        if(!r.ok) throw new Error('HTTP '+r.status);
-        return r.json();
-      })
-      .then(function(data){
-        appendOnlyNew(data);
-      })
-      .catch(function(e){
-        if(st){
-          st.innerHTML='<span class="dot err"></span>'+
-            (boxId?boxId+'@'+DOMAIN:'(no id)')+' // エラー: '+(e && e.message?e.message:e);
-        }
-      });
-  }
-
-  function setupButtons(){
-    var copyBtn=document.getElementById('copy-btn');
-    var newBtn=document.getElementById('new-btn');
-    var refBtn=document.getElementById('refresh-btn');
-
-    if(copyBtn){
-      copyBtn.addEventListener('click',function(){
-        if(!boxId) ensureBox();
-        var addr=boxId+'@'+DOMAIN;
-        function fallback(){
-          var ta=document.createElement('textarea'); ta.value=addr; ta.style.position='fixed'; ta.style.left='-9999px';
-          document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta);
-        }
-        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(addr).catch(fallback); }
-        else { fallback(); }
-      });
-    }
-    if(newBtn){
-      newBtn.addEventListener('click',function(){
-        boxId = rid(DEFAULT_ID_LEN);
-        setCookie(COOKIE, boxId, 7);
-        var el=document.getElementById('current-address'); if(el) el.textContent=boxId+'@'+DOMAIN;
-        openIds=Object.create(null);
-        document.getElementById('mails').innerHTML='';
-        var st=document.getElementById('status');
-        if(st){ st.innerHTML='<span class="dot"></span>'+boxId+'@'+DOMAIN+' // 監視中'; }
-        load();
-      });
-    }
-    if(refBtn){ refBtn.addEventListener('click',function(){ load(); }); }
-  }
-
-  function setup(){
-    ensureBox();
-    setupButtons();
-    load();
-    setInterval(load, REFRESH_MS);
-  }
-  document.addEventListener('DOMContentLoaded', setup);
-})();
-</script>
+  <script src="/app.js"></script>
 </body>
 </html>

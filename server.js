@@ -75,10 +75,51 @@ app.delete('/api/mailbox/:address/:mailId', (req, res) => {
 app.delete('/api/mailbox/:address', (req, res) => {
   const { address } = req.params;
   mailStore.clearMails(address);
-  
+
   res.json({
     success: true,
     message: '全てのメールを削除しました'
+  });
+});
+
+// 返信を送信
+app.post('/api/mailbox/:address/:mailId/reply', async (req, res) => {
+  const { address, mailId } = req.params;
+  const { body } = req.body;
+
+  if (!body || body.trim() === '') {
+    return res.status(400).json({
+      success: false,
+      error: '返信内容が空です'
+    });
+  }
+
+  // 元のメールを取得
+  const originalMail = mailStore.getMail(address, mailId);
+  if (!originalMail) {
+    return res.status(404).json({
+      success: false,
+      error: '元のメールが見つかりません'
+    });
+  }
+
+  // 返信を保存（返信履歴として保存）
+  const reply = mailStore.addReply(address, mailId, {
+    body: body.trim(),
+    from: address,
+    to: originalMail.from,
+    originalSubject: originalMail.subject
+  });
+
+  console.log(`↩️ Reply saved: ${address} -> ${originalMail.from}`);
+
+  res.json({
+    success: true,
+    message: '返信を保存しました',
+    reply: {
+      id: reply.id,
+      sentAt: reply.sentAt
+    }
   });
 });
 
