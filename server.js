@@ -215,6 +215,40 @@ app.delete('/api/address/:address', (req, res) => {
   });
 });
 
+// パスワード変更（パスワード必須）
+app.put('/api/address/:address/password', (req, res) => {
+  const { address } = req.params;
+  const { currentPassword, newPassword } = req.body;
+  
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({
+      success: false,
+      error: '現在のパスワードと新しいパスワードが必要です'
+    });
+  }
+  
+  const result = mailStore.changePassword(address, currentPassword, newPassword);
+  
+  if (result === null) {
+    return res.status(401).json({
+      success: false,
+      error: '認証に失敗しました（現在のパスワードが正しくありません）'
+    });
+  }
+  
+  if (!result) {
+    return res.status(500).json({
+      success: false,
+      error: 'パスワードの変更に失敗しました'
+    });
+  }
+  
+  res.json({
+    success: true,
+    message: 'パスワードを変更しました'
+  });
+});
+
 // サーバーステータス
 app.get('/api/status', (req, res) => {
   const stats = mailStore.getStats();
