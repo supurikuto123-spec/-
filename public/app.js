@@ -76,9 +76,9 @@ const i18n = {
     strengthMedium: '普通',
     strengthStrong: '強い',
     newAddress: '新規作成',
-    createNewAddressConfirm: '新しいアドレスを作成しますか？現在のアドレスとメールは失われます（パスワードを持っていれば後でアクセスできます）。',
-    passwordWarningTitle: '重要：パスワードを保管してください',
-    passwordWarningMessage: 'この一時メールサービスはパスワードのみでアクセスできます。<br><br><strong>パスワードをメモしないと、再度アクセスできなくなります。</strong><br><br>アドレスとパスワードを必ず保存してください。',
+    createNewAddressConfirm: '新しいアドレスを作成しますか？現在のアドレスはログアウトされます。',
+    passwordWarningTitle: 'パスワードを保存してください',
+    passwordWarningMessage: '再度アクセスするために、必ずパスワードを保存してください。',
     understood: '了解しました'
   },
   en: {
@@ -152,9 +152,9 @@ const i18n = {
     strengthMedium: 'Medium',
     strengthStrong: 'Strong',
     newAddress: 'New Address',
-    createNewAddressConfirm: 'Create a new address? Current address and emails will be lost (you can access later if you have the password).',
-    passwordWarningTitle: 'Important: Save Your Password',
-    passwordWarningMessage: 'This temporary email service is accessed only by password.<br><br><strong>If you do not save the password, you will lose access.</strong><br><br>Please save your address and password.',
+    createNewAddressConfirm: 'Create a new address? You will be logged out of your current address.',
+    passwordWarningTitle: 'Please Save Your Password',
+    passwordWarningMessage: 'To access this address later, please save your password.',
     understood: 'I Understand'
   }
 };
@@ -322,25 +322,21 @@ function showConfirm(title, message, onConfirm, type = 'warning') {
   const modal = document.getElementById('confirm-modal');
   const titleEl = document.getElementById('confirm-title');
   const messageEl = document.getElementById('confirm-message');
-  const iconEl = modal.querySelector('.confirm-icon');
   const okBtn = document.getElementById('confirm-ok');
   
   // Set content
   titleEl.textContent = title;
   messageEl.textContent = message;
   
-  // Set icon based on type
-  const icons = {
-    warning: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
-    danger: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
-    info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
-  };
-  
-  iconEl.innerHTML = icons[type] || icons.warning;
-  iconEl.className = 'confirm-icon ' + type;
+  // Update button type based on action type
+  if (type === 'danger') {
+    okBtn.className = 'btn btn-danger';
+  } else {
+    okBtn.className = 'btn btn-primary';
+  }
   
   // Update button text
-  okBtn.textContent = t('confirm');
+  okBtn.textContent = t('confirm') || '確認';
   document.getElementById('confirm-cancel').textContent = t('cancel');
   
   // Set callback
@@ -465,9 +461,16 @@ function clearSession() {
 }
 
 // ===== UI Update Functions =====
-// Auth view removed - app uses modal for login
-
-// Auth view removed - app uses modal for login
+function showLoggedOutView() {
+  const mailboxView = document.getElementById('mailbox-view');
+  if (mailboxView) mailboxView.style.display = 'none';
+  
+  const loginNavBtn = document.getElementById('nav-login');
+  if (loginNavBtn) loginNavBtn.style.display = 'flex';
+  
+  const newAddressNavBtn = document.getElementById('nav-new-address');
+  if (newAddressNavBtn) newAddressNavBtn.style.display = 'none';
+}
 
 function showMailboxView() {
   const mailboxView = document.getElementById('mailbox-view');
@@ -476,9 +479,12 @@ function showMailboxView() {
   
   if (mailboxView) mailboxView.style.display = 'block';
   
-  // Show nav items
-  if (navApi) navApi.style.display = 'flex';
-  if (navSettings) navSettings.style.display = 'flex';
+  // Toggle view elements based on login state
+  const loginNavBtn = document.getElementById('nav-login');
+  if (loginNavBtn) loginNavBtn.style.display = 'none';
+  
+  const newAddressNavBtn = document.getElementById('nav-new-address');
+  if (newAddressNavBtn) newAddressNavBtn.style.display = 'flex';
   updateNavBadge();
 }
 
@@ -535,9 +541,9 @@ function renderMailList(mails) {
   if (!mails || mails.length === 0) {
     mailList.innerHTML = `
       <div class="empty-state">
-        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-          <polyline points="22,6 12,13 2,6"/>
+        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
+          <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
         </svg>
         <p data-i18n="noMail">${t('noMail')}</p>
         <span data-i18n="noMailSub">${t('noMailSub')}</span>
@@ -692,68 +698,7 @@ function closeSettingsModal() {
   document.getElementById('settings-modal').classList.remove('active');
 }
 
-function openChangePasswordModal() {
-  document.getElementById('change-password-modal').classList.add('active');
-  closeSettingsModal();
-  // Show current password field when opened from settings
-  const currentPwGroup = document.getElementById('current-password')?.closest('.form-group');
-  if (currentPwGroup) currentPwGroup.style.display = 'block';
-}
-
-function openQuickPasswordChange() {
-  // Open password change modal but hide current password field
-  // since user is already viewing the password
-  const modal = document.getElementById('change-password-modal');
-  const currentPwGroup = document.getElementById('current-password')?.closest('.form-group');
-  const newPwInput = document.getElementById('new-password');
-
-  if (currentPwGroup) currentPwGroup.style.display = 'none';
-
-  // Pre-fill current password if visible
-  if (state.passwordVisible && state.currentPassword) {
-    document.getElementById('current-password').value = state.currentPassword;
-  }
-
-  modal.classList.add('active');
-
-  // Focus on new password field
-  setTimeout(() => newPwInput?.focus(), 100);
-}
-
-function closeChangePasswordModal() {
-  document.getElementById('change-password-modal').classList.remove('active');
-  // Clear form
-  document.getElementById('change-password-form').reset();
-  updatePasswordStrength('');
-  // Reset visibility of current password field
-  const currentPwGroup = document.getElementById('current-password')?.closest('.form-group');
-  if (currentPwGroup) currentPwGroup.style.display = 'block';
-  
-  // Reset password visibility toggles and button states
-  ['current-password', 'new-password', 'confirm-password'].forEach(id => {
-    const input = document.getElementById(id);
-    if (input) input.type = 'password';
-  });
-  
-  // Reset eye icons for change password modal (specific IDs)
-  ['toggle-current-password', 'toggle-new-password', 'toggle-confirm-password'].forEach(btnId => {
-    const btn = document.getElementById(btnId);
-    if (btn) {
-      const svg = btn.querySelector('svg');
-      if (svg) {
-        // Reset to "eye open" (visible) icon
-        svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-      }
-    }
-  });
-  
-  // Re-enable submit button if it was disabled
-  const submitBtn = document.getElementById('change-password-submit-btn');
-  if (submitBtn) {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>${t('save') || '保存'}</span>`;
-  }
-}
+// Password Change Modal Logic Removed
 
 function openLoginModal() {
   document.getElementById('login-modal').classList.add('active');
@@ -765,6 +710,8 @@ function closeLoginModal() {
 
 // ===== Password Warning Modal =====
 function openPasswordWarningModal() {
+  document.getElementById('warning-address-display').textContent = state.currentAddress || '';
+  document.getElementById('warning-password-display').textContent = state.currentPassword || '';
   document.getElementById('password-warning-modal').classList.add('active');
 }
 
@@ -785,14 +732,13 @@ function handleNewAddress() {
   // Confirm with user before creating new address
   showConfirm(
     t('newAddress') || '新規作成',
-    t('createNewAddressConfirm') || '新しいアドレスを作成しますか？現在のアドレスとメールは失われます（パスワードを持っていれば後でアクセスできます）。',
+    t('createNewAddressConfirm') || '新しいアドレスを作成しますか？現在のアドレスはログアウトされます。',
     async () => {
       // Clear current session and create new address
       clearSession();
-      await autoCreateAddress();
-      showToast(t('addressCreated'), 'success');
+      await autoCreateAddress(true);
     },
-    'warning'
+    'info'
   );
 }
 
@@ -833,11 +779,11 @@ async function handleLogin(e) {
     showToast(t('loginFailed'), 'error');
   } finally {
     loginBtn.disabled = false;
-    loginBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg><span>${t('loginBtn')}</span>`;
+    loginBtn.innerHTML = `<span>${t('loginBtn')}</span>`;
   }
 }
 
-async function autoCreateAddress() {
+async function autoCreateAddress(isManualCreation = false) {
   const mailList = document.getElementById('mail-list');
   mailList.innerHTML = `
     <div class="loading-state">
@@ -855,10 +801,14 @@ async function autoCreateAddress() {
       renderMailList([]);
       showMailboxView();
 
-      // Show welcome toast with password hint
-      showToast(`${t('addressCreated')}: ${res.address}`, 'success', 5000);
+      showToast(t('addressCreated'), 'success', 3000);
 
       startAutoRefresh();
+      
+      // Only show warning when user explicitly clicks new address button
+      if (isManualCreation && !hasSeenPasswordWarning()) {
+        setTimeout(openPasswordWarningModal, 500);
+      }
     } else {
       // Silent fail on auto-create - don't show error toast, just show empty state
       console.warn('Auto-create address failed:', res.message);
@@ -884,7 +834,7 @@ async function refreshMailbox() {
   
   try {
     refreshBtn.disabled = true;
-    refreshBtn.querySelector('svg').classList.add('loading');
+    refreshBtn.innerHTML = `<span>${t('processing') || '処理中...'}</span>`;
     
     const res = await api.getMailbox(state.currentAddress, state.currentPassword);
     
@@ -898,7 +848,7 @@ async function refreshMailbox() {
     console.error('Failed to refresh mailbox:', err);
   } finally {
     refreshBtn.disabled = false;
-    refreshBtn.querySelector('svg').classList.remove('loading');
+    refreshBtn.innerHTML = `<span>${t('refresh') || '更新'}</span>`;
   }
 }
 
@@ -966,7 +916,7 @@ function handleDeleteAddress() {
           state.mails = [];
           stopAutoRefresh();
           closeSettingsModal();
-          autoCreateAddress();
+          showLoggedOutView();
           showToast(t('deleteAddress'), 'success');
         } else {
           showToast(t('deleteFailed'), 'error');
@@ -987,148 +937,12 @@ function handleLogout() {
   state.mails = [];
   stopAutoRefresh();
   closeSettingsModal();
-  // Auto-create new address instead of showing auth view
-  autoCreateAddress();
+  showLoggedOutView();
   showToast(t('logout'), 'success');
 }
 
 // ===== Password Change Functions =====
-function validatePassword(password) {
-  // At least 8 characters, alphanumeric required, special characters optional
-  const minLength = 8;
-  const hasLetter = /[a-zA-Z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-  const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
-  
-  const errors = [];
-  if (password.length < minLength) {
-    errors.push(t('passwordTooShort') || 'パスワードは8文字以上必要です');
-  }
-  if (!hasLetter) {
-    errors.push(t('passwordNeedLetter') || '英字を含める必要があります');
-  }
-  if (!hasNumber) {
-    errors.push(t('passwordNeedNumber') || '数字を含める必要があります');
-  }
-  
-  return {
-    valid: errors.length === 0,
-    errors,
-    strength: calculatePasswordStrength(password, hasLetter, hasNumber, hasSpecial)
-  };
-}
-
-function calculatePasswordStrength(password, hasLetter, hasNumber, hasSpecial) {
-  let strength = 0;
-  if (password.length >= 8) strength += 1;
-  if (password.length >= 12) strength += 1;
-  if (hasLetter) strength += 1;
-  if (hasNumber) strength += 1;
-  if (hasSpecial) strength += 1;
-  
-  if (strength <= 2) return { level: 'weak', text: t('strengthWeak') || '弱い', color: '#ff4757' };
-  if (strength <= 4) return { level: 'medium', text: t('strengthMedium') || '普通', color: '#ffa502' };
-  return { level: 'strong', text: t('strengthStrong') || '強い', color: '#00ff9d' };
-}
-
-function updatePasswordStrength(password) {
-  const validation = validatePassword(password);
-  const strengthBar = document.getElementById('strength-bar');
-  const strengthText = document.getElementById('strength-text');
-  
-  if (!password) {
-    strengthBar.style.width = '0%';
-    strengthBar.style.background = 'transparent';
-    strengthText.textContent = '';
-    return;
-  }
-  
-  const strengthPercent = validation.strength.level === 'weak' ? 33 : 
-                          validation.strength.level === 'medium' ? 66 : 100;
-  
-  strengthBar.style.width = strengthPercent + '%';
-  strengthBar.style.background = validation.strength.color;
-  strengthText.textContent = validation.strength.text;
-  strengthText.style.color = validation.strength.color;
-}
-
-async function handleChangePassword(e) {
-  e.preventDefault();
-
-  const currentPasswordInput = document.getElementById('current-password');
-  const isQuickMode = currentPasswordInput.closest('.form-group')?.style.display === 'none';
-  const currentPassword = isQuickMode ? state.currentPassword : currentPasswordInput.value;
-  const newPassword = document.getElementById('new-password').value;
-  const confirmPassword = document.getElementById('confirm-password').value;
-  const submitBtn = document.getElementById('change-password-submit-btn');
-
-  // Validation
-  if (!newPassword || !confirmPassword) {
-    showToast(t('fillAllFields') || 'すべての項目を入力してください', 'error');
-    return;
-  }
-
-  // Verify current password (skip if field was hidden in quick change mode)
-  if (!isQuickMode) {
-    if (!currentPassword) {
-      showToast(t('fillAllFields') || 'すべての項目を入力してください', 'error');
-      return;
-    }
-    if (currentPassword !== state.currentPassword) {
-      showToast(t('currentPasswordWrong') || '現在のパスワードが違います', 'error');
-      return;
-    }
-  }
-  
-  // Validate new password
-  const validation = validatePassword(newPassword);
-  if (!validation.valid) {
-    showToast(validation.errors[0], 'error');
-    return;
-  }
-  
-  // Check confirmation
-  if (newPassword !== confirmPassword) {
-    showToast(t('passwordsNotMatch') || '新しいパスワードと確認が一致しません', 'error');
-    return;
-  }
-  
-  try {
-    submitBtn.disabled = true;
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" class="loading"/></svg><span>${t('processing')}</span>`;
-    
-    // API呼び出しを実行
-    const res = await api.changePassword(state.currentAddress, currentPassword, newPassword);
-    
-    if (res.success) {
-      // サーバー側の変更が成功した場合のみローカル状態を更新
-      state.currentPassword = newPassword;
-      saveSession(state.currentAddress, newPassword);
-      
-      // Update display with proper masking
-      const passwordEl = document.getElementById('display-password');
-      if (state.passwordVisible) {
-        passwordEl.textContent = newPassword;
-      } else {
-        // 新しいパスワードの長さに合わせて•を表示
-        passwordEl.textContent = '•'.repeat(newPassword.length);
-      }
-      
-      closeChangePasswordModal();
-      showToast(t('passwordChanged') || 'パスワードを変更しました', 'success');
-    } else {
-      // サーバーからエラーメッセージが返された場合
-      showToast(res.error || res.message || t('passwordChangeFailed') || 'パスワード変更に失敗しました', 'error');
-    }
-  } catch (err) {
-    console.error('Failed to change password:', err);
-    showToast(t('passwordChangeFailed') || 'パスワード変更に失敗しました（サーバーエラー）', 'error');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>${t('save') || '保存'}</span>`;
-  }
-}
+// Password Validation and Change Password Logic Removed
 
 // ===== Auto Refresh =====
 function startAutoRefresh() {
@@ -1181,10 +995,11 @@ function initEventListeners() {
     if (state.currentPassword) copyToClipboard(state.currentPassword);
   });
   
-  document.getElementById('toggle-password-btn').addEventListener('click', togglePasswordVisibility);
+  document.getElementById('warning-copy-btn')?.addEventListener('click', () => {
+    if (state.currentPassword) copyToClipboard(state.currentPassword);
+  });
   
-  // Edit password button - opens inline password change
-  document.getElementById('edit-password-btn').addEventListener('click', openQuickPasswordChange);
+  document.getElementById('toggle-password-btn').addEventListener('click', togglePasswordVisibility);
   
   // Refresh
   document.getElementById('refresh-btn').addEventListener('click', refreshMailbox);
@@ -1203,58 +1018,20 @@ function initEventListeners() {
   document.getElementById('modal-close-btn').addEventListener('click', closeMailModal);
   document.getElementById('modal-delete-btn').addEventListener('click', handleDeleteMail);
   document.getElementById('login-modal-close').addEventListener('click', closeLoginModal);
-  document.getElementById('change-password-modal-close').addEventListener('click', closeChangePasswordModal);
   
   // Settings actions
   document.getElementById('logout-btn').addEventListener('click', handleLogout);
   document.getElementById('delete-all-mail-btn').addEventListener('click', handleDeleteAllMail);
   document.getElementById('delete-address-btn').addEventListener('click', handleDeleteAddress);
-  document.getElementById('change-password-btn').addEventListener('click', openChangePasswordModal);
-  
-  // Change password form
-  document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
-  document.getElementById('new-password').addEventListener('input', (e) => updatePasswordStrength(e.target.value));
+  // Settings new address btn
+  document.getElementById('nav-new-address-settings')?.addEventListener('click', () => {
+    closeSettingsModal();
+    handleNewAddress();
+  });
   
   // Login password visibility toggle
   document.getElementById('toggle-login-password')?.addEventListener('click', function() {
     const input = document.getElementById('login-password');
-    const svg = this.querySelector('svg');
-    if (input.type === 'password') {
-      input.type = 'text';
-      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
-    } else {
-      input.type = 'password';
-      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-    }
-  });
-  
-  // Password visibility toggles for change password modal
-  document.getElementById('toggle-current-password')?.addEventListener('click', function() {
-    const input = document.getElementById('current-password');
-    const svg = this.querySelector('svg');
-    if (input.type === 'password') {
-      input.type = 'text';
-      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
-    } else {
-      input.type = 'password';
-      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-    }
-  });
-  
-  document.getElementById('toggle-new-password')?.addEventListener('click', function() {
-    const input = document.getElementById('new-password');
-    const svg = this.querySelector('svg');
-    if (input.type === 'password') {
-      input.type = 'text';
-      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
-    } else {
-      input.type = 'password';
-      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-    }
-  });
-  
-  document.getElementById('toggle-confirm-password')?.addEventListener('click', function() {
-    const input = document.getElementById('confirm-password');
     const svg = this.querySelector('svg');
     if (input.type === 'password') {
       input.type = 'text';
@@ -1323,27 +1100,15 @@ async function init() {
         clearSession();
         // Auto-create new address instead of showing auth view
         await autoCreateAddress();
-        // Show password warning for new users
-        if (!hasSeenPasswordWarning()) {
-          setTimeout(openPasswordWarningModal, 500);
-        }
       }
     } catch (err) {
       clearSession();
       // Auto-create new address instead of showing auth view
       await autoCreateAddress();
-      // Show password warning for new users
-      if (!hasSeenPasswordWarning()) {
-        setTimeout(openPasswordWarningModal, 500);
-      }
     }
   } else {
     // No session - auto create new address
     await autoCreateAddress();
-    // Show password warning for new users
-    if (!hasSeenPasswordWarning()) {
-      setTimeout(openPasswordWarningModal, 500);
-    }
   }
 
   console.log('🚀 Sutemeado initialized');
