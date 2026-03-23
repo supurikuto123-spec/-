@@ -1,95 +1,117 @@
 /**
- * Sutemeado - Cyberpunk Temporary Email Service
- * Frontend JavaScript with i18n, custom addresses, and reply functionality
+ * Sutemeado - Temporary Email Service with Login
+ * Frontend JavaScript with i18n and API menu
  */
 
 // ===== i18n Translations =====
 const i18n = {
   ja: {
     title: 'Sutemeado - シンプルな一時メール',
-    description: '登録不要、シンプルな一時メールサービス。24時間限定の使い捨てメールアドレスを即座に発行。',
+    description: '登録不要、パスワードでいつでもアクセスできる一時メールサービス',
     statusOnline: 'システム正常',
-    yourAddress: 'YOUR TEMPORARY ADDRESS',
-    customAddressPlaceholder: '任意のアドレス名を入力',
-    useThisAddress: '適用',
-    addressHint: '24時間有効 / 自動削除',
-    newAddress: '新規生成',
+    login: 'ログイン',
+    createNew: '新規作成',
+    emailAddress: 'メールアドレス',
+    password: 'パスワード',
+    loginBtn: 'ログイン',
+    createBtn: '作成',
+    yourAddress: 'YOUR MAIL ADDRESS',
+    yourPassword: 'YOUR PASSWORD',
+    copy: 'コピー',
+    copyPassword: 'パスワードをコピー',
+    copyAddress: 'アドレスをコピー',
+    newAddress: '新規作成',
     refresh: '更新',
-    customAddress: 'カスタム',
     inbox: 'INBOX',
     autoRefresh: '自動更新',
     noMail: 'メールはまだ届いていません',
     noMailSub: 'アドレスをコピーして登録・確認に使ってください',
-    apiAccess: 'API ACCESS',
-    apiDocs: '全機能無料でご利用いただけます。レート制限: 100req/min',
-    footerHint: 'メールは24時間後に自動削除されます',
-    receivedAt: '受信日時:',
-    replyToThis: '返信する',
-    replyPlaceholder: '返信内容を入力してください...',
-    cancel: 'キャンセル',
-    sendReply: '送信',
     delete: '削除',
     close: '閉じる',
-    copied: 'アドレスをコピーしました',
+    copied: 'コピーしました',
     copyFailed: 'コピーに失敗しました',
-    addressGenerated: '新しいアドレスを生成しました',
-    addressGenerateFailed: 'アドレス生成に失敗しました',
-    customAddressApplied: 'カスタムアドレスを適用しました',
-    invalidAddress: '英数字とハイフンのみ使用可能です',
+    addressCreated: 'アドレスを作成しました',
+    addressCreateFailed: 'アドレス作成に失敗しました',
+    loginFailed: 'ログインに失敗しました',
+    invalidCredentials: 'メールアドレスまたはパスワードが正しくありません',
     addressDeleted: 'メールを削除しました',
     deleteFailed: '削除に失敗しました',
     autoRefreshOn: '自動更新をオンにしました',
     autoRefreshOff: '自動更新をオフにしました',
-    replySent: '返信を送信しました',
-    replyFailed: '返信に失敗しました',
-    replyEmpty: '返信内容を入力してください',
     from: 'From:',
     to: 'To:',
     subject: '件名',
-    dateFormat: 'ja-JP'
+    dateFormat: 'ja-JP',
+    savePassword: 'パスワードを保存してください',
+    savePasswordSub: 'このパスワードは再表示できません',
+    apiDocs: 'API',
+    apiGetAddress: 'GET /api/new-address - 新規アドレス作成',
+    apiLogin: 'POST /api/login - ログイン',
+    apiGetMails: 'POST /api/mailbox/:address - メール取得',
+    apiDeleteMail: 'DELETE /api/mailbox/:address/:mailId - メール削除',
+    apiDeleteAddress: 'DELETE /api/address/:address - アドレス削除',
+    logout: 'ログアウト',
+    deleteAllMail: '全メール削除',
+    deleteAddress: 'アドレス削除',
+    deleteAddressConfirm: 'このアドレスを削除しますか？すべてのメールが削除されます',
+    deleteAllMailConfirm: 'すべてのメールを削除しますか？',
+    deleteAddressSuccess: 'アドレスを削除しました',
+    deleteAllMailSuccess: 'すべてのメールを削除しました',
+    menu: 'メニュー'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
-    description: 'No registration required. Instant disposable email addresses valid for 24 hours.',
+    description: 'No registration required. Access anytime with your password.',
     statusOnline: 'System Online',
-    yourAddress: 'YOUR TEMPORARY ADDRESS',
-    customAddressPlaceholder: 'Enter custom address name',
-    useThisAddress: 'Apply',
-    addressHint: 'Valid for 24h / Auto-delete',
-    newAddress: 'Generate New',
+    login: 'Login',
+    createNew: 'Create New',
+    emailAddress: 'Email Address',
+    password: 'Password',
+    loginBtn: 'Login',
+    createBtn: 'Create',
+    yourAddress: 'YOUR MAIL ADDRESS',
+    yourPassword: 'YOUR PASSWORD',
+    copy: 'Copy',
+    copyPassword: 'Copy Password',
+    copyAddress: 'Copy Address',
+    newAddress: 'Create New',
     refresh: 'Refresh',
-    customAddress: 'Custom',
     inbox: 'INBOX',
     autoRefresh: 'Auto Refresh',
     noMail: 'No emails yet',
     noMailSub: 'Copy the address to use for registration',
-    apiAccess: 'API ACCESS',
-    apiDocs: 'All features free to use. Rate limit: 100req/min',
-    footerHint: 'Emails are automatically deleted after 24 hours',
-    receivedAt: 'Received:',
-    replyToThis: 'Reply',
-    replyPlaceholder: 'Enter your reply...',
-    cancel: 'Cancel',
-    sendReply: 'Send',
     delete: 'Delete',
     close: 'Close',
-    copied: 'Address copied to clipboard',
+    copied: 'Copied to clipboard',
     copyFailed: 'Failed to copy',
-    addressGenerated: 'New address generated',
-    addressGenerateFailed: 'Failed to generate address',
-    customAddressApplied: 'Custom address applied',
-    invalidAddress: 'Only alphanumeric and hyphens allowed',
+    addressCreated: 'Address created successfully',
+    addressCreateFailed: 'Failed to create address',
+    loginFailed: 'Login failed',
+    invalidCredentials: 'Invalid email address or password',
     addressDeleted: 'Email deleted',
     deleteFailed: 'Failed to delete',
     autoRefreshOn: 'Auto refresh enabled',
     autoRefreshOff: 'Auto refresh disabled',
-    replySent: 'Reply sent',
-    replyFailed: 'Failed to send reply',
-    replyEmpty: 'Please enter reply content',
     from: 'From:',
     to: 'To:',
     subject: 'Subject',
-    dateFormat: 'en-US'
+    dateFormat: 'en-US',
+    savePassword: 'Please save your password',
+    savePasswordSub: 'This password cannot be displayed again',
+    apiDocs: 'API',
+    apiGetAddress: 'GET /api/new-address - Create new address',
+    apiLogin: 'POST /api/login - Login',
+    apiGetMails: 'POST /api/mailbox/:address - Get mails',
+    apiDeleteMail: 'DELETE /api/mailbox/:address/:mailId - Delete mail',
+    apiDeleteAddress: 'DELETE /api/address/:address - Delete address',
+    logout: 'Logout',
+    deleteAllMail: 'Delete All Mail',
+    deleteAddress: 'Delete Address',
+    deleteAddressConfirm: 'Delete this address? All mails will be removed.',
+    deleteAllMailConfirm: 'Delete all mails?',
+    deleteAddressSuccess: 'Address deleted',
+    deleteAllMailSuccess: 'All mails deleted',
+    menu: 'Menu'
   }
 };
 
@@ -97,33 +119,47 @@ const i18n = {
 const CONFIG = {
   API_BASE: '',
   REFRESH_INTERVAL: 5000,
-  STORAGE_KEY: 'sutemeado_address',
+  STORAGE_KEY: 'sutemeado_session',
   LANG_KEY: 'sutemeado_lang'
 };
 
 // ===== State Management =====
 const state = {
   currentAddress: null,
+  currentPassword: null,
   mails: [],
   autoRefresh: true,
   refreshTimer: null,
   selectedMail: null,
-  currentLang: 'ja'
+  currentLang: 'ja',
+  showApiMenu: false
 };
 
 // ===== DOM Elements =====
 const elements = {
-  emailAddress: document.getElementById('email-address'),
-  copyBtn: document.getElementById('copy-btn'),
+  // Login/Create
+  loginForm: document.getElementById('login-form'),
+  createForm: document.getElementById('create-form'),
+  authSection: document.getElementById('auth-section'),
+  mainSection: document.getElementById('main-section'),
+  loginAddress: document.getElementById('login-address'),
+  loginPassword: document.getElementById('login-password'),
+  loginBtn: document.getElementById('login-btn'),
   newAddressBtn: document.getElementById('new-address-btn'),
-  refreshBtn: document.getElementById('refresh-btn'),
-  toggleCustomBtn: document.getElementById('toggle-custom-btn'),
-  customAddressGroup: document.getElementById('custom-address-group'),
-  customAddressInput: document.getElementById('custom-address-input'),
-  useCustomBtn: document.getElementById('use-custom-btn'),
+  
+  // Address display
+  emailAddress: document.getElementById('email-address'),
+  passwordDisplay: document.getElementById('password-display'),
+  copyAddressBtn: document.getElementById('copy-address-btn'),
+  copyPasswordBtn: document.getElementById('copy-password-btn'),
+  
+  // Mailbox
   mailList: document.getElementById('mail-list'),
   mailCount: document.getElementById('mail-count'),
+  refreshBtn: document.getElementById('refresh-btn'),
   autoRefreshToggle: document.getElementById('auto-refresh'),
+  
+  // Modal
   modal: document.getElementById('mail-modal'),
   modalSubject: document.getElementById('modal-subject'),
   modalFrom: document.getElementById('modal-from'),
@@ -133,10 +169,21 @@ const elements = {
   modalClose: document.getElementById('modal-close'),
   modalCloseBtn: document.getElementById('modal-close-btn'),
   modalDelete: document.getElementById('modal-delete'),
-  replySection: document.getElementById('reply-section'),
-  replyInput: document.getElementById('reply-input'),
-  replySend: document.getElementById('reply-send'),
-  replyCancel: document.getElementById('reply-cancel'),
+  
+  // API Menu
+  apiMenuBtn: document.getElementById('api-menu-btn'),
+  apiMenu: document.getElementById('api-menu'),
+  apiMenuClose: document.getElementById('api-menu-close'),
+  
+  // Settings Menu
+  settingsBtn: document.getElementById('settings-btn'),
+  settingsMenu: document.getElementById('settings-menu'),
+  settingsMenuClose: document.getElementById('settings-menu-close'),
+  logoutBtn: document.getElementById('logout-btn'),
+  deleteAllMailBtn: document.getElementById('delete-all-mail-btn'),
+  deleteAddressBtn: document.getElementById('delete-address-btn'),
+  
+  // Toast
   toast: document.getElementById('toast'),
   langBtns: document.querySelectorAll('.lang-btn')
 };
@@ -146,12 +193,10 @@ function setLanguage(lang) {
   state.currentLang = lang;
   localStorage.setItem(CONFIG.LANG_KEY, lang);
   
-  // Update active button
   elements.langBtns.forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
   
-  // Update all translatable elements
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     if (i18n[lang][key]) {
@@ -163,7 +208,6 @@ function setLanguage(lang) {
     }
   });
   
-  // Update placeholders
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const key = el.dataset.i18nPlaceholder;
     if (i18n[lang][key]) {
@@ -171,15 +215,9 @@ function setLanguage(lang) {
     }
   });
   
-  // Update meta description
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && i18n[lang].description) {
     metaDesc.content = i18n[lang].description;
-  }
-  
-  // Refresh mail list to update dates
-  if (state.mails.length > 0) {
-    renderMailList(state.mails);
   }
 }
 
@@ -194,38 +232,62 @@ const api = {
     return res.json();
   },
 
-  async getMailbox(address) {
-    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}`);
-    return res.json();
-  },
-
-  async getMail(address, mailId) {
-    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}/${mailId}`);
-    return res.json();
-  },
-
-  async deleteMail(address, mailId) {
-    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}/${mailId}`, {
-      method: 'DELETE'
+  async login(address, password) {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address, password })
     });
     return res.json();
   },
 
-  async sendReply(address, mailId, body) {
-    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}/${mailId}/reply`, {
+  async getMailbox(address, password) {
+    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ body })
+      body: JSON.stringify({ password })
+    });
+    return res.json();
+  },
+
+  async getMail(address, password, mailId) {
+    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}/${mailId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    return res.json();
+  },
+
+  async deleteMail(address, password, mailId) {
+    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}/${mailId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    return res.json();
+  },
+
+  async clearMails(address, password) {
+    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    return res.json();
+  },
+
+  async deleteAddress(address, password) {
+    const res = await fetch(`/api/address/${encodeURIComponent(address)}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
     });
     return res.json();
   }
 };
 
 // ===== Utility Functions =====
-function generateRandomId() {
-  return Math.random().toString(36).substring(2, 15);
-}
-
 function showToast(message, type = 'info') {
   elements.toast.textContent = message;
   elements.toast.className = `toast show ${type}`;
@@ -295,32 +357,51 @@ function linkify(text) {
   return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
 }
 
-// ===== State Management =====
-function loadSavedAddress() {
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ===== Session Management =====
+function saveSession(address, password) {
+  const data = { address, password };
+  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
+}
+
+function loadSession() {
   const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
   if (saved) {
     try {
-      const data = JSON.parse(saved);
-      if (data.address && data.createdAt && (Date.now() - data.createdAt < 24 * 60 * 60 * 1000)) {
-        return data.address;
-      }
+      return JSON.parse(saved);
     } catch (e) {
-      console.error('Failed to parse saved address:', e);
+      return null;
     }
   }
   return null;
 }
 
-function saveAddress(address) {
-  const data = { address, createdAt: Date.now() };
-  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
+function clearSession() {
+  localStorage.removeItem(CONFIG.STORAGE_KEY);
 }
 
 // ===== UI Update Functions =====
-function updateAddressDisplay(address) {
+function showAuthSection() {
+  elements.authSection.style.display = 'block';
+  elements.mainSection.style.display = 'none';
+}
+
+function showMainSection() {
+  elements.authSection.style.display = 'none';
+  elements.mainSection.style.display = 'block';
+}
+
+function updateAddressDisplay(address, password) {
   elements.emailAddress.textContent = address;
+  elements.passwordDisplay.textContent = password;
   state.currentAddress = address;
-  saveAddress(address);
+  state.currentPassword = password;
+  saveSession(address, password);
 }
 
 function renderMailList(mails) {
@@ -362,12 +443,6 @@ function renderMailList(mails) {
   });
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
 // ===== HTML Mail Handling =====
 function createSandboxFrame(htmlContent) {
   const frame = document.createElement('iframe');
@@ -380,7 +455,6 @@ function createSandboxFrame(htmlContent) {
   frame.style.borderRadius = 'var(--radius-md)';
   frame.style.background = '#fff';
 
-  // HTMLリンクのセキュリティ対策
   const sanitizedHtml = htmlContent
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     .replace(/javascript:/gi, 'void(0);')
@@ -422,7 +496,6 @@ function createSandboxFrame(htmlContent) {
 
   frame.srcdoc = docContent;
 
-  // 高さ自動調整
   frame.addEventListener('load', () => {
     try {
       const doc = frame.contentDocument || frame.contentWindow.document;
@@ -435,7 +508,6 @@ function createSandboxFrame(htmlContent) {
         );
         frame.style.height = Math.min(Math.max(height + 20, 200), 600) + 'px';
 
-        // 画像読み込み後に再調整
         const imgs = doc.querySelectorAll('img');
         imgs.forEach(img => {
           img.addEventListener('load', () => {
@@ -469,7 +541,6 @@ async function openMailModal(mailId) {
   elements.modalTo.textContent = state.currentAddress;
   elements.modalDate.textContent = new Date(mail.receivedAt).toLocaleString(i18n[state.currentLang].dateFormat);
 
-  // HTMLメール対応
   elements.modalBody.innerHTML = '';
   if (mail.html && mail.html.trim().length > 0) {
     const frame = createSandboxFrame(mail.html);
@@ -478,11 +549,7 @@ async function openMailModal(mailId) {
     elements.modalBody.innerHTML = linkify(escapeHtml(mail.body));
   }
 
-  // Clear reply input
-  elements.replyInput.value = '';
-
   elements.modal.classList.add('active');
-
   mail.read = true;
   renderMailList(state.mails);
 }
@@ -493,86 +560,80 @@ function closeMailModal() {
 }
 
 // ===== Core Functions =====
+async function login() {
+  const address = elements.loginAddress.value.trim();
+  const password = elements.loginPassword.value.trim();
+  
+  if (!address || !password) {
+    showToast(t('invalidCredentials'), 'error');
+    return;
+  }
+  
+  try {
+    elements.loginBtn.disabled = true;
+    elements.loginBtn.textContent = state.currentLang === 'ja' ? 'ログイン中...' : 'Logging in...';
+    
+    const res = await api.login(address, password);
+    
+    if (res.success) {
+      updateAddressDisplay(address, password);
+      state.mails = res.mails || [];
+      renderMailList(state.mails);
+      showMainSection();
+      startAutoRefresh();
+      showToast(t('login'), 'success');
+    } else {
+      showToast(t('invalidCredentials'), 'error');
+    }
+  } catch (err) {
+    console.error('Login failed:', err);
+    showToast(t('loginFailed'), 'error');
+  } finally {
+    elements.loginBtn.disabled = false;
+    elements.loginBtn.textContent = t('loginBtn');
+  }
+}
+
 async function createNewAddress() {
   try {
     elements.newAddressBtn.disabled = true;
-    const originalContent = elements.newAddressBtn.innerHTML;
-    elements.newAddressBtn.innerHTML = `
-      <svg class="loading" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"></circle>
-      </svg>
-      <span>${state.currentLang === 'ja' ? '生成中...' : 'Generating...'}</span>
-    `;
+    elements.newAddressBtn.textContent = state.currentLang === 'ja' ? '作成中...' : 'Creating...';
     
     const res = await api.newAddress();
+    
     if (res.success) {
-      updateAddressDisplay(res.address);
+      updateAddressDisplay(res.address, res.password);
       state.mails = [];
       renderMailList([]);
-      showToast(t('addressGenerated'), 'success');
+      showMainSection();
+      
+      // Show password warning
+      showToast(`${t('savePassword')}: ${res.password}`, 'success');
+      setTimeout(() => {
+        alert(`${t('savePassword')}\n${t('savePasswordSub')}\n\nEmail: ${res.address}\nPassword: ${res.password}`);
+      }, 100);
+      
+      startAutoRefresh();
+    } else {
+      showToast(t('addressCreateFailed'), 'error');
     }
   } catch (err) {
     console.error('Failed to create address:', err);
-    showToast(t('addressGenerateFailed'), 'error');
+    showToast(t('addressCreateFailed'), 'error');
   } finally {
     elements.newAddressBtn.disabled = false;
-    elements.newAddressBtn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-      </svg>
-      <span>${t('newAddress')}</span>
-    `;
-  }
-}
-
-async function useCustomAddress() {
-  const input = elements.customAddressInput.value.trim().toLowerCase();
-  
-  if (!input) {
-    showToast(t('invalidAddress'), 'error');
-    return;
-  }
-  
-  // Validate: alphanumeric and hyphens only
-  if (!/^[a-z0-9-]+$/.test(input)) {
-    showToast(t('invalidAddress'), 'error');
-    return;
-  }
-  
-  const address = `${input}@sutemeado.com`;
-  updateAddressDisplay(address);
-  state.mails = [];
-  renderMailList([]);
-  showToast(t('customAddressApplied'), 'success');
-  
-  // Hide custom input after applying
-  elements.customAddressGroup.style.display = 'none';
-  elements.customAddressInput.value = '';
-}
-
-function toggleCustomAddress() {
-  const isVisible = elements.customAddressGroup.style.display !== 'none';
-  elements.customAddressGroup.style.display = isVisible ? 'none' : 'flex';
-  if (!isVisible) {
-    elements.customAddressInput.focus();
+    elements.newAddressBtn.textContent = t('createBtn');
   }
 }
 
 async function refreshMailbox() {
-  if (!state.currentAddress) return;
+  if (!state.currentAddress || !state.currentPassword) return;
   
   try {
     elements.refreshBtn.disabled = true;
-    elements.refreshBtn.innerHTML = `
-      <svg class="loading" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"></circle>
-      </svg>
-      <span>${state.currentLang === 'ja' ? '更新中...' : 'Updating...'}</span>
-    `;
     
-    const res = await api.getMailbox(state.currentAddress);
+    const res = await api.getMailbox(state.currentAddress, state.currentPassword);
+    
     if (res.success) {
       const readIds = new Set(state.mails.filter(m => m.read).map(m => m.id));
       state.mails = res.mails.map(m => ({ ...m, read: readIds.has(m.id) || m.read }));
@@ -582,21 +643,15 @@ async function refreshMailbox() {
     console.error('Failed to refresh mailbox:', err);
   } finally {
     elements.refreshBtn.disabled = false;
-    elements.refreshBtn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="23,4 23,10 17,10"></polyline>
-        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-      </svg>
-      <span>${t('refresh')}</span>
-    `;
   }
 }
 
 async function deleteCurrentMail() {
-  if (!state.selectedMail || !state.currentAddress) return;
+  if (!state.selectedMail || !state.currentAddress || !state.currentPassword) return;
   
   try {
-    const res = await api.deleteMail(state.currentAddress, state.selectedMail.id);
+    const res = await api.deleteMail(state.currentAddress, state.currentPassword, state.selectedMail.id);
+    
     if (res.success) {
       state.mails = state.mails.filter(m => m.id !== state.selectedMail.id);
       renderMailList(state.mails);
@@ -609,44 +664,77 @@ async function deleteCurrentMail() {
   }
 }
 
-async function sendReply() {
-  if (!state.selectedMail || !state.currentAddress) return;
+async function deleteAllMail() {
+  if (!state.currentAddress || !state.currentPassword) return;
   
-  const body = elements.replyInput.value.trim();
-  if (!body) {
-    showToast(t('replyEmpty'), 'error');
-    return;
-  }
+  if (!confirm(t('deleteAllMailConfirm'))) return;
   
   try {
-    elements.replySend.disabled = true;
-    elements.replySend.innerHTML = `
-      <svg class="loading" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"></circle>
-      </svg>
-      <span>${state.currentLang === 'ja' ? '送信中...' : 'Sending...'}</span>
-    `;
+    const res = await api.clearMails(state.currentAddress, state.currentPassword);
     
-    const res = await api.sendReply(state.currentAddress, state.selectedMail.id, body);
     if (res.success) {
-      elements.replyInput.value = '';
-      showToast(t('replySent'), 'success');
-    } else {
-      showToast(t('replyFailed'), 'error');
+      state.mails = [];
+      renderMailList([]);
+      closeSettingsMenu();
+      showToast(t('deleteAllMailSuccess'), 'success');
     }
   } catch (err) {
-    console.error('Failed to send reply:', err);
-    showToast(t('replyFailed'), 'error');
-  } finally {
-    elements.replySend.disabled = false;
-    elements.replySend.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="22" y1="2" x2="11" y2="13"></line>
-        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-      </svg>
-      <span>${t('sendReply')}</span>
-    `;
+    console.error('Failed to delete all mails:', err);
+    showToast(t('deleteFailed'), 'error');
   }
+}
+
+async function deleteAddress() {
+  if (!state.currentAddress || !state.currentPassword) return;
+  
+  if (!confirm(t('deleteAddressConfirm'))) return;
+  
+  try {
+    const res = await api.deleteAddress(state.currentAddress, state.currentPassword);
+    
+    if (res.success) {
+      clearSession();
+      state.currentAddress = null;
+      state.currentPassword = null;
+      state.mails = [];
+      stopAutoRefresh();
+      closeSettingsMenu();
+      showAuthSection();
+      showToast(t('deleteAddressSuccess'), 'success');
+    }
+  } catch (err) {
+    console.error('Failed to delete address:', err);
+    showToast(t('deleteFailed'), 'error');
+  }
+}
+
+function logout() {
+  clearSession();
+  state.currentAddress = null;
+  state.currentPassword = null;
+  state.mails = [];
+  stopAutoRefresh();
+  closeSettingsMenu();
+  showAuthSection();
+}
+
+// ===== Menu Functions =====
+function toggleApiMenu() {
+  state.showApiMenu = !state.showApiMenu;
+  elements.apiMenu.classList.toggle('active', state.showApiMenu);
+}
+
+function closeApiMenu() {
+  state.showApiMenu = false;
+  elements.apiMenu.classList.remove('active');
+}
+
+function toggleSettingsMenu() {
+  elements.settingsMenu.classList.toggle('active');
+}
+
+function closeSettingsMenu() {
+  elements.settingsMenu.classList.remove('active');
 }
 
 // ===== Auto Refresh =====
@@ -669,32 +757,53 @@ function stopAutoRefresh() {
 
 // ===== Event Listeners =====
 function initEventListeners() {
-  // Copy button
-  elements.copyBtn.addEventListener('click', () => {
+  // Login
+  elements.loginBtn.addEventListener('click', login);
+  elements.loginPassword.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') login();
+  });
+  
+  // Create new address
+  elements.newAddressBtn.addEventListener('click', createNewAddress);
+  
+  // Auth tabs switching
+  const loginTab = document.getElementById('login-tab');
+  const createTab = document.getElementById('create-tab');
+  const loginForm = document.getElementById('login-form');
+  const createForm = document.getElementById('create-form');
+  
+  if (loginTab && createTab) {
+    loginTab.addEventListener('click', () => {
+      loginTab.classList.add('active');
+      createTab.classList.remove('active');
+      loginForm.style.display = 'block';
+      createForm.style.display = 'none';
+    });
+    
+    createTab.addEventListener('click', () => {
+      createTab.classList.add('active');
+      loginTab.classList.remove('active');
+      createForm.style.display = 'block';
+      loginForm.style.display = 'none';
+    });
+  }
+  
+  // Copy buttons
+  elements.copyAddressBtn.addEventListener('click', () => {
     if (state.currentAddress) {
       copyToClipboard(state.currentAddress);
     }
   });
-
-  // New address
-  elements.newAddressBtn.addEventListener('click', createNewAddress);
-
-  // Refresh
-  elements.refreshBtn.addEventListener('click', refreshMailbox);
-
-  // Custom address toggle
-  elements.toggleCustomBtn.addEventListener('click', toggleCustomAddress);
   
-  // Use custom address
-  elements.useCustomBtn.addEventListener('click', useCustomAddress);
-  
-  // Custom address input enter key
-  elements.customAddressInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      useCustomAddress();
+  elements.copyPasswordBtn.addEventListener('click', () => {
+    if (state.currentPassword) {
+      copyToClipboard(state.currentPassword);
     }
   });
-
+  
+  // Refresh
+  elements.refreshBtn.addEventListener('click', refreshMailbox);
+  
   // Auto refresh toggle
   elements.autoRefreshToggle.addEventListener('change', (e) => {
     state.autoRefresh = e.target.checked;
@@ -706,17 +815,22 @@ function initEventListeners() {
       showToast(t('autoRefreshOff'), 'info');
     }
   });
-
-  // Modal close
+  
+  // Modal
   elements.modalClose.addEventListener('click', closeMailModal);
   elements.modalCloseBtn.addEventListener('click', closeMailModal);
   elements.modalDelete.addEventListener('click', deleteCurrentMail);
   
-  // Reply
-  elements.replySend.addEventListener('click', sendReply);
-  elements.replyCancel.addEventListener('click', () => {
-    elements.replyInput.value = '';
-  });
+  // API Menu
+  elements.apiMenuBtn.addEventListener('click', toggleApiMenu);
+  elements.apiMenuClose.addEventListener('click', closeApiMenu);
+  
+  // Settings Menu
+  elements.settingsBtn.addEventListener('click', toggleSettingsMenu);
+  elements.settingsMenuClose.addEventListener('click', closeSettingsMenu);
+  elements.logoutBtn.addEventListener('click', logout);
+  elements.deleteAllMailBtn.addEventListener('click', deleteAllMail);
+  elements.deleteAddressBtn.addEventListener('click', deleteAddress);
   
   // Modal outside click
   elements.modal.addEventListener('click', (e) => {
@@ -724,11 +838,19 @@ function initEventListeners() {
       closeMailModal();
     }
   });
-
+  
   // ESC key
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && elements.modal.classList.contains('active')) {
-      closeMailModal();
+    if (e.key === 'Escape') {
+      if (elements.modal.classList.contains('active')) {
+        closeMailModal();
+      }
+      if (elements.apiMenu.classList.contains('active')) {
+        closeApiMenu();
+      }
+      if (elements.settingsMenu.classList.contains('active')) {
+        closeSettingsMenu();
+      }
     }
   });
   
@@ -748,20 +870,28 @@ async function init() {
   const savedLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';
   setLanguage(savedLang);
   
-  // Hide custom address input initially
-  elements.customAddressGroup.style.display = 'none';
-  
-  // Load or create address
-  const savedAddress = loadSavedAddress();
-  if (savedAddress) {
-    updateAddressDisplay(savedAddress);
-    await refreshMailbox();
+  // Try to restore session
+  const session = loadSession();
+  if (session && session.address && session.password) {
+    try {
+      const res = await api.login(session.address, session.password);
+      if (res.success) {
+        updateAddressDisplay(session.address, session.password);
+        state.mails = res.mails || [];
+        renderMailList(state.mails);
+        showMainSection();
+        startAutoRefresh();
+      } else {
+        clearSession();
+        showAuthSection();
+      }
+    } catch (err) {
+      clearSession();
+      showAuthSection();
+    }
   } else {
-    await createNewAddress();
+    showAuthSection();
   }
-  
-  // Start auto refresh
-  startAutoRefresh();
   
   console.log('🚀 Sutemeado initialized');
 }

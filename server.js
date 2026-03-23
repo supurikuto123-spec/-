@@ -19,20 +19,78 @@ app.use(express.static('public'));
 
 // ===== API Routes =====
 
-// 新しいメールアドレスを生成
+// 新しいメールアドレスを生成（パスワード付き）
 app.get('/api/new-address', (req, res) => {
-  const address = mailStore.generateAddress();
+  const result = mailStore.generateAddress();
   res.json({
     success: true,
-    address: address,
+    address: result.address,
+    password: result.password,
     domain: 'sutemeado.com'
   });
 });
 
-// 特定のアドレスのメールを取得
-app.get('/api/mailbox/:address', (req, res) => {
+// ログイン（メールボックスへのアクセス）
+app.post('/api/login', (req, res) => {
+  const { address, password } = req.body;
+  
+  if (!address || !password) {
+    return res.status(400).json({
+      success: false,
+      error: 'メールアドレスとパスワードを入力してください'
+    });
+  }
+  
+  const normalized = address.toLowerCase().trim();
+  
+  // アドレスが存在するかチェック
+  if (!mailStore.addressExists(normalized)) {
+    return res.status(404).json({
+      success: false,
+      error: 'メールアドレスが見つかりません'
+    });
+  }
+  
+  // パスワード検証
+  if (!mailStore.verifyPassword(normalized, password)) {
+    return res.status(401).json({
+      success: false,
+      error: 'パスワードが正しくありません'
+    });
+  }
+  
+  // ログイン成功
+  const mails = mailStore.getMails(normalized, password);
+  
+  res.json({
+    success: true,
+    message: 'ログインしました',
+    address: normalized,
+    count: mails.length,
+    mails: mails
+  });
+});
+
+// 特定のアドレスのメールを取得（パスワード必須）
+app.post('/api/mailbox/:address', (req, res) => {
   const { address } = req.params;
-  const mails = mailStore.getMails(address);
+  const { password } = req.body;
+  
+  if (!password) {
+    return res.status(400).json({
+      success: false,
+      error: 'パスワードが必要です'
+    });
+  }
+  
+  const mails = mailStore.getMails(address, password);
+  
+  if (mails === null) {
+    return res.status(401).json({
+      success: false,
+      error: '認証に失敗しました'
+    });
+  }
   
   res.json({
     success: true,
@@ -42,10 +100,26 @@ app.get('/api/mailbox/:address', (req, res) => {
   });
 });
 
-// 特定のメールの詳細を取得
-app.get('/api/mailbox/:address/:mailId', (req, res) => {
+// 特定のメールの詳細を取得（パスワード必須）
+app.post('/api/mailbox/:address/:mailId', (req, res) => {
   const { address, mailId } = req.params;
-  const mail = mailStore.getMail(address, mailId);
+  const { password } = req.body;
+  
+  if (!password) {
+    return res.status(400).json({
+      success: false,
+      error: 'パスワードが必要です'
+    });
+  }
+  
+  const mail = mailStore.getMail(address, password, mailId);
+  
+  if (mail === null) {
+    return res.status(401).json({
+      success: false,
+      error: '認証に失敗しました'
+    });
+  }
   
   if (!mail) {
     return res.status(404).json({
@@ -60,66 +134,84 @@ app.get('/api/mailbox/:address/:mailId', (req, res) => {
   });
 });
 
-// メールを削除
+// メールを削除（パスワード必須）
 app.delete('/api/mailbox/:address/:mailId', (req, res) => {
   const { address, mailId } = req.params;
-  const deleted = mailStore.deleteMail(address, mailId);
+  const { password } = req.body;
+  
+  if (!password) {
+    return res.status(400).json({
+      success: false,
+      error: 'パスワードが必要です'
+    });
+  }
+  
+  const result = mailStore.deleteMail(address, password, mailId);
+  
+  if (result === null) {
+    return res.status(401).json({
+      success: false,
+      error: '認証に失敗しました'
+    });
+  }
   
   res.json({
-    success: deleted,
-    message: deleted ? 'メールを削除しました' : 'メールが見つかりません'
+    success: result,
+    message: result ? 'メールを削除しました' : 'メールが見つかりません'
   });
 });
 
-// 全メールを削除
+// 全メールを削除（パスワード必須）
 app.delete('/api/mailbox/:address', (req, res) => {
   const { address } = req.params;
-  mailStore.clearMails(address);
-
+  const { password } = req.body;
+  
+  if (!password) {
+    return res.status(400).json({
+      success: false,
+      error: 'パスワードが必要です'
+    });
+  }
+  
+  const result = mailStore.clearMails(address, password);
+  
+  if (result === null) {
+    return res.status(401).json({
+      success: false,
+      error: '認証に失敗しました'
+    });
+  }
+  
   res.json({
     success: true,
     message: '全てのメールを削除しました'
   });
 });
 
-// 返信を送信
-app.post('/api/mailbox/:address/:mailId/reply', async (req, res) => {
-  const { address, mailId } = req.params;
-  const { body } = req.body;
-
-  if (!body || body.trim() === '') {
+// アドレスを完全に削除（パスワード必須）
+app.delete('/api/address/:address', (req, res) => {
+  const { address } = req.params;
+  const { password } = req.body;
+  
+  if (!password) {
     return res.status(400).json({
       success: false,
-      error: '返信内容が空です'
+      error: 'パスワードが必要です'
     });
   }
-
-  // 元のメールを取得
-  const originalMail = mailStore.getMail(address, mailId);
-  if (!originalMail) {
-    return res.status(404).json({
+  
+  const result = mailStore.deleteAddress(address, password);
+  
+  if (result === null) {
+    return res.status(401).json({
       success: false,
-      error: '元のメールが見つかりません'
+      error: '認証に失敗しました'
     });
   }
-
-  // 返信を保存（返信履歴として保存）
-  const reply = mailStore.addReply(address, mailId, {
-    body: body.trim(),
-    from: address,
-    to: originalMail.from,
-    originalSubject: originalMail.subject
-  });
-
-  console.log(`↩️ Reply saved: ${address} -> ${originalMail.from}`);
-
+  
   res.json({
     success: true,
-    message: '返信を保存しました',
-    reply: {
-      id: reply.id,
-      sentAt: reply.sentAt
-    }
+    message: 'アドレスを削除しました'
   });
 });
 
