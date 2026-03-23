@@ -1689,13 +1689,21 @@ section {
   font-family: var(--font-mono);
   font-size: 0.9375rem;
   color: var(--neon-cyan);
-  white-space: nowrap;
-  overflow: visible;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-all;
   min-width: 0;
 }
 
 .info-value-password {
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+/* パスワード表示用のスタイル */
+.password-dots {
   letter-spacing: 0.1em;
+  font-family: var(--font-mono);
 }
 
 .info-divider {
@@ -2146,21 +2154,147 @@ section {
     font-size: 1.25rem;
   }
   
+  /* スマホ版info-card改善 */
   .info-card {
     flex-direction: column;
+    gap: var(--spacing-sm);
   }
   
   .info-section {
     min-width: auto;
+    width: 100%;
+  }
+  
+  .info-section:first-child {
+    flex: 1 1 auto;
+  }
+  
+  .info-value-box {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+  
+  .info-value {
+    font-size: 0.875rem;
+    word-break: break-all;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+  
+  .info-divider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
   }
   
   .mail-header-bar {
     flex-direction: column;
     align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .mail-actions {
+    width: 100%;
+    justify-content: space-between;
   }
   
   .modal-content {
     margin: var(--spacing-sm);
     max-height: calc(100vh - var(--spacing-lg));
+    width: calc(100% - var(--spacing-lg));
+  }
+  
+  .modal-body {
+    padding: var(--spacing-md);
+  }
+  
+  .auth-form {
+    padding: var(--spacing-md);
+  }
+  
+  .form-group {
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .input-wrapper {
+    padding: 0 var(--spacing-xs);
+  }
+  
+  .btn-large {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* さらに小さい画面向け */
+@media (max-width: 480px) {
+  .nav-menu {
+    gap: 2px;
+  }
+  
+  .nav-item {
+    padding: var(--spacing-xs);
+    font-size: 0.75rem;
+  }
+  
+  .nav-item svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .lang-switch {
+    margin-left: 0;
+  }
+  
+  .lang-btn {
+    padding: 2px 6px;
+    font-size: 0.625rem;
+  }
+  
+  .info-card {
+    padding: var(--spacing-sm);
+  }
+  
+  .info-label {
+    font-size: 0.625rem;
+  }
+  
+  .info-value {
+    font-size: 0.8125rem;
+  }
+  
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .mail-title {
+    font-size: 1rem;
+  }
+  
+  .mail-count {
+    min-width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+  }
+  
+  .mail-item {
+    padding: var(--spacing-sm);
+  }
+  
+  .mail-subject {
+    font-size: 0.875rem;
+  }
+  
+  .mail-from {
+    font-size: 0.75rem;
+  }
+  
+  .modal-header h3 {
+    font-size: 1rem;
+  }
+  
+  .modal-close {
+    width: 32px;
+    height: 32px;
   }
 }

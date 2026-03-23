@@ -481,8 +481,9 @@ function showMailboxView() {
 
 function updateAddressDisplay(address, password) {
   document.getElementById('display-address').textContent = address;
-  // Always start with masked password
-  document.getElementById('display-password').textContent = '••••••••••';
+  // パスワードの長さに合わせて•を表示
+  const maskedPassword = password ? '•'.repeat(password.length) : '••••••••';
+  document.getElementById('display-password').textContent = maskedPassword;
   state.currentAddress = address;
   state.currentPassword = password;
   state.passwordVisible = false;
@@ -498,14 +499,21 @@ function togglePasswordVisibility() {
   const passwordEl = document.getElementById('display-password');
   const eyeIcon = document.getElementById('eye-icon');
   
+  if (!state.currentPassword) return;
+  
   state.passwordVisible = !state.passwordVisible;
   
   if (state.passwordVisible) {
     passwordEl.textContent = state.currentPassword;
-    eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    if (eyeIcon) {
+      eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
   } else {
-    passwordEl.textContent = '••••••••••';
-    eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    // パスワードの長さに合わせて•を表示
+    passwordEl.textContent = '•'.repeat(state.currentPassword.length);
+    if (eyeIcon) {
+      eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    }
   }
 }
 
@@ -724,11 +732,15 @@ function closeChangePasswordModal() {
     if (input) input.type = 'password';
   });
   
-  // Reset eye icons
-  document.querySelectorAll('[id^="toggle-"]').forEach(btn => {
-    const svg = btn.querySelector('svg');
-    if (svg) {
-      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  // Reset eye icons for change password modal (specific IDs)
+  ['toggle-current-password', 'toggle-new-password', 'toggle-confirm-password'].forEach(btnId => {
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      const svg = btn.querySelector('svg');
+      if (svg) {
+        // Reset to "eye open" (visible) icon
+        svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      }
     }
   });
   
@@ -1049,46 +1061,32 @@ async function handleChangePassword(e) {
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" class="loading"/></svg><span>${t('processing')}</span>`;
     
-    // Try API call first
-    try {
-      const res = await api.changePassword(state.currentAddress, currentPassword, newPassword);
-      if (res.success) {
-        // Update local state
-        state.currentPassword = newPassword;
-        saveSession(state.currentAddress, newPassword);
-        
-        // Update display
-        const passwordEl = document.getElementById('display-password');
-        if (state.passwordVisible) {
-          passwordEl.textContent = newPassword;
-        } else {
-          passwordEl.textContent = '••••••••••';
-        }
-        
-        closeChangePasswordModal();
-        showToast(t('passwordChanged') || 'パスワードを変更しました', 'success');
-      } else {
-        showToast(res.message || t('passwordChangeFailed') || 'パスワード変更に失敗しました', 'error');
-      }
-    } catch (apiErr) {
-      // API not available - update locally only (will sync on next login)
-      console.warn('Password change API not available, updating locally:', apiErr);
+    // API呼び出しを実行
+    const res = await api.changePassword(state.currentAddress, currentPassword, newPassword);
+    
+    if (res.success) {
+      // サーバー側の変更が成功した場合のみローカル状態を更新
       state.currentPassword = newPassword;
       saveSession(state.currentAddress, newPassword);
       
+      // Update display with proper masking
       const passwordEl = document.getElementById('display-password');
       if (state.passwordVisible) {
         passwordEl.textContent = newPassword;
       } else {
-        passwordEl.textContent = '••••••••••';
+        // 新しいパスワードの長さに合わせて•を表示
+        passwordEl.textContent = '•'.repeat(newPassword.length);
       }
       
       closeChangePasswordModal();
-      showToast(t('passwordChanged') || 'パスワードを変更しました（ローカル）', 'success');
+      showToast(t('passwordChanged') || 'パスワードを変更しました', 'success');
+    } else {
+      // サーバーからエラーメッセージが返された場合
+      showToast(res.message || t('passwordChangeFailed') || 'パスワード変更に失敗しました', 'error');
     }
   } catch (err) {
     console.error('Failed to change password:', err);
-    showToast(t('passwordChangeFailed') || 'パスワード変更に失敗しました', 'error');
+    showToast(t('passwordChangeFailed') || 'パスワード変更に失敗しました（サーバーエラー）', 'error');
   } finally {
     submitBtn.disabled = false;
     submitBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>${t('save') || '保存'}</span>`;
@@ -1184,6 +1182,19 @@ function initEventListeners() {
     form.dispatchEvent(submitEvent);
   });
   document.getElementById('new-password').addEventListener('input', (e) => updatePasswordStrength(e.target.value));
+  
+  // Login password visibility toggle
+  document.getElementById('toggle-login-password')?.addEventListener('click', function() {
+    const input = document.getElementById('login-password');
+    const svg = this.querySelector('svg');
+    if (input.type === 'password') {
+      input.type = 'text';
+      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+      input.type = 'password';
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+  });
   
   // Password visibility toggles for change password modal
   document.getElementById('toggle-current-password')?.addEventListener('click', function() {
