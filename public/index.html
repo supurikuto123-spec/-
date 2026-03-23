@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sutemeado - シンプルな一時メール</title>
+  <meta name="description" content="登録不要、シンプルな一時メールサービス。24時間限定の使い捨てメールアドレスを即座に発行。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="ambient-light"></div>
+  
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">📧</span>
+      <span class="logo-text">Sutemeado</span>
+    </div>
+    <div class="header-status">
+      <span class="status-indicator online"></span>
+      <span class="status-text">サービス稼働中</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- アドレス表示セクション -->
+    <section class="address-card">
+      <h1 class="section-title">あなたの一時メールアドレス</h1>
+      
+      <div class="address-display">
+        <div class="address-box">
+          <span id="email-address">loading...</span>
+          <button class="icon-btn" id="copy-btn" title="コピー">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="address-hint">このアドレスは24時間有効です</p>
+      </div>
+
+      <div class="address-actions">
+        <button class="btn btn-primary" id="new-address-btn">
+          <span>🎲</span> 新しいアドレス
+        </button>
+        <button class="btn btn-secondary" id="refresh-btn">
+          <span>🔄</span> 更新
+        </button>
+      </div>
+    </section>
+
+    <!-- メールリストセクション -->
+    <section class="mailbox-section">
+      <div class="section-header">
+        <h2 class="section-title">受信メール <span class="badge" id="mail-count">0</span></h2>
+        <div class="auto-refresh">
+          <label class="toggle">
+            <input type="checkbox" id="auto-refresh" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">自動更新</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="mail-list" id="mail-list">
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <p>メールはまだ届いていません</p>
+          <p class="empty-sub">アドレスをコピーして登録・確認に使ってください</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 使い方セクション -->
+    <section class="info-section">
+      <h2 class="section-title">使い方</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <p>アドレスをコピー</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <p>サービスに登録</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <p>メールを受信</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2024 Sutemeado - Simple Temporary Email Service</p>
+    <p class="footer-hint">プライバシー保護のため、メールは24時間後に自動削除されます</p>
+  </footer>
+
+  <!-- メール詳細モーダル -->
+  <div class="modal" id="mail-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-subject">件名</h3>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="mail-meta">
+          <div class="meta-row">
+            <span class="meta-label">From:</span>
+            <span id="modal-from">sender@example.com</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">受信日時:</span>
+            <span id="modal-date">2024/01/01 00:00:00</span>
+          </div>
+        </div>
+        <div class="mail-body" id="modal-body">
+          メール本文
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modal-delete">削除</button>
+        <button class="btn btn-primary" id="modal-close-btn">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- トースト通知 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
