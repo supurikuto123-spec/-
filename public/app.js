@@ -253,8 +253,6 @@ async function createNewAddress() {
       renderMailList([]);
       showToast('新しいアドレスを生成しました');
       
-      // テスト用にウェルカムメールを送信
-      await sendWelcomeMail(res.address);
     }
   } catch (err) {
     console.error('Failed to create address:', err);
@@ -262,44 +260,6 @@ async function createNewAddress() {
   } finally {
     elements.newAddressBtn.disabled = false;
     elements.newAddressBtn.innerHTML = '<span>🎲</span> 新しいアドレス';
-  }
-}
-
-async function sendWelcomeMail(address) {
-  try {
-    await fetch('/api/simulate-mail', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        address,
-        subject: '🎉 Sutemeadoへようこそ！',
-        from: 'welcome@sutemeado.com',
-        body: `Sutemeadoをご利用いただきありがとうございます！
-
-これはテストメールです。実際のメールサービスと同じように動作します。
-
-【使い方】
-1. 画面上部のアドレスをコピー
-2. 登録したいサービスに貼り付け
-3. この画面でメールを待つ
-4. メールが届いたらクリックして確認
-
-【注意事項】
-- メールは24時間後に自動削除されます
-- 重要なデータの受信には不向きです
-- プライバシー保護のためにご利用ください
-
-ご質問があればお気軽にどうぞ！
-
-Sutemeado Team
-https://sutemeado.com`
-      })
-    });
-    
-    // ウェルカムメール後に更新
-    setTimeout(() => refreshMailbox(), 500);
-  } catch (err) {
-    console.error('Failed to send welcome mail:', err);
   }
 }
 

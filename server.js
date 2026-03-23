@@ -1,10 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const { SMTPServer } = require('smtp-server');
+const simpleParser = require('mailparser').simpleParser;
 const MailStore = require('./lib/mailstore');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SMTP_PORT = process.env.SMTP_PORT || 2525;
 
 // メールストアの初期化
 const mailStore = new MailStore();
@@ -81,35 +84,14 @@ app.delete('/api/mailbox/:address', (req, res) => {
 
 // サーバーステータス
 app.get('/api/status', (req, res) => {
+  const stats = mailStore.getStats();
   res.json({
     success: true,
     status: 'running',
     uptime: process.uptime(),
-    timestamp: new Date().toISOString()
-  });
-});
-
-// シミュレーション: テストメールを送信（開発用）
-app.post('/api/simulate-mail', (req, res) => {
-  const { address, subject, from, body } = req.body;
-  
-  if (!address) {
-    return res.status(400).json({
-      success: false,
-      error: 'アドレスが必要です'
-    });
-  }
-  
-  const mail = mailStore.addMail(address, {
-    subject: subject || 'テストメール',
-    from: from || 'test@example.com',
-    body: body || 'これはテストメールです。'
-  });
-  
-  res.json({
-    success: true,
-    message: 'テストメールを送信しました',
-    mail: mail
+    timestamp: new Date().toISOString(),
+    stats: stats,
+    smtpPort: SMTP_PORT
   });
 });
 
@@ -127,7 +109,86 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Expressサーバー起動
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Sutemeado server running on port ${PORT}`);
-  console.log(`📧 http://localhost:${PORT}`);
+  console.log(`🚀 Sutemeado API server running on port ${PORT}`);
+  console.log(`📧 API: http://localhost:${PORT}`);
+});
+
+// ===== SMTP Server =====
+const smtpServer = new SMTPServer({
+  port: SMTP_PORT,
+  host: '0.0.0.0',
+  banner: 'Sutemeado SMTP Server',
+  disabledCommands: ['AUTH', 'STARTTLS'],
+  
+  // 接続ログ
+  onConnect(session, callback) {
+    console.log(`📥 SMTP Connection from: ${session.remoteAddress}`);
+    callback();
+  },
+  
+  // メール受信時の処理
+  onData(stream, session, callback) {
+    simpleParser(stream)
+      .then(parsed => {
+        console.log(`📨 Email received: From=${parsed.from?.text}, Subject=${parsed.subject}`);
+        console.log(`   To: ${parsed.to?.text || 'N/A'}`);
+        
+        // 宛先アドレスを抽出
+        const recipients = [];
+        
+        if (parsed.to) {
+          if (Array.isArray(parsed.to)) {
+            parsed.to.forEach(addr => {
+              if (addr.address) recipients.push(addr.address.toLowerCase());
+            });
+          } else if (parsed.to.address) {
+            recipients.push(parsed.to.address.toLowerCase());
+          }
+        }
+        
+        // envelope.rcptTo からも取得（BCC対応）
+        if (session.envelope && session.envelope.rcptTo) {
+          session.envelope.rcptTo.forEach(addr => {
+            const email = addr.address.toLowerCase();
+            if (!recipients.includes(email)) {
+              recipients.push(email);
+            }
+          });
+        }
+        
+        console.log(`   Recipients: ${recipients.join(', ')}`);
+        
+        // 各宛先にメールを保存
+        recipients.forEach(address => {
+          if (address.endsWith('@sutemeado.com')) {
+            const mail = mailStore.addMail(address, {
+              subject: parsed.subject || '(件名なし)',
+              from: parsed.from?.text || parsed.from?.address || 'unknown@example.com',
+              body: parsed.text || parsed.html || '(本文なし)',
+              html: parsed.html || null
+            });
+            console.log(`   ✅ Saved to mailbox: ${address} (ID: ${mail.id})`);
+          }
+        });
+        
+        callback();
+      })
+      .catch(err => {
+        console.error('❌ Failed to parse email:', err);
+        callback(new Error('Failed to parse email'));
+      });
+  }
+});
+
+// SMTPサーバー起動
+smtpServer.listen(SMTP_PORT, '0.0.0.0', () => {
+  console.log(`📬 SMTP Server running on port ${SMTP_PORT}`);
+  console.log(`   Port: ${SMTP_PORT}`);
+});
+
+// エラーハンドリング
+smtpServer.on('error', (err) => {
+  console.error('SMTP Server Error:', err);
 });
