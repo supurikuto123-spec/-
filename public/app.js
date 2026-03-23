@@ -451,18 +451,7 @@ function clearSession() {
 // ===== UI Update Functions =====
 // Auth view removed - app uses modal for login
 
-function showAuthView() {
-  // Auth view removed - app uses modal for login
-  // Just hide mailbox and show nav login button
-  const mailboxView = document.getElementById('mailbox-view');
-  if (mailboxView) mailboxView.style.display = 'none';
-  
-  // Hide nav items that require login
-  const navApi = document.getElementById('nav-api');
-  const navSettings = document.getElementById('nav-settings');
-  if (navApi) navApi.style.display = 'none';
-  if (navSettings) navSettings.style.display = 'none';
-}
+// Auth view removed - app uses modal for login
 
 function showMailboxView() {
   const mailboxView = document.getElementById('mailbox-view');
@@ -821,7 +810,7 @@ async function handleLogin(e) {
       showToast(t('login') + ' ' + t('success'), 'success');
       startAutoRefresh();
     } else {
-      showToast(t('invalidCredentials'), 'error');
+      showToast(res.error || t('invalidCredentials'), 'error');
     }
   } catch (err) {
     console.error('Login failed:', err);
@@ -961,7 +950,7 @@ function handleDeleteAddress() {
           state.mails = [];
           stopAutoRefresh();
           closeSettingsModal();
-          showAuthView();
+          autoCreateAddress();
           showToast(t('deleteAddress'), 'success');
         } else {
           showToast(t('deleteFailed'), 'error');
@@ -1051,7 +1040,8 @@ async function handleChangePassword(e) {
   e.preventDefault();
 
   const currentPasswordInput = document.getElementById('current-password');
-  const currentPassword = currentPasswordInput.value || state.currentPassword;
+  const isQuickMode = currentPasswordInput.closest('.form-group')?.style.display === 'none';
+  const currentPassword = isQuickMode ? state.currentPassword : currentPasswordInput.value;
   const newPassword = document.getElementById('new-password').value;
   const confirmPassword = document.getElementById('confirm-password').value;
   const submitBtn = document.getElementById('change-password-submit-btn');
@@ -1063,7 +1053,7 @@ async function handleChangePassword(e) {
   }
 
   // Verify current password (skip if field was hidden in quick change mode)
-  if (currentPasswordInput.closest('.form-group')?.style.display !== 'none') {
+  if (!isQuickMode) {
     if (!currentPassword) {
       showToast(t('fillAllFields') || 'すべての項目を入力してください', 'error');
       return;
@@ -1113,7 +1103,7 @@ async function handleChangePassword(e) {
       showToast(t('passwordChanged') || 'パスワードを変更しました', 'success');
     } else {
       // サーバーからエラーメッセージが返された場合
-      showToast(res.message || t('passwordChangeFailed') || 'パスワード変更に失敗しました', 'error');
+      showToast(res.error || res.message || t('passwordChangeFailed') || 'パスワード変更に失敗しました', 'error');
     }
   } catch (err) {
     console.error('Failed to change password:', err);
@@ -1207,14 +1197,6 @@ function initEventListeners() {
   
   // Change password form
   document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
-  document.getElementById('change-password-submit-btn').addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const form = document.getElementById('change-password-form');
-    // Trigger form submit event manually
-    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-    form.dispatchEvent(submitEvent);
-  });
   document.getElementById('new-password').addEventListener('input', (e) => updatePasswordStrength(e.target.value));
   
   // Login password visibility toggle
