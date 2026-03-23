@@ -74,7 +74,12 @@ const i18n = {
     fillAllFields: 'すべての項目を入力してください',
     strengthWeak: '弱い',
     strengthMedium: '普通',
-    strengthStrong: '強い'
+    strengthStrong: '強い',
+    newAddress: '新規作成',
+    createNewAddressConfirm: '新しいアドレスを作成しますか？現在のアドレスとメールは失われます（パスワードを持っていれば後でアクセスできます）。',
+    passwordWarningTitle: '重要：パスワードを保管してください',
+    passwordWarningMessage: 'この一時メールサービスはパスワードのみでアクセスできます。<br><br><strong>パスワードをメモしないと、再度アクセスできなくなります。</strong><br><br>アドレスとパスワードを必ず保存してください。',
+    understood: '了解しました'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
@@ -145,7 +150,12 @@ const i18n = {
     fillAllFields: 'Please fill in all fields',
     strengthWeak: 'Weak',
     strengthMedium: 'Medium',
-    strengthStrong: 'Strong'
+    strengthStrong: 'Strong',
+    newAddress: 'New Address',
+    createNewAddressConfirm: 'Create a new address? Current address and emails will be lost (you can access later if you have the password).',
+    passwordWarningTitle: 'Important: Save Your Password',
+    passwordWarningMessage: 'This temporary email service is accessed only by password.<br><br><strong>If you do not save the password, you will lose access.</strong><br><br>Please save your address and password.',
+    understood: 'I Understand'
   }
 };
 
@@ -748,6 +758,39 @@ function closeLoginModal() {
   document.getElementById('login-modal').classList.remove('active');
 }
 
+// ===== Password Warning Modal =====
+function openPasswordWarningModal() {
+  document.getElementById('password-warning-modal').classList.add('active');
+}
+
+function closePasswordWarningModal() {
+  document.getElementById('password-warning-modal').classList.remove('active');
+}
+
+function hasSeenPasswordWarning() {
+  return localStorage.getItem('passwordWarningSeen') === 'true';
+}
+
+function markPasswordWarningSeen() {
+  localStorage.setItem('passwordWarningSeen', 'true');
+}
+
+// ===== New Address =====
+function handleNewAddress() {
+  // Confirm with user before creating new address
+  showConfirm(
+    t('newAddress') || '新規作成',
+    t('createNewAddressConfirm') || '新しいアドレスを作成しますか？現在のアドレスとメールは失われます（パスワードを持っていれば後でアクセスできます）。',
+    async () => {
+      // Clear current session and create new address
+      clearSession();
+      await autoCreateAddress();
+      showToast(t('addressCreated'), 'success');
+    },
+    'warning'
+  );
+}
+
 // ===== Core Functions =====
 async function handleLogin(e) {
   e.preventDefault();
@@ -1117,6 +1160,9 @@ function initEventListeners() {
   // Login button in nav
   document.getElementById('nav-login').addEventListener('click', openLoginModal);
   
+  // New address button in nav
+  document.getElementById('nav-new-address').addEventListener('click', handleNewAddress);
+  
   // Forms
   document.getElementById('modal-login-form').addEventListener('submit', handleLogin);
   
@@ -1224,7 +1270,13 @@ function initEventListeners() {
   // Confirm modal
   document.getElementById('confirm-cancel').addEventListener('click', closeConfirm);
   document.getElementById('confirm-ok').addEventListener('click', handleConfirmOk);
-  
+
+  // Password warning modal
+  document.getElementById('password-warning-ok').addEventListener('click', () => {
+    markPasswordWarningSeen();
+    closePasswordWarningModal();
+  });
+
   // Language switch
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
@@ -1273,17 +1325,29 @@ async function init() {
         clearSession();
         // Auto-create new address instead of showing auth view
         await autoCreateAddress();
+        // Show password warning for new users
+        if (!hasSeenPasswordWarning()) {
+          setTimeout(openPasswordWarningModal, 500);
+        }
       }
     } catch (err) {
       clearSession();
       // Auto-create new address instead of showing auth view
       await autoCreateAddress();
+      // Show password warning for new users
+      if (!hasSeenPasswordWarning()) {
+        setTimeout(openPasswordWarningModal, 500);
+      }
     }
   } else {
     // No session - auto create new address
     await autoCreateAddress();
+    // Show password warning for new users
+    if (!hasSeenPasswordWarning()) {
+      setTimeout(openPasswordWarningModal, 500);
+    }
   }
-  
+
   console.log('🚀 Sutemeado initialized');
 }
 
@@ -1293,8 +1357,7 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
-te === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+ventListener('DOMContentLoaded', init);
 } else {
   init();
 }
