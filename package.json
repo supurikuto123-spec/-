@@ -8,10 +8,13 @@
     "dev": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "better-sqlite3": "^12.8.0",
     "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mailparser": "^3.6.5",
     "smtp-server": "^3.13.0",
-    "mailparser": "^3.6.5"
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1"
   },
   "engines": {
     "node": ">=16.0.0"

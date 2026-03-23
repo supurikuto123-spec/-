@@ -432,11 +432,26 @@ function linkify(text) {
 
 // ===== Session Management =====
 function saveSession(address, password) {
-  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify({ address, password }));
+  const data = JSON.stringify({ address, password });
+  localStorage.setItem(CONFIG.STORAGE_KEY, data);
+  // Set cookie valid for 30 days
+  const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString();
+  document.cookie = `sutemeado_session=${encodeURIComponent(data)}; expires=${expires}; path=/; SameSite=Lax`;
 }
 
 function loadSession() {
   try {
+    // Try cookie first
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith('sutemeado_session=')) {
+        const value = decodeURIComponent(cookie.substring('sutemeado_session='.length));
+        return JSON.parse(value);
+      }
+    }
+    
+    // Fallback to localStorage
     const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
     return saved ? JSON.parse(saved) : null;
   } catch (e) {
@@ -446,6 +461,7 @@ function loadSession() {
 
 function clearSession() {
   localStorage.removeItem(CONFIG.STORAGE_KEY);
+  document.cookie = 'sutemeado_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 }
 
 // ===== UI Update Functions =====
@@ -1336,10 +1352,6 @@ async function init() {
 // Start when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
-ventListener('DOMContentLoaded', init);
 } else {
   init();
 }
