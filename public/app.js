@@ -465,10 +465,8 @@ function showAuthView() {
   document.getElementById('mailbox-view').style.display = 'none';
   
   // Hide nav items that require login
-  document.getElementById('nav-inbox').style.display = 'none';
   document.getElementById('nav-api').style.display = 'none';
   document.getElementById('nav-settings').style.display = 'none';
-  document.getElementById('nav-badge').style.display = 'none';
 }
 
 function showMailboxView() {
@@ -476,7 +474,6 @@ function showMailboxView() {
   document.getElementById('mailbox-view').style.display = 'block';
   
   // Show nav items
-  document.getElementById('nav-inbox').style.display = 'flex';
   document.getElementById('nav-api').style.display = 'flex';
   document.getElementById('nav-settings').style.display = 'flex';
   updateNavBadge();
@@ -513,15 +510,9 @@ function togglePasswordVisibility() {
 }
 
 function updateNavBadge() {
-  const badge = document.getElementById('nav-badge');
+  // Badge element removed with nav-inbox, function kept for compatibility
   const unreadCount = state.mails.filter(m => !m.read).length;
-  
-  if (unreadCount > 0) {
-    badge.textContent = unreadCount;
-    badge.style.display = 'inline-flex';
-  } else {
-    badge.style.display = 'none';
-  }
+  return unreadCount;
 }
 
 function renderMailList(mails) {
@@ -693,6 +684,29 @@ function closeSettingsModal() {
 function openChangePasswordModal() {
   document.getElementById('change-password-modal').classList.add('active');
   closeSettingsModal();
+  // Show current password field when opened from settings
+  const currentPwGroup = document.getElementById('current-password')?.closest('.form-group');
+  if (currentPwGroup) currentPwGroup.style.display = 'block';
+}
+
+function openQuickPasswordChange() {
+  // Open password change modal but hide current password field
+  // since user is already viewing the password
+  const modal = document.getElementById('change-password-modal');
+  const currentPwGroup = document.getElementById('current-password')?.closest('.form-group');
+  const newPwInput = document.getElementById('new-password');
+
+  if (currentPwGroup) currentPwGroup.style.display = 'none';
+
+  // Pre-fill current password if visible
+  if (state.passwordVisible && state.currentPassword) {
+    document.getElementById('current-password').value = state.currentPassword;
+  }
+
+  modal.classList.add('active');
+
+  // Focus on new password field
+  setTimeout(() => newPwInput?.focus(), 100);
 }
 
 function closeChangePasswordModal() {
@@ -700,6 +714,9 @@ function closeChangePasswordModal() {
   // Clear form
   document.getElementById('change-password-form').reset();
   updatePasswordStrength('');
+  // Reset visibility of current password field
+  const currentPwGroup = document.getElementById('current-password')?.closest('.form-group');
+  if (currentPwGroup) currentPwGroup.style.display = 'block';
 }
 
 function openLoginModal() {
@@ -759,27 +776,28 @@ async function autoCreateAddress() {
       <p data-i18n="creating">${t('creating')}</p>
     </div>
   `;
-  
+
   try {
     const res = await api.newAddress();
-    
+
     if (res.success) {
       updateAddressDisplay(res.address, res.password);
       state.mails = [];
       renderMailList([]);
       showMailboxView();
-      
+
       // Show welcome toast with password hint
       showToast(`${t('addressCreated')}: ${res.address}`, 'success', 5000);
-      
+
       startAutoRefresh();
     } else {
-      showToast(t('addressCreateFailed'), 'error');
+      // Silent fail on auto-create - don't show error toast, just show empty state
+      console.warn('Auto-create address failed:', res.message);
       renderMailList([]);
     }
   } catch (err) {
+    // Silent fail on auto-create - don't show error toast
     console.error('Failed to create address:', err);
-    showToast(t('addressCreateFailed'), 'error');
     renderMailList([]);
   }
 }
@@ -967,22 +985,29 @@ function updatePasswordStrength(password) {
 
 async function handleChangePassword(e) {
   e.preventDefault();
-  
-  const currentPassword = document.getElementById('current-password').value;
+
+  const currentPasswordInput = document.getElementById('current-password');
+  const currentPassword = currentPasswordInput.value || state.currentPassword;
   const newPassword = document.getElementById('new-password').value;
   const confirmPassword = document.getElementById('confirm-password').value;
   const submitBtn = document.getElementById('change-password-submit-btn');
-  
+
   // Validation
-  if (!currentPassword || !newPassword || !confirmPassword) {
+  if (!newPassword || !confirmPassword) {
     showToast(t('fillAllFields') || 'すべての項目を入力してください', 'error');
     return;
   }
-  
-  // Verify current password
-  if (currentPassword !== state.currentPassword) {
-    showToast(t('currentPasswordWrong') || '現在のパスワードが違います', 'error');
-    return;
+
+  // Verify current password (skip if field was hidden in quick change mode)
+  if (currentPasswordInput.closest('.form-group')?.style.display !== 'none') {
+    if (!currentPassword) {
+      showToast(t('fillAllFields') || 'すべての項目を入力してください', 'error');
+      return;
+    }
+    if (currentPassword !== state.currentPassword) {
+      showToast(t('currentPasswordWrong') || '現在のパスワードが違います', 'error');
+      return;
+    }
   }
   
   // Validate new password
@@ -1099,6 +1124,9 @@ function initEventListeners() {
   
   document.getElementById('toggle-password-btn').addEventListener('click', togglePasswordVisibility);
   
+  // Edit password button - opens inline password change
+  document.getElementById('edit-password-btn').addEventListener('click', openQuickPasswordChange);
+  
   // Refresh
   document.getElementById('refresh-btn').addEventListener('click', refreshMailbox);
   
@@ -1106,7 +1134,6 @@ function initEventListeners() {
   document.getElementById('auto-refresh').addEventListener('change', toggleAutoRefresh);
   
   // Nav items
-  document.getElementById('nav-inbox').addEventListener('click', scrollToMailbox);
   document.getElementById('nav-api').addEventListener('click', openApiModal);
   document.getElementById('nav-settings').addEventListener('click', openSettingsModal);
   

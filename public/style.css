@@ -1543,6 +1543,8 @@ section {
   border-radius: var(--radius-md);
   padding: 0 var(--spacing-sm);
   transition: all var(--transition-fast);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .input-wrapper:focus-within {
@@ -1564,6 +1566,8 @@ section {
   font-size: 1rem;
   font-family: var(--font-mono);
   outline: none;
+  min-width: 0;
+  width: 100%;
 }
 
 .form-input::placeholder {
@@ -1660,6 +1664,8 @@ section {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs) var(--spacing-sm);
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .info-value {
@@ -1667,7 +1673,10 @@ section {
   font-family: var(--font-mono);
   font-size: 1rem;
   color: var(--neon-cyan);
-  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .info-value-password {
@@ -1891,7 +1900,8 @@ section {
 
 /* Modal Variants */
 .modal-content-sm {
-  max-width: 400px;
+  max-width: 420px;
+  width: 90vw;
 }
 
 .modal-content-xs {
