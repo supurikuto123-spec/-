@@ -703,10 +703,13 @@ function createSandboxFrame(htmlContent) {
           doc.documentElement?.scrollHeight || 0,
           doc.documentElement?.offsetHeight || 0
         );
-        frame.style.height = Math.min(Math.max(height + 20, 200), 600) + 'px';
+        // モーダル内の可視領域に応じて高さを調整（最大 80vh まで）
+        const maxH = Math.floor(window.innerHeight * 0.55);
+        frame.style.height = Math.min(Math.max(height + 20, 150), Math.max(maxH, 300)) + 'px';
       }
     } catch (e) {
-      console.log('Iframe resize error:', e);
+      // クロスオリジンの場合はデフォルト高さを設定
+      frame.style.height = '350px';
     }
   });
   
@@ -1110,8 +1113,9 @@ function handleDeleteAddress() {
           state.currentPassword = null;
           state.mails = [];
           stopAutoRefresh();
-          showLoggedOutView();
           showToast(t('deleteAddress'), 'success');
+          // 削除後は新しいアドレスを自動生成（ページリロード不要）
+          await autoCreateAddress();
         } else {
           showToast(t('deleteFailed'), 'error');
         }
