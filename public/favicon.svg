@@ -1,8 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <!-- Dark rounded background -->
-  <rect width="32" height="32" rx="7" fill="#0d0d18"/>
-  <!-- Envelope body -->
-  <rect x="3" y="8" width="26" height="17" rx="2.5" fill="none" stroke="#00e8f8" stroke-width="1.8"/>
-  <!-- Envelope flap / V line -->
-  <polyline points="3,10 16,19 29,10" fill="none" stroke="#00e8f8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="mail icon">
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#ffffff"/>
+  <rect x="14" y="20" width="36" height="24" rx="4" fill="none" stroke="#111827" stroke-width="3"/>
+  <polyline points="14,24 32,36 50,24" fill="none" stroke="#111827" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

@@ -2785,6 +2785,10 @@ body.drawer-open {
   border-color: rgba(0,119,204,0.15);
 }
 
+[data-theme="light"] .info-label {
+  color: #111827;
+}
+
 [data-theme="light"] .mail-card {
   border-color: #e5e7eb;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);

@@ -669,6 +669,31 @@ function createSandboxFrame(htmlContent) {
       const doc = frame.contentDocument || frame.contentWindow.document;
       if (!doc || !doc.body) return;
 
+      // Make all links inside HTML email open outside the iframe
+      doc.querySelectorAll('a[href]').forEach(a => {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
+      });
+
+      doc.addEventListener('click', (event) => {
+        const anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+        if (!anchor) return;
+
+        const rawHref = (anchor.getAttribute('href') || '').trim();
+        if (!rawHref || rawHref.startsWith('#') || rawHref.toLowerCase().startsWith('javascript:')) return;
+
+        let openUrl = rawHref;
+        if (rawHref.startsWith('//')) {
+          openUrl = 'https:' + rawHref;
+        }
+
+        // Absolute URLs are opened in a new tab so user can navigate properly
+        if (/^https?:\/\//i.test(openUrl)) {
+          event.preventDefault();
+          window.open(openUrl, '_blank', 'noopener,noreferrer');
+        }
+      }, true);
+
       const viewportWidth = frame.clientWidth || frame.parentElement?.clientWidth || 360;
       const contentWidth = Math.max(
         doc.documentElement?.scrollWidth || 0,
