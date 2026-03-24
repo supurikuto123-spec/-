@@ -322,8 +322,9 @@ function showToast(message, type = 'info', duration = 3000) {
 
 // ===== Custom Confirm Modal =====
 let confirmCallback = null;
+let confirmCancelCallback = null;
 
-function showConfirm(title, message, onConfirm, type = 'warning') {
+function showConfirm(title, message, onConfirm, type = 'warning', onCancel = null) {
   const modal = document.getElementById('confirm-modal');
   const titleEl = document.getElementById('confirm-title');
   const messageEl = document.getElementById('confirm-message');
@@ -344,8 +345,9 @@ function showConfirm(title, message, onConfirm, type = 'warning') {
   okBtn.textContent = t('confirm') || '確認';
   document.getElementById('confirm-cancel').textContent = t('cancel');
   
-  // Set callback
+  // Set callbacks
   confirmCallback = onConfirm;
+  confirmCancelCallback = onCancel;
   
   // Show modal
   modal.classList.add('active');
@@ -355,13 +357,19 @@ function closeConfirm() {
   const modal = document.getElementById('confirm-modal');
   modal.classList.remove('active');
   confirmCallback = null;
+  confirmCancelCallback = null;
 }
 
 function handleConfirmOk() {
-  if (confirmCallback) {
-    confirmCallback();
-  }
+  const cb = confirmCallback;
   closeConfirm();
+  if (cb) cb();
+}
+
+function handleConfirmCancel() {
+  const cb = confirmCancelCallback;
+  closeConfirm();
+  if (cb) cb();
 }
 
 // ===== Utility Functions =====
@@ -993,9 +1001,6 @@ async function autoCreateAddress(isManualCreation = false) {
       showToast(t('addressCreated'), 'success', 3000);
 
       startAutoRefresh();
-      
-      // Show password save warning for every new address (auto or manual) if not yet acknowledged
-      maybeShowPasswordWarning();
     } else {
       // Silent fail on auto-create - don't show error toast, just show empty state
       console.warn('Auto-create address failed:', res.message);
@@ -1213,13 +1218,14 @@ function initEventListeners() {
     await autoCreateAddress(true);
   });
   document.getElementById('new-addr-delete').addEventListener('click', () => {
+    // 削除確認ポップアップ（キャンセル時は新規作成モーダルに戻る）
     closeNewAddressConfirmModal();
-    // 削除確認ポップアップ
+    const msg = state.currentLang === 'ja'
+      ? 'アドレスを使用しない場合は削除してください。\n\n' + t('deleteAddressConfirm')
+      : "If you don't use the address, delete it.\n\n" + t('deleteAddressConfirm');
     showConfirm(
       t('deleteAddress'),
-      (state.currentLang === 'ja'
-        ? 'アドレスを使用しない場合は削除してください。\n\n' + t('deleteAddressConfirm')
-        : 'If you don\'t use the address, delete it.\n\n' + t('deleteAddressConfirm')),
+      msg,
       async () => {
         if (state.currentAddress && state.currentPassword) {
           try {
@@ -1234,7 +1240,8 @@ function initEventListeners() {
         stopAutoRefresh();
         await autoCreateAddress(true);
       },
-      'danger'
+      'danger',
+      openNewAddressConfirmModal  // キャンセル時は元のモーダルに戻る
     );
   });
 
@@ -1344,7 +1351,7 @@ function initEventListeners() {
   });
   
   // Confirm modal
-  document.getElementById('confirm-cancel').addEventListener('click', closeConfirm);
+  document.getElementById('confirm-cancel').addEventListener('click', handleConfirmCancel);
   document.getElementById('confirm-ok').addEventListener('click', handleConfirmOk);
 
   // Password warning modal
@@ -1362,7 +1369,11 @@ function initEventListeners() {
   document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', (e) => {
       if (e.target === modal || e.target.classList.contains('modal-overlay')) {
-        modal.classList.remove('active');
+        if (modal.id === 'confirm-modal') {
+          handleConfirmCancel();
+        } else {
+          modal.classList.remove('active');
+        }
       }
     });
   });
@@ -1371,7 +1382,11 @@ function initEventListeners() {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       document.querySelectorAll('.modal.active').forEach(modal => {
-        modal.classList.remove('active');
+        if (modal.id === 'confirm-modal') {
+          handleConfirmCancel();
+        } else {
+          modal.classList.remove('active');
+        }
       });
     }
   });

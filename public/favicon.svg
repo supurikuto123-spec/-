@@ -1,12 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Background rounded square -->
-  <rect width="32" height="32" rx="7" fill="#0a0a0f"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#0a0a0f"/>
   <!-- Envelope body -->
-  <rect x="4" y="9" width="24" height="16" rx="2" fill="none" stroke="#00f0ff" stroke-width="1.8"/>
-  <!-- Envelope flap (V shape) -->
-  <polyline points="4,11 16,20 28,11" fill="none" stroke="#00f0ff" stroke-width="1.8" stroke-linejoin="round"/>
-  <!-- Small "trash / discard" X mark in bottom right corner -->
-  <circle cx="24" cy="22" r="5" fill="#0a0a0f"/>
-  <line x1="21.5" y1="19.5" x2="26.5" y2="24.5" stroke="#ff00aa" stroke-width="1.8" stroke-linecap="round"/>
-  <line x1="26.5" y1="19.5" x2="21.5" y2="24.5" stroke="#ff00aa" stroke-width="1.8" stroke-linecap="round"/>
+  <rect x="4" y="9" width="18" height="13" rx="2" fill="none" stroke="#00f0ff" stroke-width="1.6"/>
+  <!-- Envelope flap -->
+  <polyline points="4,11 13,17 22,11" fill="none" stroke="#00f0ff" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- Trash can (delete indicator) at bottom-right -->
+  <g transform="translate(18,18)">
+    <!-- Trash body -->
+    <rect x="1" y="3" width="8" height="7" rx="1" fill="none" stroke="#ff00aa" stroke-width="1.4"/>
+    <!-- Trash lid -->
+    <line x1="0" y1="3" x2="10" y2="3" stroke="#ff00aa" stroke-width="1.4" stroke-linecap="round"/>
+    <!-- Lid handle -->
+    <path d="M3.5 3V2a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1" fill="none" stroke="#ff00aa" stroke-width="1.2"/>
+  </g>
 </svg>

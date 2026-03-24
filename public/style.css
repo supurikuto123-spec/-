@@ -574,6 +574,8 @@ section {
 .mail-list {
   max-height: 500px;
   overflow-y: auto;
+  min-height: 0;
+  /* Height is content-driven; no fixed min */
 }
 
 .mail-list::-webkit-scrollbar {
@@ -1537,6 +1539,41 @@ section {
 /* body に drawer-open クラスがついた時はスクロール無効 */
 body.drawer-open {
   overflow: hidden;
+}
+
+/* Drawer footer with register button */
+.drawer-footer {
+  padding: 12px 16px 16px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.drawer-register-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(0,240,255,0.08);
+  border: 1px solid rgba(0,240,255,0.25);
+  border-radius: var(--radius-md);
+  color: var(--neon-cyan);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: not-allowed;
+  opacity: 0.55;
+  transition: all var(--transition-fast);
+}
+
+/* New address confirm footer */
+.new-addr-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  flex-wrap: wrap;
 }
 
 .nav-brand {
@@ -2563,15 +2600,45 @@ body.drawer-open {
     padding: var(--spacing-md);
   }
 
+  /* Mail list: remove fixed max-height on mobile to avoid huge empty space */
+  .mail-list {
+    max-height: none;
+    overflow-y: visible;
+  }
+
   /* Mail iframe: ensure images don't overflow on mobile */
   .mail-frame {
-    max-height: 450px;
+    max-height: 45vh;
+    min-height: 150px;
     overflow-x: hidden;
     overflow-y: auto;
   }
 
   .mail-detail-body {
     overflow-x: hidden;
+  }
+
+  /* Modal footer for mail detail: stack buttons nicely */
+  #mail-modal .modal-footer {
+    flex-direction: column-reverse;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+  #mail-modal .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* New-address confirm modal footer: wrap buttons */
+  .new-addr-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+  .new-addr-footer .btn {
+    flex: 1 1 auto;
+    min-width: 80px;
+    justify-content: center;
   }
 }
 
@@ -2987,5 +3054,14 @@ body.drawer-open {
 [data-theme="light"] .confirm-icon.info {
   background: rgba(0,119,204,0.08);
   border-color: rgba(0,119,204,0.2);
+  color: var(--neon-cyan);
+}
+
+[data-theme="light"] .drawer-footer {
+  border-top-color: #e5e7eb;
+}
+[data-theme="light"] .drawer-register-btn {
+  background: rgba(0,119,204,0.07);
+  border-color: rgba(0,119,204,0.25);
   color: var(--neon-cyan);
 }
