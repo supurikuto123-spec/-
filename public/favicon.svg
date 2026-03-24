@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background rounded square -->
+  <rect width="32" height="32" rx="7" fill="#0a0a0f"/>
+  <!-- Envelope body -->
+  <rect x="4" y="9" width="24" height="16" rx="2" fill="none" stroke="#00f0ff" stroke-width="1.8"/>
+  <!-- Envelope flap (V shape) -->
+  <polyline points="4,11 16,20 28,11" fill="none" stroke="#00f0ff" stroke-width="1.8" stroke-linejoin="round"/>
+  <!-- Small "trash / discard" X mark in bottom right corner -->
+  <circle cx="24" cy="22" r="5" fill="#0a0a0f"/>
+  <line x1="21.5" y1="19.5" x2="26.5" y2="24.5" stroke="#ff00aa" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="26.5" y1="19.5" x2="21.5" y2="24.5" stroke="#ff00aa" stroke-width="1.8" stroke-linecap="round"/>
+</svg>

@@ -164,7 +164,9 @@ const CONFIG = {
   API_BASE: '',
   REFRESH_INTERVAL: 5000,
   STORAGE_KEY: 'sutemeado_session',
-  LANG_KEY: 'sutemeado_lang'
+  LANG_KEY: 'sutemeado_lang',
+  READ_KEY: 'sutemeado_read',
+  THEME_KEY: 'sutemeado_theme'
 };
 
 // ===== State =====
@@ -176,7 +178,8 @@ const state = {
   refreshTimer: null,
   selectedMail: null,
   currentLang: 'ja',
-  passwordVisible: false
+  passwordVisible: false,
+  theme: 'neon'
 };
 
 // ===== DOM Elements Cache =====
@@ -460,31 +463,62 @@ function clearSession() {
   document.cookie = 'sutemeado_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 }
 
+// ===== Read State Persistence =====
+function getReadKey(address) {
+  return CONFIG.READ_KEY + '_' + (address || '');
+}
+function saveReadState(address, mails) {
+  if (!address) return;
+  const readIds = mails.filter(m => m.read).map(m => m.id);
+  localStorage.setItem(getReadKey(address), JSON.stringify(readIds));
+}
+function loadReadIds(address) {
+  if (!address) return new Set();
+  try {
+    const raw = localStorage.getItem(getReadKey(address));
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch { return new Set(); }
+}
+function clearReadState(address) {
+  localStorage.removeItem(getReadKey(address));
+}
+
+// ===== Theme =====
+function applyTheme(theme) {
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem(CONFIG.THEME_KEY, theme);
+  // theme toggle button label
+  const lbl = document.getElementById('theme-toggle-label');
+  if (lbl) lbl.textContent = theme === 'light' ? (state.currentLang === 'ja' ? 'ネオンモード' : 'Neon Mode') : (state.currentLang === 'ja' ? 'ライトモード' : 'Light Mode');
+}
+function toggleTheme() {
+  applyTheme(state.theme === 'neon' ? 'light' : 'neon');
+}
+
 // ===== UI Update Functions =====
 function showLoggedOutView() {
   const mailboxView = document.getElementById('mailbox-view');
   if (mailboxView) mailboxView.style.display = 'none';
-  
+  // ログアウト時: ログインボタン表示、新規作成非表示
   const loginNavBtn = document.getElementById('nav-login');
-  if (loginNavBtn) loginNavBtn.style.display = 'flex';
-  
+  if (loginNavBtn) { loginNavBtn.style.display = 'flex'; loginNavBtn.dataset.loggedIn = ''; }
   const newAddressNavBtn = document.getElementById('nav-new-address');
   if (newAddressNavBtn) newAddressNavBtn.style.display = 'none';
+  const navActions = document.getElementById('nav-actions');
+  if (navActions) navActions.style.display = 'none';
 }
 
 function showMailboxView() {
   const mailboxView = document.getElementById('mailbox-view');
-  const navApi = document.getElementById('nav-api');
-  const navSettings = document.getElementById('nav-settings');
-  
   if (mailboxView) mailboxView.style.display = 'block';
-  
-  // Toggle view elements based on login state
+  // ログイン中もログインボタンを表示（別アドレスへのログイン用）
   const loginNavBtn = document.getElementById('nav-login');
-  if (loginNavBtn) loginNavBtn.style.display = 'none';
-  
+  if (loginNavBtn) { loginNavBtn.style.display = 'flex'; loginNavBtn.dataset.loggedIn = 'true'; }
   const newAddressNavBtn = document.getElementById('nav-new-address');
   if (newAddressNavBtn) newAddressNavBtn.style.display = 'flex';
+  const navActions = document.getElementById('nav-actions');
+  if (navActions) navActions.style.display = 'flex';
   updateNavBadge();
 }
 
@@ -577,6 +611,8 @@ function renderMailList(mails) {
     });
   }
   
+  // 既読状態を永続化
+  saveReadState(state.currentAddress, mails);
   updateNavBadge();
 }
 
@@ -678,6 +714,7 @@ function openMailModal(mailId) {
   // Mark as read
   if (!mail.read) {
     mail.read = true;
+    saveReadState(state.currentAddress, state.mails);
     renderMailList(state.mails);
   }
 }
@@ -837,7 +874,9 @@ async function handleLogin(e) {
     if (res.success) {
       updateAddressDisplay(address, password);
       state.mails = res.mails || [];
-      state.mails.forEach(m => m.read = false);
+      // Restore read state from localStorage
+      const readIds = loadReadIds(address);
+      state.mails = (state.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
       renderMailList(state.mails);
       showMailboxView();
       closeLoginModal();
@@ -912,6 +951,9 @@ async function refreshMailbox() {
     
     if (res.success) {
       const readIds = new Set(state.mails.filter(m => m.read).map(m => m.id));
+      // localStorageの既読も統合
+      const savedIds = loadReadIds(state.currentAddress);
+      savedIds.forEach(id => readIds.add(id));
       state.mails = (res.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
       renderMailList(state.mails);
     }
@@ -954,6 +996,7 @@ function handleDeleteAllMail() {
         const res = await api.clearMails(state.currentAddress, state.currentPassword);
         
         if (res.success) {
+          clearReadState(state.currentAddress);
           state.mails = [];
           renderMailList([]);
           closeSettingsModal();
@@ -981,6 +1024,7 @@ function handleDeleteAddress() {
         const res = await api.deleteAddress(state.currentAddress, state.currentPassword);
         
         if (res.success) {
+          clearReadState(state.currentAddress);
           clearSession();
           state.currentAddress = null;
           state.currentPassword = null;
@@ -1048,8 +1092,22 @@ function scrollToMailbox() {
 
 // ===== Event Listeners =====
 function initEventListeners() {
-  // Login button in nav
-  document.getElementById('nav-login').addEventListener('click', openLoginModal);
+  // Login button: ログイン中でも押せる
+  document.getElementById('nav-login').addEventListener('click', () => {
+    if (document.getElementById('nav-login').dataset.loggedIn === 'true') {
+      // ログイン中 → 警告を出してからログインモーダル
+      showConfirm(
+        t('login'),
+        state.currentLang === 'ja'
+          ? 'ログイン情報を保存していない場合、現在のアドレスにはアクセスできなくなります。\n\n別のアドレスにログインしますか？'
+          : 'If you have not saved your login info, you will lose access to the current address.\n\nLogin to a different address?',
+        () => { clearSession(); openLoginModal(); },
+        'warning'
+      );
+    } else {
+      openLoginModal();
+    }
+  });
   
   // New address button in nav
   document.getElementById('nav-new-address').addEventListener('click', handleNewAddress);
@@ -1091,16 +1149,21 @@ function initEventListeners() {
   document.getElementById('login-modal-close').addEventListener('click', closeLoginModal);
   document.getElementById('change-password-modal-close').addEventListener('click', closeChangePasswordModal);
 
-  // Settings actions
-  document.getElementById('logout-btn').addEventListener('click', handleLogout);
-  document.getElementById('delete-all-mail-btn').addEventListener('click', handleDeleteAllMail);
-  document.getElementById('delete-address-btn').addEventListener('click', handleDeleteAddress);
+  // Settings actions (パスワード変更と外観のみ)
   document.getElementById('change-password-btn').addEventListener('click', () => {
     closeSettingsModal();
     openChangePasswordModal();
   });
+  document.getElementById('theme-toggle-btn').addEventListener('click', () => {
+    toggleTheme();
+    closeSettingsModal();
+  });
   // info-card のパスワード欄横の鉛筆ボタン
   document.getElementById('change-password-inline-btn').addEventListener('click', openChangePasswordModal);
+
+  // ナビ: 全メール削除・アドレス削除ボタン
+  document.getElementById('nav-delete-all-mail')?.addEventListener('click', handleDeleteAllMail);
+  document.getElementById('nav-delete-address')?.addEventListener('click', handleDeleteAddress);
 
   // Change password form
   document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
@@ -1205,6 +1268,10 @@ async function init() {
   // Load language
   const savedLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';
   setLanguage(savedLang);
+
+  // Load theme
+  const savedTheme = localStorage.getItem(CONFIG.THEME_KEY) || 'neon';
+  applyTheme(savedTheme);
   
   // Init event listeners
   initEventListeners();
@@ -1216,7 +1283,8 @@ async function init() {
       const res = await api.login(session.address, session.password);
       if (res.success) {
         updateAddressDisplay(session.address, session.password);
-        state.mails = (res.mails || []).map(m => ({ ...m, read: false }));
+        const readIds = loadReadIds(session.address);
+        state.mails = (res.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
         renderMailList(state.mails);
         showMailboxView();
         startAutoRefresh();

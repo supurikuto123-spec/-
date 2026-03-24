@@ -1360,12 +1360,16 @@ section {
   z-index: 100;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+  /* モバイルで折り返さない */
+  min-width: 0;
+  overflow: hidden;
 }
 
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .nav-logo-wrap {
@@ -1398,14 +1402,20 @@ section {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+.nav-menu::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .nav-item {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 6px 12px;
+  padding: 6px 10px;
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
@@ -1415,6 +1425,20 @@ section {
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 危険アクションのナビボタン */
+.nav-item-danger {
+  color: rgba(255, 60, 120, 0.8);
+}
+.nav-item-danger:hover {
+  background: rgba(255, 0, 100, 0.08) !important;
+  border-color: rgba(255, 0, 100, 0.35) !important;
+  color: var(--neon-magenta) !important;
+}
+.nav-item-danger svg {
+  color: var(--neon-magenta);
 }
 
 .nav-item:hover {
@@ -1431,7 +1455,14 @@ section {
 
 /* アイコンのみボタン */
 .nav-item-icon {
-  padding: 6px 9px;
+  padding: 6px 8px;
+}
+
+/* ナビアクショングループ（ログイン後のみ表示） */
+.nav-actions {
+  display: none;
+  align-items: center;
+  gap: 2px;
 }
 
 .nav-badge {
@@ -1727,13 +1758,15 @@ section {
 .info-value-box {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: rgba(0,0,0,0.35);
   border: 1px solid rgba(0,240,255,0.1);
   border-radius: var(--radius-sm);
-  padding: 8px 8px 8px 12px;
+  padding: 7px 7px 7px 10px;
   overflow: hidden;
   max-width: 100%;
+  width: 100%;
+  min-width: 0;
   transition: border-color var(--transition-fast);
 }
 
@@ -2418,4 +2451,186 @@ section {
   .toggle-sm span {
     font-size: 0.72rem;
   }
+}
+
+/* ===== Light Mode ===== */
+[data-theme="light"] {
+  --bg-primary: #f4f6fb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #eef0f7;
+  --bg-card: #ffffff;
+  --bg-hover: #e8ecf5;
+
+  --neon-cyan: #0077cc;
+  --neon-magenta: #cc0077;
+  --neon-purple: #7733cc;
+  --neon-blue: #0055bb;
+  --neon-green: #008855;
+
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-tertiary: #6b7280;
+  --text-muted: #9ca3af;
+
+  --border-color: #d1d5db;
+  --border-glow: rgba(0, 119, 204, 0.2);
+
+  --status-online: #008855;
+  --status-busy: #cc5500;
+  --status-offline: #9ca3af;
+}
+
+[data-theme="light"] body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] body::before {
+  background-image:
+    linear-gradient(rgba(0, 119, 204, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 119, 204, 0.04) 1px, transparent 1px);
+}
+
+[data-theme="light"] .navbar {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom-color: rgba(0, 119, 204, 0.18);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .nav-logo-wrap {
+  background: linear-gradient(135deg, rgba(0,119,204,0.12) 0%, rgba(0,85,187,0.08) 100%);
+  border-color: rgba(0,119,204,0.3);
+}
+
+[data-theme="light"] .nav-item:hover {
+  background: rgba(0,119,204,0.07);
+  border-color: rgba(0,119,204,0.25);
+}
+
+[data-theme="light"] .info-card {
+  background: linear-gradient(135deg, rgba(0,119,204,0.05) 0%, rgba(0,85,187,0.02) 100%);
+  border-color: rgba(0,119,204,0.2);
+}
+
+[data-theme="light"] .info-value-box {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,119,204,0.15);
+}
+
+[data-theme="light"] .mail-card {
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .mail-header-bar {
+  background: #f8fafc;
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .mail-item:hover {
+  background: #f0f4ff;
+}
+
+[data-theme="light"] .mail-item.unread::before {
+  background: var(--neon-cyan);
+  box-shadow: 0 0 6px rgba(0,119,204,0.4);
+}
+
+[data-theme="light"] .modal-content {
+  background: #ffffff;
+  border-color: #d1d5db;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+}
+
+[data-theme="light"] .modal-header {
+  background: #f8fafc;
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .modal-footer {
+  background: #f8fafc;
+  border-top-color: #e5e7eb;
+}
+
+[data-theme="light"] .settings-item {
+  background: rgba(0,0,0,0.02);
+  border-color: #e5e7eb;
+  color: #111827;
+}
+
+[data-theme="light"] .settings-item:hover {
+  background: rgba(0,119,204,0.06);
+  border-color: rgba(0,119,204,0.3);
+}
+
+[data-theme="light"] .spinner {
+  border-color: rgba(0,119,204,0.15);
+  border-top-color: var(--neon-cyan);
+  box-shadow: none;
+}
+
+[data-theme="light"] .empty-state {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .icon-btn {
+  background: rgba(0,0,0,0.04);
+  border-color: #d1d5db;
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .icon-btn:hover {
+  background: rgba(0,119,204,0.1);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+[data-theme="light"] .btn-primary {
+  background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-blue) 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,119,204,0.25);
+}
+
+[data-theme="light"] .btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+[data-theme="light"] .btn-secondary:hover {
+  background: #e5e7eb;
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+[data-theme="light"] .api-entry {
+  background: #f8fafc;
+  border-color: #e5e7eb;
+}
+
+[data-theme="light"] .password-save-box {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,119,204,0.2);
+}
+
+[data-theme="light"] .toast {
+  background: #ffffff;
+  border-color: #d1d5db;
+  color: #111827;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+[data-theme="light"] .input-wrapper {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+[data-theme="light"] .mail-from {
+  color: var(--neon-purple);
+}
+
+[data-theme="light"] .nav-title {
+  background: linear-gradient(135deg, #111827 0%, var(--neon-cyan) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }

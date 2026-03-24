@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="neon">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="title">Sutemeado - 一時メール</title>
   <meta name="description" content="登録不要、パスワードでいつでもアクセスできる一時メールサービス">
+  <!-- ファビコン: 捨てメアドテーマ SVG -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +26,7 @@
     </div>
     
     <div class="nav-menu" id="nav-menu">
-      <!-- ログイン前のみ表示 -->
+      <!-- ログイン（常時表示、ログイン中は別アドレスへのログイン用） -->
       <button class="nav-item" id="nav-login">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
@@ -33,14 +35,30 @@
         </svg>
         <span data-i18n="login">ログイン</span>
       </button>
-      
-      <!-- ログイン後のみ表示 -->
-      <button class="nav-item" id="nav-new-address" style="display: none;">
+
+      <!-- 新しいメアド作成（ログイン後のみ） -->
+      <button class="nav-item" id="nav-new-address" style="display:none;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 5v14M5 12h14"/>
         </svg>
         <span data-i18n="newAddress">新しいメールアドレスを作成</span>
       </button>
+
+      <!-- アクションボタン群（ログイン後） -->
+      <div class="nav-actions" id="nav-actions" style="display:none;">
+        <button class="nav-item nav-item-icon" id="nav-delete-all-mail" title="全メール削除">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </button>
+        <button class="nav-item nav-item-icon nav-item-danger" id="nav-delete-address" title="アドレスを削除">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <line x1="9" y1="13" x2="15" y2="13"/>
+          </svg>
+        </button>
+      </div>
 
       <div class="nav-divider"></div>
 
@@ -160,13 +178,13 @@
           <div class="form-group">
             <label class="form-label" data-i18n="emailAddress">メールアドレス</label>
             <div class="input-wrapper">
-              <input type="email" id="login-address" class="form-input" placeholder="xxxxxx@sutemeado.com" required style="min-width: 0;">
+              <input type="email" id="login-address" class="form-input" placeholder="xxxxxx@sutemeado.com" required style="min-width:0;" autocomplete="username">
             </div>
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="password">パスワード</label>
             <div class="input-wrapper">
-              <input type="password" id="login-password" class="form-input" placeholder="••••••••" required style="min-width: 0;">
+              <input type="password" id="login-password" class="form-input" placeholder="••••••••" required style="min-width:0;" autocomplete="current-password">
               <button type="button" class="btn-icon btn-icon-sm" id="toggle-login-password" title="Show/Hide">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -197,32 +215,17 @@
       </div>
       <div class="modal-body">
         <div class="api-list">
-          <div class="api-entry">
-            <div class="api-meta"><span class="api-method get">GET</span><code>/api/new-address</code></div>
-            <p data-i18n="apiGetAddress">新規アドレスを作成</p>
-          </div>
-          <div class="api-entry">
-            <div class="api-meta"><span class="api-method post">POST</span><code>/api/login</code></div>
-            <p data-i18n="apiLogin">ログイン</p>
-          </div>
-          <div class="api-entry">
-            <div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address</code></div>
-            <p data-i18n="apiGetMails">メール一覧を取得</p>
-          </div>
-          <div class="api-entry">
-            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address/:mailId</code></div>
-            <p data-i18n="apiDeleteMail">メールを削除</p>
-          </div>
-          <div class="api-entry">
-            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/address/:address</code></div>
-            <p data-i18n="apiDeleteAddress">アドレスを削除</p>
-          </div>
+          <div class="api-entry"><div class="api-meta"><span class="api-method get">GET</span><code>/api/new-address</code></div><p data-i18n="apiGetAddress">新規アドレスを作成</p></div>
+          <div class="api-entry"><div class="api-meta"><span class="api-method post">POST</span><code>/api/login</code></div><p data-i18n="apiLogin">ログイン</p></div>
+          <div class="api-entry"><div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address</code></div><p data-i18n="apiGetMails">メール一覧を取得</p></div>
+          <div class="api-entry"><div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address/:mailId</code></div><p data-i18n="apiDeleteMail">メールを削除</p></div>
+          <div class="api-entry"><div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/address/:address</code></div><p data-i18n="apiDeleteAddress">アドレスを削除</p></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Settings Modal -->
+  <!-- Settings Modal: 外観のみ -->
   <div class="modal" id="settings-modal">
     <div class="modal-overlay"></div>
     <div class="modal-content modal-content-sm">
@@ -236,7 +239,6 @@
       </div>
       <div class="modal-body">
         <div class="settings-list">
-
           <!-- パスワード変更 -->
           <button class="settings-item" id="change-password-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -245,37 +247,21 @@
             </svg>
             <span data-i18n="changePassword">パスワード変更</span>
           </button>
-
-          <!-- ログアウト -->
-          <button class="settings-item" id="logout-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16,17 21,12 16,7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            <span data-i18n="logout">ログアウト</span>
-          </button>
-
-          <!-- 全メール削除 -->
-          <button class="settings-item" id="delete-all-mail-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3,6 5,6 21,6"/>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            </svg>
-            <span data-i18n="deleteAllMail">全メールを削除</span>
-          </button>
-
           <div class="settings-divider"></div>
-
-          <!-- アドレス削除（危険） -->
-          <button class="settings-item settings-item-danger" id="delete-address-btn">
+          <!-- 外観切替 -->
+          <button class="settings-item" id="theme-toggle-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3,6 5,6 21,6"/>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-              <line x1="10" y1="11" x2="10" y2="17"/>
-              <line x1="14" y1="11" x2="14" y2="17"/>
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
             </svg>
-            <span data-i18n="deleteAddress">アドレスを削除</span>
+            <span id="theme-toggle-label">ライトモード</span>
           </button>
         </div>
       </div>
@@ -302,16 +288,12 @@
               <input type="password" id="new-password" class="form-input" placeholder="••••••••" required style="min-width:0;" autocomplete="new-password">
               <button type="button" class="btn-icon btn-icon-sm" id="toggle-new-password" title="Show/Hide">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
                 </svg>
               </button>
             </div>
-            <!-- 強度メーター -->
             <div class="pw-strength-wrap" id="pw-strength-wrap" style="display:none;">
-              <div class="pw-strength-bar">
-                <div class="pw-strength-fill" id="pw-strength-fill"></div>
-              </div>
+              <div class="pw-strength-bar"><div class="pw-strength-fill" id="pw-strength-fill"></div></div>
               <span class="pw-strength-label" id="pw-strength-label"></span>
             </div>
           </div>
@@ -321,8 +303,7 @@
               <input type="password" id="confirm-new-password" class="form-input" placeholder="••••••••" required style="min-width:0;" autocomplete="new-password">
               <button type="button" class="btn-icon btn-icon-sm" id="toggle-confirm-password" title="Show/Hide">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
                 </svg>
               </button>
             </div>
@@ -350,18 +331,9 @@
       </div>
       <div class="modal-body">
         <div class="mail-detail-meta">
-          <div class="meta-item">
-            <span class="meta-label" data-i18n="from">From:</span>
-            <span id="modal-from" class="meta-value">-</span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-label" data-i18n="to">To:</span>
-            <span id="modal-to" class="meta-value">-</span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-label" data-i18n="date">Date:</span>
-            <span id="modal-date" class="meta-value">-</span>
-          </div>
+          <div class="meta-item"><span class="meta-label" data-i18n="from">From:</span><span id="modal-from" class="meta-value">-</span></div>
+          <div class="meta-item"><span class="meta-label" data-i18n="to">To:</span><span id="modal-to" class="meta-value">-</span></div>
+          <div class="meta-item"><span class="meta-label" data-i18n="date">Date:</span><span id="modal-date" class="meta-value">-</span></div>
         </div>
         <div class="mail-detail-body" id="modal-body-content"></div>
       </div>
@@ -399,17 +371,17 @@
             <line x1="12" y1="8" x2="12.01" y2="8"/>
           </svg>
         </div>
-        <h4 data-i18n="passwordWarningTitle" style="margin-top: 0;">パスワードを保存してください</h4>
-        <p data-i18n="passwordWarningMessage" style="text-align: left; margin: 0.75rem 0;">
+        <h4 data-i18n="passwordWarningTitle" style="margin-top:0;">パスワードを保存してください</h4>
+        <p data-i18n="passwordWarningMessage" style="text-align:left;margin:0.75rem 0;">
           再度アクセスするために、必ずパスワードを保存してください。
         </p>
         <div class="password-save-box">
           <div class="password-save-row">
-            <span class="password-save-label" data-i18n="yourAddress">アドレス</span>
+            <span class="password-save-label">アドレス</span>
             <code id="warning-address-display" class="password-save-value"></code>
           </div>
           <div class="password-save-row">
-            <span class="password-save-label" data-i18n="yourPassword">パスワード</span>
+            <span class="password-save-label">パスワード</span>
             <div style="display:flex;align-items:center;gap:8px;min-width:0;">
               <code id="warning-password-display" class="password-save-value"></code>
               <button class="icon-btn" id="warning-copy-btn" title="Copy Password">
@@ -428,17 +400,27 @@
     </div>
   </div>
 
-  <!-- Confirm Modal -->
+  <!-- Confirm Modal (アドレス削除時はメール削除ボタンも表示) -->
   <div class="modal" id="confirm-modal">
     <div class="modal-overlay"></div>
     <div class="modal-content modal-content-xs">
       <div class="modal-body modal-body-center">
-        <h4 id="confirm-title" style="margin-top: 0;">Confirm</h4>
-        <p id="confirm-message">Are you sure?</p>
+        <h4 id="confirm-title" style="margin-top:0;">Confirm</h4>
+        <p id="confirm-message" style="white-space:pre-line;"></p>
       </div>
-      <div class="modal-footer modal-footer-center">
-        <button class="btn btn-secondary" id="confirm-cancel" data-i18n="cancel">キャンセル</button>
-        <button class="btn btn-primary" id="confirm-ok" data-i18n="confirm">確認</button>
+      <div class="modal-footer modal-footer-center" style="flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:8px;width:100%;justify-content:center;">
+          <button class="btn btn-secondary" id="confirm-cancel" data-i18n="cancel">キャンセル</button>
+          <button class="btn btn-primary" id="confirm-ok" data-i18n="confirm">確認</button>
+        </div>
+        <!-- アドレス削除警告時のみ表示 -->
+        <button class="btn btn-danger" id="confirm-delete-mail-btn" style="display:none;width:100%;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          <span>メールを削除してログアウト</span>
+        </button>
       </div>
     </div>
   </div>
