@@ -28,6 +28,7 @@ const i18n = {
     delete: '削除',
     close: '閉じる',
     cancel: 'キャンセル',
+    back: '戻る',
     confirm: '確認',
     savePassword: 'パスワードを保存してください',
     savePasswordSub: 'このパスワードは再表示できません',
@@ -104,6 +105,7 @@ const i18n = {
     delete: 'Delete',
     close: 'Close',
     cancel: 'Cancel',
+    back: 'Back',
     confirm: 'Confirm',
     savePassword: 'Please save your password',
     savePasswordSub: 'This password cannot be displayed again',
@@ -500,25 +502,13 @@ function toggleTheme() {
 function showLoggedOutView() {
   const mailboxView = document.getElementById('mailbox-view');
   if (mailboxView) mailboxView.style.display = 'none';
-  // ログアウト時: ログインボタン表示、新規作成非表示
-  const loginNavBtn = document.getElementById('nav-login');
-  if (loginNavBtn) { loginNavBtn.style.display = 'flex'; loginNavBtn.dataset.loggedIn = ''; }
-  const newAddressNavBtn = document.getElementById('nav-new-address');
-  if (newAddressNavBtn) newAddressNavBtn.style.display = 'none';
-  const navActions = document.getElementById('nav-actions');
-  if (navActions) navActions.style.display = 'none';
+  updateDrawerLoginState();
 }
 
 function showMailboxView() {
   const mailboxView = document.getElementById('mailbox-view');
   if (mailboxView) mailboxView.style.display = 'block';
-  // ログイン中もログインボタンを表示（別アドレスへのログイン用）
-  const loginNavBtn = document.getElementById('nav-login');
-  if (loginNavBtn) { loginNavBtn.style.display = 'flex'; loginNavBtn.dataset.loggedIn = 'true'; }
-  const newAddressNavBtn = document.getElementById('nav-new-address');
-  if (newAddressNavBtn) newAddressNavBtn.style.display = 'flex';
-  const navActions = document.getElementById('nav-actions');
-  if (navActions) navActions.style.display = 'flex';
+  updateDrawerLoginState();
   updateNavBadge();
 }
 
@@ -637,16 +627,21 @@ function createSandboxFrame(htmlContent) {
     <html>
     <head>
       <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
       <style>
-        body {
+        html, body {
           margin: 0;
-          padding: 16px;
+          padding: 0;
+          overflow-x: hidden;
+        }
+        body {
+          padding: 12px;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-size: 14px;
           line-height: 1.6;
           color: #333;
           word-break: break-word;
+          overflow-wrap: break-word;
         }
         a {
           color: #0088ff;
@@ -654,11 +649,33 @@ function createSandboxFrame(htmlContent) {
           word-break: break-all;
         }
         img {
-          max-width: 100%;
-          height: auto;
+          max-width: 100% !important;
+          width: auto !important;
+          height: auto !important;
+          display: block;
         }
         table {
-          max-width: 100%;
+          max-width: 100% !important;
+          width: 100% !important;
+          table-layout: fixed !important;
+          border-collapse: collapse;
+        }
+        td, th {
+          word-break: break-word;
+          overflow-wrap: break-word;
+          max-width: 0;
+        }
+        * {
+          max-width: 100% !important;
+          box-sizing: border-box;
+        }
+        /* Prevent fixed-width email layouts from overflowing */
+        [width], [style*="width"] {
+          max-width: 100% !important;
+        }
+        div, section, article, header, footer {
+          max-width: 100% !important;
+          overflow-x: hidden;
         }
       </style>
     </head>
@@ -722,6 +739,27 @@ function openMailModal(mailId) {
 function closeMailModal() {
   document.getElementById('mail-modal').classList.remove('active');
   state.selectedMail = null;
+}
+
+// ===== Drawer Menu =====
+function openDrawer() {
+  document.getElementById('drawer').classList.add('active');
+  document.getElementById('drawer-overlay').classList.add('active');
+  document.body.classList.add('drawer-open');
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('active');
+  document.getElementById('drawer-overlay').classList.remove('active');
+  document.body.classList.remove('drawer-open');
+}
+
+function updateDrawerLoginState() {
+  const loggedIn = !!state.currentAddress;
+  const loggedOutSec = document.getElementById('drawer-loggedout-section');
+  const loggedInSec = document.getElementById('drawer-loggedin-section');
+  if (loggedOutSec) loggedOutSec.style.display = loggedIn ? 'none' : 'block';
+  if (loggedInSec) loggedInSec.style.display = loggedIn ? 'block' : 'none';
 }
 
 // ===== Modal Management =====
@@ -799,8 +837,18 @@ async function handleChangePassword(e) {
       state.currentPassword = newPw;
       saveSession(state.currentAddress, newPw);
       updateAddressDisplay(state.currentAddress, newPw);
+      // After password change, mark warning as unseen so user re-saves new credentials
+      const addr = state.currentAddress;
+      try {
+        let saved = JSON.parse(localStorage.getItem('passwordWarningSeen') || '{}');
+        if (typeof saved === 'boolean') saved = {};
+        delete saved[addr];
+        localStorage.setItem('passwordWarningSeen', JSON.stringify(saved));
+      } catch {}
       closeChangePasswordModal();
       showToast(t('passwordChanged'), 'success');
+      // Show the save-password warning so user saves the new password
+      setTimeout(openPasswordWarningModal, 400);
     } else {
       showToast(res.error || t('passwordChangeFailed'), 'error');
     }
@@ -830,25 +878,55 @@ function closePasswordWarningModal() {
   document.getElementById('password-warning-modal').classList.remove('active');
 }
 
-function hasSeenPasswordWarning() {
-  return localStorage.getItem('passwordWarningSeen') === 'true';
+// Whether the user has saved/acknowledged the password warning for the current address
+function hasSeenPasswordWarning(address) {
+  const addr = address || state.currentAddress;
+  if (!addr) return false;
+  try {
+    const saved = JSON.parse(localStorage.getItem('passwordWarningSeen') || '{}');
+    // Legacy flat boolean support
+    if (typeof saved === 'boolean') return saved;
+    return !!saved[addr];
+  } catch { return false; }
 }
 
-function markPasswordWarningSeen() {
-  localStorage.setItem('passwordWarningSeen', 'true');
+function markPasswordWarningSeen(address) {
+  const addr = address || state.currentAddress;
+  if (!addr) return;
+  try {
+    let saved = JSON.parse(localStorage.getItem('passwordWarningSeen') || '{}');
+    if (typeof saved === 'boolean') saved = {};
+    saved[addr] = true;
+    localStorage.setItem('passwordWarningSeen', JSON.stringify(saved));
+  } catch { localStorage.setItem('passwordWarningSeen', JSON.stringify({ [addr]: true })); }
+}
+
+// Show password warning if the address was NOT accessed via login flow
+// (i.e. auto-created this session) or if the password was changed
+function maybeShowPasswordWarning() {
+  if (!state.currentAddress) return;
+  if (!hasSeenPasswordWarning(state.currentAddress)) {
+    setTimeout(openPasswordWarningModal, 600);
+  }
+}
+
+// ===== New Address Confirm Modal =====
+function openNewAddressConfirmModal() {
+  document.getElementById('new-address-confirm-modal').classList.add('active');
+}
+function closeNewAddressConfirmModal() {
+  document.getElementById('new-address-confirm-modal').classList.remove('active');
 }
 
 // ===== New Address =====
 function handleNewAddress() {
-  showConfirm(
-    t('newAddress'),
-    t('createNewAddressConfirm'),
-    async () => {
-      clearSession();
-      await autoCreateAddress(true);
-    },
-    'warning'
-  );
+  if (state.currentAddress) {
+    // ログイン中 → 専用ダイアログ（削除ボタン付き）
+    openNewAddressConfirmModal();
+  } else {
+    // 未ログイン → そのまま作成
+    autoCreateAddress(true);
+  }
 }
 
 // ===== Core Functions =====
@@ -916,10 +994,8 @@ async function autoCreateAddress(isManualCreation = false) {
 
       startAutoRefresh();
       
-      // Only show warning when user explicitly clicks new address button
-      if (isManualCreation && !hasSeenPasswordWarning()) {
-        setTimeout(openPasswordWarningModal, 500);
-      }
+      // Show password save warning for every new address (auto or manual) if not yet acknowledged
+      maybeShowPasswordWarning();
     } else {
       // Silent fail on auto-create - don't show error toast, just show empty state
       console.warn('Auto-create address failed:', res.message);
@@ -999,7 +1075,6 @@ function handleDeleteAllMail() {
           clearReadState(state.currentAddress);
           state.mails = [];
           renderMailList([]);
-          closeSettingsModal();
           showToast(t('deleteAllMail'), 'success');
         } else {
           showToast(t('deleteFailed'), 'error');
@@ -1030,7 +1105,6 @@ function handleDeleteAddress() {
           state.currentPassword = null;
           state.mails = [];
           stopAutoRefresh();
-          closeSettingsModal();
           showLoggedOutView();
           showToast(t('deleteAddress'), 'success');
         } else {
@@ -1051,7 +1125,6 @@ function handleLogout() {
   state.currentPassword = null;
   state.mails = [];
   stopAutoRefresh();
-  closeSettingsModal();
   showLoggedOutView();
   showToast(t('logout'), 'success');
 }
@@ -1092,26 +1165,79 @@ function scrollToMailbox() {
 
 // ===== Event Listeners =====
 function initEventListeners() {
-  // Login button: ログイン中でも押せる
-  document.getElementById('nav-login').addEventListener('click', () => {
-    if (document.getElementById('nav-login').dataset.loggedIn === 'true') {
-      // ログイン中 → 警告を出してからログインモーダル
-      showConfirm(
-        t('login'),
-        state.currentLang === 'ja'
-          ? 'ログイン情報を保存していない場合、現在のアドレスにはアクセスできなくなります。\n\n別のアドレスにログインしますか？'
-          : 'If you have not saved your login info, you will lose access to the current address.\n\nLogin to a different address?',
-        () => { clearSession(); openLoginModal(); },
-        'warning'
-      );
-    } else {
-      openLoginModal();
-    }
+  // Hamburger / Drawer
+  document.getElementById('menu-toggle').addEventListener('click', openDrawer);
+  document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+  document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
+
+  // Drawer menu items
+  document.getElementById('menu-login').addEventListener('click', () => {
+    closeDrawer();
+    openLoginModal();
   });
-  
-  // New address button in nav
-  document.getElementById('nav-new-address').addEventListener('click', handleNewAddress);
-  
+  document.getElementById('menu-login-other').addEventListener('click', () => {
+    closeDrawer();
+    // ログイン中: 警告なしで直接ログインモーダルを開く
+    openLoginModal();
+  });
+  document.getElementById('menu-new-address').addEventListener('click', () => {
+    closeDrawer();
+    handleNewAddress();
+  });
+  document.getElementById('menu-change-password').addEventListener('click', () => {
+    closeDrawer();
+    openChangePasswordModal();
+  });
+  document.getElementById('menu-delete-all-mail').addEventListener('click', () => {
+    closeDrawer();
+    handleDeleteAllMail();
+  });
+  document.getElementById('menu-delete-address').addEventListener('click', () => {
+    closeDrawer();
+    handleDeleteAddress();
+  });
+  document.getElementById('menu-api').addEventListener('click', () => {
+    closeDrawer();
+    openApiModal();
+  });
+  document.getElementById('menu-settings').addEventListener('click', () => {
+    closeDrawer();
+    openSettingsModal();
+  });
+
+  // New Address Confirm Modal
+  document.getElementById('new-addr-cancel').addEventListener('click', closeNewAddressConfirmModal);
+  document.getElementById('new-addr-ok').addEventListener('click', async () => {
+    closeNewAddressConfirmModal();
+    clearSession();
+    await autoCreateAddress(true);
+  });
+  document.getElementById('new-addr-delete').addEventListener('click', () => {
+    closeNewAddressConfirmModal();
+    // 削除確認ポップアップ
+    showConfirm(
+      t('deleteAddress'),
+      (state.currentLang === 'ja'
+        ? 'アドレスを使用しない場合は削除してください。\n\n' + t('deleteAddressConfirm')
+        : 'If you don\'t use the address, delete it.\n\n' + t('deleteAddressConfirm')),
+      async () => {
+        if (state.currentAddress && state.currentPassword) {
+          try {
+            await api.deleteAddress(state.currentAddress, state.currentPassword);
+            clearReadState(state.currentAddress);
+          } catch(e) { /* ignore */ }
+        }
+        clearSession();
+        state.currentAddress = null;
+        state.currentPassword = null;
+        state.mails = [];
+        stopAutoRefresh();
+        await autoCreateAddress(true);
+      },
+      'danger'
+    );
+  });
+
   // Forms
   document.getElementById('modal-login-form').addEventListener('submit', handleLogin);
   
@@ -1136,10 +1262,6 @@ function initEventListeners() {
   // Auto refresh toggle
   document.getElementById('auto-refresh').addEventListener('change', toggleAutoRefresh);
   
-  // Nav items
-  document.getElementById('nav-api').addEventListener('click', openApiModal);
-  document.getElementById('nav-settings').addEventListener('click', openSettingsModal);
-  
   // Modal closes
   document.getElementById('api-modal-close').addEventListener('click', closeApiModal);
   document.getElementById('settings-modal-close').addEventListener('click', closeSettingsModal);
@@ -1149,21 +1271,13 @@ function initEventListeners() {
   document.getElementById('login-modal-close').addEventListener('click', closeLoginModal);
   document.getElementById('change-password-modal-close').addEventListener('click', closeChangePasswordModal);
 
-  // Settings actions (パスワード変更と外観のみ)
-  document.getElementById('change-password-btn').addEventListener('click', () => {
-    closeSettingsModal();
-    openChangePasswordModal();
-  });
+  // Settings actions (外観のみ)
   document.getElementById('theme-toggle-btn').addEventListener('click', () => {
     toggleTheme();
     closeSettingsModal();
   });
   // info-card のパスワード欄横の鉛筆ボタン
   document.getElementById('change-password-inline-btn').addEventListener('click', openChangePasswordModal);
-
-  // ナビ: 全メール削除・アドレス削除ボタン
-  document.getElementById('nav-delete-all-mail')?.addEventListener('click', handleDeleteAllMail);
-  document.getElementById('nav-delete-address')?.addEventListener('click', handleDeleteAddress);
 
   // Change password form
   document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
@@ -1235,7 +1349,7 @@ function initEventListeners() {
 
   // Password warning modal
   document.getElementById('password-warning-ok').addEventListener('click', () => {
-    markPasswordWarningSeen();
+    markPasswordWarningSeen(state.currentAddress);
     closePasswordWarningModal();
   });
 

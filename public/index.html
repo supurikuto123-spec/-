@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="title">Sutemeado - 一時メール</title>
   <meta name="description" content="登録不要、パスワードでいつでもアクセスできる一時メールサービス">
-  <!-- ファビコン: 捨てメアドテーマ SVG -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Navigation -->
+  <!-- Navigation: ブランド + ハンバーガーボタンのみ -->
   <nav class="navbar">
     <div class="nav-brand">
       <div class="nav-logo-wrap">
@@ -24,64 +23,117 @@
       </div>
       <span class="nav-title">Sutemeado</span>
     </div>
-    
-    <div class="nav-menu" id="nav-menu">
-      <!-- ログイン（常時表示、ログイン中は別アドレスへのログイン用） -->
-      <button class="nav-item" id="nav-login">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-          <polyline points="10,17 15,12 10,7"/>
-          <line x1="15" y1="12" x2="3" y2="12"/>
-        </svg>
-        <span data-i18n="login">ログイン</span>
-      </button>
 
-      <!-- 新しいメアド作成（ログイン後のみ） -->
-      <button class="nav-item" id="nav-new-address" style="display:none;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 5v14M5 12h14"/>
-        </svg>
-        <span data-i18n="newAddress">新しいメールアドレスを作成</span>
-      </button>
-
-      <!-- アクションボタン群（ログイン後） -->
-      <div class="nav-actions" id="nav-actions" style="display:none;">
-        <button class="nav-item nav-item-icon" id="nav-delete-all-mail" title="全メール削除">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3,6 5,6 21,6"/>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-          </svg>
-        </button>
-        <button class="nav-item nav-item-icon nav-item-danger" id="nav-delete-address" title="アドレスを削除">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-            <line x1="9" y1="13" x2="15" y2="13"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="nav-divider"></div>
-
-      <button class="nav-item" id="nav-api">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-        </svg>
-        <span data-i18n="apiDocs">API</span>
-      </button>
-
-      <button class="nav-item nav-item-icon" id="nav-settings" title="設定">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
-      </button>
-      
+    <!-- 右側: 言語 + ハンバーガー -->
+    <div class="nav-right">
       <div class="lang-switch">
         <button class="lang-btn active" data-lang="ja">JA</button>
         <button class="lang-btn" data-lang="en">EN</button>
       </div>
+      <button class="hamburger-btn" id="menu-toggle" aria-label="メニュー">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- ドロワーオーバーレイ -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+
+  <!-- ドロワーメニュー -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">メニュー</span>
+      <button class="drawer-close" id="drawer-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+
+      <!-- === ログアウト中のみ表示 === -->
+      <div class="drawer-section" id="drawer-loggedout-section">
+        <button class="drawer-item" id="menu-login">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span data-i18n="login">ログイン</span>
+        </button>
+      </div>
+
+      <!-- === ログイン中のみ表示 === -->
+      <div class="drawer-section" id="drawer-loggedin-section" style="display:none;">
+        <div class="drawer-section-label">アカウント</div>
+
+        <button class="drawer-item" id="menu-login-other">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span data-i18n="login">別アカウントでログイン</span>
+        </button>
+
+        <button class="drawer-item" id="menu-new-address">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span data-i18n="newAddress">新しいメールアドレスを作成</span>
+        </button>
+
+        <button class="drawer-item" id="menu-change-password">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span data-i18n="changePassword">パスワード変更</span>
+        </button>
+
+        <div class="drawer-divider"></div>
+        <div class="drawer-section-label">危険な操作</div>
+
+        <button class="drawer-item drawer-item-danger" id="menu-delete-all-mail">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          <span data-i18n="deleteAllMail">全メール削除</span>
+        </button>
+
+        <button class="drawer-item drawer-item-danger" id="menu-delete-address">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <line x1="9" y1="13" x2="15" y2="13"/>
+            <line x1="12" y1="10" x2="12" y2="16"/>
+          </svg>
+          <span data-i18n="deleteAddress">アドレスを削除</span>
+        </button>
+      </div>
+
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label">その他</div>
+
+      <button class="drawer-item" id="menu-api">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+        </svg>
+        <span data-i18n="apiDocs">API ドキュメント</span>
+      </button>
+
+      <button class="drawer-item" id="menu-settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 3a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span data-i18n="settings">設定</span>
+      </button>
+
+    </div>
+  </div>
 
   <!-- Main Content -->
   <main class="main">
@@ -239,15 +291,6 @@
       </div>
       <div class="modal-body">
         <div class="settings-list">
-          <!-- パスワード変更 -->
-          <button class="settings-item" id="change-password-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            <span data-i18n="changePassword">パスワード変更</span>
-          </button>
-          <div class="settings-divider"></div>
           <!-- 外観切替 -->
           <button class="settings-item" id="theme-toggle-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -400,7 +443,40 @@
     </div>
   </div>
 
-  <!-- Confirm Modal (アドレス削除時はメール削除ボタンも表示) -->
+  <!-- New Address Confirm Modal（ログイン中専用・削除ボタン付き） -->
+  <div class="modal" id="new-address-confirm-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-sm">
+      <div class="modal-body modal-body-center">
+        <div class="confirm-icon warning">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h4 id="new-addr-modal-title" style="margin-top:0;">新しいメールアドレスを作成</h4>
+        <p id="new-addr-modal-msg" style="white-space:pre-line;text-align:left;margin:0.75rem 0;font-size:0.9rem;color:var(--text-secondary);">
+          ログイン情報を保存していない場合、現在のアドレスにはアクセスできなくなります。<br><br>今後このアドレスを利用しない場合は、削除してから新規作成することを推奨します。
+        </p>
+      </div>
+      <div class="modal-footer" style="flex-direction:column;gap:8px;padding:var(--spacing-md) var(--spacing-lg);">
+        <div style="display:flex;gap:8px;width:100%;justify-content:center;">
+          <button class="btn btn-secondary" id="new-addr-cancel" data-i18n="back">戻る</button>
+          <button class="btn btn-primary" id="new-addr-ok">作成する</button>
+        </div>
+        <button class="btn btn-danger" id="new-addr-delete" style="width:100%;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          <span data-i18n="deleteAddress">このアドレスを削除</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
   <div class="modal" id="confirm-modal">
     <div class="modal-overlay"></div>
     <div class="modal-content modal-content-xs">
@@ -408,19 +484,9 @@
         <h4 id="confirm-title" style="margin-top:0;">Confirm</h4>
         <p id="confirm-message" style="white-space:pre-line;"></p>
       </div>
-      <div class="modal-footer modal-footer-center" style="flex-direction:column;gap:8px;">
-        <div style="display:flex;gap:8px;width:100%;justify-content:center;">
-          <button class="btn btn-secondary" id="confirm-cancel" data-i18n="cancel">キャンセル</button>
-          <button class="btn btn-primary" id="confirm-ok" data-i18n="confirm">確認</button>
-        </div>
-        <!-- アドレス削除警告時のみ表示 -->
-        <button class="btn btn-danger" id="confirm-delete-mail-btn" style="display:none;width:100%;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3,6 5,6 21,6"/>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-          </svg>
-          <span>メールを削除してログアウト</span>
-        </button>
+      <div class="modal-footer modal-footer-center">
+        <button class="btn btn-secondary" id="confirm-cancel" data-i18n="cancel">キャンセル</button>
+        <button class="btn btn-primary" id="confirm-ok" data-i18n="confirm">確認</button>
       </div>
     </div>
   </div>
