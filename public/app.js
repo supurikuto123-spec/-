@@ -624,95 +624,80 @@ function createSandboxFrame(htmlContent) {
   frame.style.border = '1px solid var(--border-color)';
   frame.style.borderRadius = 'var(--radius-md)';
   frame.style.background = '#fff';
-  
+
   const sanitizedHtml = htmlContent
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     .replace(/javascript:/gi, 'void(0);')
     .replace(/on\w+\s*=/gi, 'data-blocked-event=');
-  
+
   const docContent = `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
         html, body {
           margin: 0;
           padding: 0;
-          overflow-x: hidden;
+          background: #fff;
         }
         body {
-          padding: 12px;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-size: 14px;
           line-height: 1.6;
           color: #333;
-          word-break: break-word;
-          overflow-wrap: break-word;
         }
-        a {
-          color: #0088ff;
-          text-decoration: underline;
-          word-break: break-all;
-        }
+        /* Keep email's original layout as much as possible */
         img {
-          max-width: 100% !important;
-          width: auto !important;
-          height: auto !important;
-          display: block;
+          max-width: 100%;
+          height: auto;
         }
-        table {
-          max-width: 100% !important;
-          width: 100% !important;
-          table-layout: fixed !important;
-          border-collapse: collapse;
-        }
-        td, th {
-          word-break: break-word;
-          overflow-wrap: break-word;
-          max-width: 0;
-        }
-        * {
-          max-width: 100% !important;
-          box-sizing: border-box;
-        }
-        /* Prevent fixed-width email layouts from overflowing */
-        [width], [style*="width"] {
-          max-width: 100% !important;
-        }
-        div, section, article, header, footer {
-          max-width: 100% !important;
-          overflow-x: hidden;
+        body, table, td, th, div, p, span, a {
+          -webkit-text-size-adjust: 100%;
         }
       </style>
     </head>
     <body>${sanitizedHtml}</body>
     </html>
   `;
-  
+
   frame.srcdoc = docContent;
-  
+
   frame.addEventListener('load', () => {
     try {
       const doc = frame.contentDocument || frame.contentWindow.document;
-      if (doc && doc.body) {
-        const height = Math.max(
-          doc.body.scrollHeight,
-          doc.body.offsetHeight,
-          doc.documentElement?.scrollHeight || 0,
-          doc.documentElement?.offsetHeight || 0
-        );
-        // モーダル内の可視領域に応じて高さを調整（最大 80vh まで）
-        const maxH = Math.floor(window.innerHeight * 0.55);
-        frame.style.height = Math.min(Math.max(height + 20, 150), Math.max(maxH, 300)) + 'px';
-      }
+      if (!doc || !doc.body) return;
+
+      const viewportWidth = frame.clientWidth || frame.parentElement?.clientWidth || 360;
+      const contentWidth = Math.max(
+        doc.documentElement?.scrollWidth || 0,
+        doc.body.scrollWidth || 0,
+        1
+      );
+
+      const scale = contentWidth > viewportWidth ? viewportWidth / contentWidth : 1;
+
+      doc.body.style.transformOrigin = 'top left';
+      doc.body.style.transform = `scale(${scale})`;
+      doc.body.style.width = `${contentWidth}px`;
+      doc.body.style.margin = '0';
+
+      const contentHeight = Math.max(
+        doc.body.scrollHeight,
+        doc.documentElement?.scrollHeight || 0,
+        doc.body.offsetHeight,
+        doc.documentElement?.offsetHeight || 0
+      );
+
+      const scaledHeight = Math.ceil(contentHeight * scale) + 8;
+      const maxH = Math.floor(window.innerHeight * 0.62);
+      frame.style.height = Math.min(Math.max(scaledHeight, 180), Math.max(maxH, 320)) + 'px';
     } catch (e) {
-      // クロスオリジンの場合はデフォルト高さを設定
       frame.style.height = '350px';
     }
   });
-  
+
   return frame;
 }
 

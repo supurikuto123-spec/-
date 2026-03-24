@@ -2621,13 +2621,11 @@ body.drawer-open {
     padding: 12px;
   }
 
-  /* Mail iframe: fill available space, scroll internally */
+  /* Mail iframe: keep original email layout and fit by JS scaling */
   .mail-frame {
     width: 100%;
-    min-height: 150px;
-    max-height: 50vh;
-    overflow-x: hidden;
-    overflow-y: auto;
+    min-height: 180px;
+    max-height: none;
   }
 
   .mail-detail-body {
