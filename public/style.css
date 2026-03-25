@@ -1356,7 +1356,7 @@ section {
   justify-content: space-between;
   align-items: center;
   padding: 0 var(--spacing-md);
-  height: 56px;
+  height: 64px;
   background: rgba(10, 10, 15, 0.88);
   border-bottom: 1px solid rgba(0, 240, 255, 0.12);
   position: sticky;
@@ -2574,7 +2574,7 @@ body.drawer-open {
 @media (max-width: 768px) {
   .navbar {
     padding: 0 var(--spacing-sm);
-    height: 54px;
+    height: 60px;
   }
 
   .nav-title {
@@ -2718,7 +2718,7 @@ body.drawer-open {
 
 @media (max-width: 480px) {
   .navbar {
-    height: 50px;
+    height: 56px;
   }
 
   .nav-title {
@@ -3072,6 +3072,183 @@ body.drawer-open {
 }
 [data-theme="light"] .hamburger-btn:hover span {
   background: var(--neon-cyan);
+}
+
+/* ===== Global Stats Meter ===== */
+.global-stats-meter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.08) 0%, rgba(184, 41, 221, 0.05) 100%);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 240, 255, 0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: all var(--transition-fast);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.global-stats-meter:hover {
+  border-color: rgba(0, 240, 255, 0.35);
+  box-shadow: 0 6px 25px rgba(0, 240, 255, 0.12), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-sm);
+  color: var(--neon-cyan);
+}
+
+.stat-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 240, 255, 0.3) 50%, transparent 100%);
+  margin: 0 4px;
+}
+
+/* Animations for stats */
+@keyframes statPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.stat-value.updating {
+  animation: statPulse 0.5s ease;
+}
+
+/* Responsive adjustments for stats meter */
+@media (max-width: 768px) {
+  .global-stats-meter {
+    position: static;
+    transform: none;
+    padding: 5px 10px;
+    gap: 6px;
+  }
+
+  .stat-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .stat-icon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .stat-value {
+    font-size: 0.875rem;
+  }
+
+  .stat-label {
+    font-size: 0.6rem;
+  }
+
+  .stat-divider {
+    height: 20px;
+    margin: 0 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .global-stats-meter {
+    padding: 4px 8px;
+    gap: 4px;
+  }
+
+  .stat-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .stat-icon svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .stat-value {
+    font-size: 0.8rem;
+  }
+
+  .stat-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+  }
+}
+
+/* Light Mode: Global Stats Meter */
+[data-theme="light"] .global-stats-meter {
+  background: linear-gradient(135deg, rgba(0, 119, 204, 0.06) 0%, rgba(119, 51, 204, 0.03) 100%);
+  border-color: rgba(0, 119, 204, 0.2);
+  box-shadow: 0 2px 12px rgba(0, 119, 204, 0.06), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+[data-theme="light"] .global-stats-meter:hover {
+  border-color: rgba(0, 119, 204, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 119, 204, 0.1), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+[data-theme="light"] .stat-icon {
+  background: rgba(0, 119, 204, 0.1);
+  border-color: rgba(0, 119, 204, 0.2);
+  color: var(--neon-cyan);
+}
+
+[data-theme="light"] .stat-value {
+  color: var(--neon-cyan);
+  text-shadow: none;
+}
+
+[data-theme="light"] .stat-label {
+  color: #6b7280;
+}
+
+[data-theme="light"] .stat-divider {
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 119, 204, 0.2) 50%, transparent 100%);
 }
 /* Light mode: lang buttons */
 [data-theme="light"] .lang-btn {

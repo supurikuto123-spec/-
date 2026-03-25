@@ -8,6 +8,8 @@ const i18n = {
   ja: {
     title: 'Sutemeado - シンプルな一時メール',
     description: '登録不要、パスワードでいつでもアクセスできる一時メールサービス',
+    statsAddresses: '作成アドレス',
+    statsMails: '受信メール',
     statusOnline: 'システム正常',
     login: 'ログイン',
     createNew: '新規作成',
@@ -87,6 +89,8 @@ const i18n = {
   en: {
     title: 'Sutemeado - Simple Temporary Email',
     description: 'No registration. Access anytime with your password.',
+    statsAddresses: 'Addresses Created',
+    statsMails: 'Emails Received',
     statusOnline: 'System Online',
     login: 'Login',
     createNew: 'Create New',
@@ -229,6 +233,11 @@ function setLanguage(lang) {
 const api = {
   async newAddress() {
     const res = await fetch('/api/new-address');
+    return res.json();
+  },
+
+  async getStatus() {
+    const res = await fetch('/api/status');
     return res.json();
   },
 
@@ -1154,6 +1163,65 @@ function scrollToMailbox() {
   document.getElementById('mailbox-view').scrollIntoView({ behavior: 'smooth' });
 }
 
+// ===== Global Stats Meter =====
+let statsTimer = null;
+let statsUpdateInterval = 30000; // 30 seconds update interval
+
+function formatNumber(num) {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'K';
+  }
+  return num.toString();
+}
+
+async function updateGlobalStats() {
+  try {
+    const res = await api.getStatus();
+    if (res.success && res.stats) {
+      const addressesEl = document.getElementById('stat-addresses');
+      const mailsEl = document.getElementById('stat-mails');
+
+      if (addressesEl) {
+        const newValue = formatNumber(res.stats.mailboxes);
+        if (addressesEl.textContent !== newValue) {
+          addressesEl.classList.add('updating');
+          addressesEl.textContent = newValue;
+          setTimeout(() => addressesEl.classList.remove('updating'), 500);
+        }
+      }
+
+      if (mailsEl) {
+        const newValue = formatNumber(res.stats.totalMails);
+        if (mailsEl.textContent !== newValue) {
+          mailsEl.classList.add('updating');
+          mailsEl.textContent = newValue;
+          setTimeout(() => mailsEl.classList.remove('updating'), 500);
+        }
+      }
+    }
+  } catch (err) {
+    // Silently fail - stats are not critical
+    console.log('Failed to update stats:', err);
+  }
+}
+
+function startGlobalStats() {
+  // Initial update
+  updateGlobalStats();
+  // Set up periodic updates
+  if (statsTimer) clearInterval(statsTimer);
+  statsTimer = setInterval(updateGlobalStats, statsUpdateInterval);
+}
+
+function stopGlobalStats() {
+  if (statsTimer) {
+    clearInterval(statsTimer);
+    statsTimer = null;
+  }
+}
+
 // ===== Event Listeners =====
 function initEventListeners() {
   // Hamburger / Drawer
@@ -1377,10 +1445,13 @@ async function init() {
   // Load theme
   const savedTheme = localStorage.getItem(CONFIG.THEME_KEY) || 'neon';
   applyTheme(savedTheme);
-  
+
   // Init event listeners
   initEventListeners();
-  
+
+  // Start global stats meter
+  startGlobalStats();
+
   // Try restore session or create new address
   const session = loadSession();
   if (session && session.address && session.password) {

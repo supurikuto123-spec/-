@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const { SMTPServer } = require('smtp-server');
 const simpleParser = require('mailparser').simpleParser;
 const MailStore = require('./lib/mailstore');
@@ -9,8 +10,25 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const SMTP_PORT = process.env.SMTP_PORT || 2525;
 
-// メールストアの初期化
-const mailStore = new MailStore();
+// DBパス設定（VPS永続化対策：絶対パスを使用）
+const DB_DIR = process.env.DB_DIR || path.join(__dirname, '.');
+const DB_PATH = process.env.DB_PATH || path.join(DB_DIR, 'data.db');
+
+// DBディレクトリが存在しない場合は作成
+try {
+  const dbDir = path.dirname(DB_PATH);
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+    console.log(`📁 Created DB directory: ${dbDir}`);
+  }
+} catch (err) {
+  console.error('⚠️ Failed to create DB directory:', err.message);
+}
+
+console.log(`💾 Database path: ${DB_PATH}`);
+
+// メールストアの初期化（明示的なDBパスを渡す）
+const mailStore = new MailStore(DB_PATH);
 
 // ミドルウェア
 app.use(cors());

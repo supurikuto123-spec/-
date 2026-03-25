@@ -8,6 +8,9 @@ APP_DIR="/var/www/sutemeado.com"
 REPO_URL="https://github.com/supurikuto123-spec/-.git"
 SERVICE_NAME="sutemeado"
 NODE_VERSION="18"
+DB_FILE="/var/www/sutemeado.com/data.db"
+LOG_DIR="/var/log/sutemeado"
+BACKUP_DIR="/var/backups/sutemeado"
 
 echo "🚀 Sutemeado VPSデプロイを開始します..."
 
@@ -26,10 +29,26 @@ echo "✅ npm version: $(npm --version)"
 echo "📦 PM2をインストール..."
 npm install -g pm2
 
+# ログディレクトリ作成
+echo "📂 ログディレクトリを作成..."
+mkdir -p $LOG_DIR
+chmod 755 $LOG_DIR
+
+# バックアップディレクトリ作成
+echo "📂 バックアップディレクトリを作成..."
+mkdir -p $BACKUP_DIR
+chmod 755 $BACKUP_DIR
+
 # アプリケーションディレクトリ作成
 echo "📂 アプリケーションディレクトリを作成..."
 mkdir -p $APP_DIR
 cd $APP_DIR
+
+# 既存のDBをバックアップ（存在する場合）
+if [ -f "$DB_FILE" ]; then
+    echo "💾 既存のデータベースをバックアップ..."
+    cp $DB_FILE "$BACKUP_DIR/data_$(date +%Y%m%d_%H%M%S).db"
+fi
 
 # 既存のリポジトリがあれば削除、なければクローン
 if [ -d ".git" ]; then
@@ -49,14 +68,32 @@ npm install
 # 更新スクリプトに実行権限を付与
 chmod +x update.sh
 
-# PM2でサービスを起動・再起動
+# DBファイルの権限設定（永続化対策）
+touch $DB_FILE
+chmod 644 $DB_FILE
+chown root:root $DB_FILE 2>/dev/null || true
+echo "✅ DBファイル準備完了: $DB_FILE"
+
+# PM2でサービスを起動・再起動（ecosystem.config.js使用）
 echo "🔄 PM2サービスを起動..."
-if pm2 list | grep -q "$SERVICE_NAME"; then
-    pm2 restart $SERVICE_NAME
+if [ -f "ecosystem.config.js" ]; then
+    # ecosystem.config.jsを使用（環境変数含む設定）
+    if pm2 list | grep -q "$SERVICE_NAME"; then
+        echo "🔄 既存サービスを再起動..."
+        pm2 restart ecosystem.config.js --env production
+    else
+        echo "🆕 新規サービスを起動..."
+        pm2 start ecosystem.config.js --env production
+    fi
 else
-    pm2 start server.js --name $SERVICE_NAME -- --port 3000
-    pm2 save
+    # 従来の方法
+    if pm2 list | grep -q "$SERVICE_NAME"; then
+        pm2 restart $SERVICE_NAME
+    else
+        pm2 start server.js --name $SERVICE_NAME -- --port 3000
+    fi
 fi
+pm2 save
 
 # PM2自動起動設定
 echo "🔧 PM2自動起動を設定..."
@@ -73,10 +110,13 @@ fi
 echo ""
 echo "🎉 デプロイが完了しました！"
 echo "🌐 http://sutemeado.com"
+echo "💾 DBファイル: $DB_FILE"
 echo "📊 サービスステータス:"
 pm2 status $SERVICE_NAME
 echo ""
 echo "📋 便利なコマンド:"
-echo "  pm2 logs $SERVICE_NAME    # ログ表示"
-echo "  pm2 restart $SERVICE_NAME # 再起動"
-echo "  ./update.sh               # サイト更新"
+echo "  pm2 logs $SERVICE_NAME              # ログ表示"
+echo "  pm2 restart $SERVICE_NAME          # 再起動"
+echo "  ./update.sh                        # サイト更新"
+echo "  ls -la $DB_FILE                    # DBファイル確認"
+echo "  ls -la $BACKUP_DIR                 # バックアップ一覧"
