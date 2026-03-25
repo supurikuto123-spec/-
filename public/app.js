@@ -957,7 +957,8 @@ async function handleLogin(e) {
     if (res.success) {
       updateAddressDisplay(address, password);
       state.mails = res.mails || [];
-      state.totalReceived = res.totalReceived || state.mails.length;
+      state.totalReceived = res.totalReceived ?? state.mails.length;
+      console.log('Login API response:', { count: res.count, totalReceived: res.totalReceived, mailsLength: res.mails?.length });
       // Restore read state from localStorage
       const readIds = loadReadIds(address);
       state.mails = (state.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
@@ -1034,7 +1035,7 @@ async function refreshMailbox() {
       const savedIds = loadReadIds(state.currentAddress);
       savedIds.forEach(id => readIds.add(id));
       state.mails = (res.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
-      state.totalReceived = res.totalReceived || state.totalReceived || state.mails.length;
+      state.totalReceived = res.totalReceived ?? state.totalReceived ?? state.mails.length;
       renderMailList(state.mails);
     }
   } catch (err) {
@@ -1465,7 +1466,7 @@ async function init() {
       if (res.success) {
         updateAddressDisplay(session.address, session.password);
         state.mails = (res.mails || []);
-        state.totalReceived = res.totalReceived || state.mails.length;
+        state.totalReceived = res.totalReceived ?? state.mails.length;
         const readIds = loadReadIds(session.address);
         state.mails = state.mails.map(m => ({ ...m, read: readIds.has(m.id) }));
         renderMailList(state.mails);
