@@ -184,6 +184,7 @@ const state = {
   currentAddress: null,
   currentPassword: null,
   mails: [],
+  totalReceived: 0,
   autoRefresh: true,
   refreshTimer: null,
   selectedMail: null,
@@ -583,17 +584,19 @@ function renderMailList(mails) {
   const navMailCounter = document.getElementById('nav-mail-counter');
   const navCounterValue = document.getElementById('nav-counter-value');
   
-  // 未読数を表示
+  // 未読数と累計受信数を表示（削除しても減らない）
   const unreadCount = (mails || []).filter(m => !m.read).length;
   const totalCount = mails ? mails.length : 0;
-  mailCount.textContent = unreadCount > 0 ? unreadCount : totalCount;
-  mailCount.title = unreadCount > 0 ? `${unreadCount}件未読` : `${totalCount}件`;
+  const cumulativeCount = state.totalReceived || totalCount;
+  // バッジは累計受信数を表示（削除しても減らない）
+  mailCount.textContent = cumulativeCount;
+  mailCount.title = unreadCount > 0 ? `${unreadCount}件未読 / 累計${cumulativeCount}件` : `累計${cumulativeCount}件受信`;
   mailCount.classList.toggle('has-unread', unreadCount > 0);
-  
-  // ナビゲーションバーのメールカウンターも更新
+
+  // ナビゲーションバーのメールカウンターも更新（累計数を表示）
   if (navMailCounter && navCounterValue) {
-    navCounterValue.textContent = totalCount;
-    navMailCounter.title = unreadCount > 0 ? `${unreadCount}件未読 / ${totalCount}件` : `${totalCount}件`;
+    navCounterValue.textContent = cumulativeCount;
+    navMailCounter.title = unreadCount > 0 ? `${unreadCount}件未読 / 累計${cumulativeCount}件` : `累計${cumulativeCount}件受信`;
     // 未読がある場合は光る効果
     navMailCounter.style.borderColor = unreadCount > 0 ? 'rgba(0, 255, 157, 0.5)' : 'rgba(0, 240, 255, 0.2)';
     navMailCounter.style.background = unreadCount > 0 ? 'rgba(0, 255, 157, 0.15)' : 'rgba(0, 240, 255, 0.1)';
@@ -954,6 +957,7 @@ async function handleLogin(e) {
     if (res.success) {
       updateAddressDisplay(address, password);
       state.mails = res.mails || [];
+      state.totalReceived = res.totalReceived || state.mails.length;
       // Restore read state from localStorage
       const readIds = loadReadIds(address);
       state.mails = (state.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
@@ -1030,6 +1034,7 @@ async function refreshMailbox() {
       const savedIds = loadReadIds(state.currentAddress);
       savedIds.forEach(id => readIds.add(id));
       state.mails = (res.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
+      state.totalReceived = res.totalReceived || state.totalReceived || state.mails.length;
       renderMailList(state.mails);
     }
   } catch (err) {
@@ -1459,8 +1464,10 @@ async function init() {
       const res = await api.login(session.address, session.password);
       if (res.success) {
         updateAddressDisplay(session.address, session.password);
+        state.mails = (res.mails || []);
+        state.totalReceived = res.totalReceived || state.mails.length;
         const readIds = loadReadIds(session.address);
-        state.mails = (res.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
+        state.mails = state.mails.map(m => ({ ...m, read: readIds.has(m.id) }));
         renderMailList(state.mails);
         showMailboxView();
         startAutoRefresh();
