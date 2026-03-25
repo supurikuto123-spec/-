@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お知らせ - Sutemeado</title>
+  <link rel="stylesheet" href="style.css?v=20260326e">
+  <style>
+    .news-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .page-header h1 {
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-color);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .back-link:hover {
+      opacity: 1;
+    }
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .news-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .news-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .news-item.unread {
+      border-left: 4px solid var(--accent-color);
+    }
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .news-date {
+      font-size: 13px;
+      opacity: 0.6;
+    }
+    .news-badge {
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .news-badge.important {
+      background: #ef4444;
+      color: white;
+    }
+    .news-badge.update {
+      background: #3b82f6;
+      color: white;
+    }
+    .news-badge.info {
+      background: #22c55e;
+      color: white;
+    }
+    .news-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .news-summary {
+      font-size: 14px;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+    .news-detail {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+      font-size: 14px;
+      line-height: 1.8;
+      display: none;
+    }
+    .news-item.expanded .news-detail {
+      display: block;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      opacity: 0.6;
+    }
+    .admin-section {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+      border: 2px dashed rgba(139, 92, 246, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      display: none;
+    }
+    .admin-section.visible {
+      display: block;
+    }
+    .admin-section h3 {
+      margin-bottom: 15px;
+      color: #8b5cf6;
+    }
+    .admin-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .admin-form input,
+    .admin-form textarea,
+    .admin-form select {
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      font-family: inherit;
+    }
+    .admin-form textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .admin-form button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .admin-form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+    .json-output {
+      background: rgba(0,0,0,0.3);
+      padding: 12px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      word-break: break-all;
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="news-page">
+    <a href="/" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      戻る
+    </a>
+
+    <div class="page-header">
+      <h1>📢 お知らせ</h1>
+    </div>
+
+    <!-- 管理者用投稿フォーム (URLに?admin=1で表示) -->
+    <div class="admin-section" id="adminSection">
+      <h3>🔧 管理者用 - 新規投稿作成</h3>
+      <form class="admin-form" id="adminForm">
+        <input type="text" id="newsTitle" placeholder="タイトル" required>
+        <textarea id="newsContent" placeholder="本文（HTMLタグ使用可）" required></textarea>
+        <select id="newsCategory">
+          <option value="info">お知らせ</option>
+          <option value="important">重要</option>
+          <option value="update">アップデート</option>
+        </select>
+        <input type="text" id="newsSummary" placeholder="サマリー（一覧表示用、省略可）">
+        <button type="submit">投稿を作成</button>
+      </form>
+      <div class="json-output" id="jsonOutput"></div>
+    </div>
+
+    <div class="news-list" id="newsList">
+      <!-- ニュース項目はJSで動的に生成 -->
+    </div>
+
+    <div class="empty-state" id="emptyState" style="display: none;">
+      <p>📭 お知らせはありません</p>
+    </div>
+  </div>
+
+  <script>
+    // サンプルニュースデータ（実際はJSONファイルから読み込み）
+    let newsData = [
+      {
+        id: '1',
+        title: 'Sutemeado サービス開始のお知らせ',
+        date: '2026-03-25T10:00:00',
+        category: 'important',
+        summary: 'シンプルな一時メールサービス「Sutemeado」を公開しました。',
+        content: 'いつもご利用いただきありがとうございます。<br><br>シンプルで使いやすい一時メールサービス「Sutemeado」を正式に公開いたしました。<br><br>主な機能：<br>• ワンクリックでメールアドレスを作成<br>• ログイン機能付き（アドレスとパスワードで保護）<br>• 自動バックアップシステム<br>• 日本語・英語対応<br><br>今後ともよろしくお願いいたします。'
+      }
+    ];
+
+    // URLパラメータチェック
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('admin')) {
+      document.getElementById('adminSection').classList.add('visible');
+    }
+
+    // ニュース表示
+    function renderNews() {
+      const list = document.getElementById('newsList');
+      const empty = document.getElementById('emptyState');
+      
+      if (newsData.length === 0) {
+        list.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+      
+      list.innerHTML = newsData.map(news => {
+        const date = new Date(news.date).toLocaleString('ja-JP');
+        const categoryLabels = {
+          important: { text: '重要', class: 'important' },
+          update: { text: 'アップデート', class: 'update' },
+          info: { text: 'お知らせ', class: 'info' }
+        };
+        const cat = categoryLabels[news.category] || categoryLabels.info;
+        
+        return `
+          <div class="news-item" data-id="${news.id}" onclick="toggleNews('${news.id}')">
+            <div class="news-meta">
+              <span class="news-date">${date}</span>
+              <span class="news-badge ${cat.class}">${cat.text}</span>
+            </div>
+            <div class="news-title">${escapeHtml(news.title)}</div>
+            <div class="news-summary">${escapeHtml(news.summary || news.content.substring(0, 100) + '...')}</div>
+            <div class="news-detail">${news.content}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleNews(id) {
+      const item = document.querySelector(`[data-id="${id}"]`);
+      item.classList.toggle('expanded');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // 管理者フォーム
+    document.getElementById('adminForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const newPost = {
+        id: Date.now().toString(),
+        title: document.getElementById('newsTitle').value,
+        content: document.getElementById('newsContent').value,
+        category: document.getElementById('newsCategory').value,
+        summary: document.getElementById('newsSummary').value || document.getElementById('newsContent').value.substring(0, 100) + '...',
+        date: new Date().toISOString()
+      };
+      
+      // JSON出力（コピー用）
+      document.getElementById('jsonOutput').textContent = JSON.stringify(newPost, null, 2);
+      
+      // ローカルに追加
+      newsData.unshift(newPost);
+      renderNews();
+      
+      // フォームリセット
+      e.target.reset();
+      alert('投稿を作成しました！JSONをコピーして news.json に追加してください。');
+    });
+
+    // 初期表示
+    renderNews();
+
+    // 外部JSON読み込み（存在する場合）
+    fetch('data/news.json')
+      .then(r => r.json())
+      .then(data => {
+        newsData = data;
+        renderNews();
+      })
+      .catch(() => {
+        // ファイルがない場合はデフォルトデータを使用
+      });
+  </script>
+</body>
+</html>

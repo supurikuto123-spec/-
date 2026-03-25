@@ -1559,6 +1559,15 @@ section {
   color: var(--neon-magenta);
 }
 
+.drawer-item-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.drawer-item-disabled svg {
+  color: var(--text-tertiary);
+}
+
 .drawer-divider {
   height: 1px;
   background: rgba(255,255,255,0.07);
