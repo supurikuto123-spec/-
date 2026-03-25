@@ -3114,3 +3114,44 @@ body.drawer-open {
   border-color: rgba(0,119,204,0.25);
   color: var(--neon-cyan);
 }
+
+/* ===== Drawer Footer - Legal Links ===== */
+.drawer-footer {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  margin-top: auto;
+}
+
+.drawer-footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.drawer-footer-link {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.drawer-footer-link:hover {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
+.drawer-footer-separator {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+}
+
+.drawer-footer-copy {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin: 0;
+}
