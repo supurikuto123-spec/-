@@ -571,12 +571,25 @@ function updateNavBadge() {
 function renderMailList(mails) {
   const mailList = document.getElementById('mail-list');
   const mailCount = document.getElementById('mail-count');
+  const navMailCounter = document.getElementById('nav-mail-counter');
+  const navCounterValue = document.getElementById('nav-counter-value');
   
   // 未読数を表示
   const unreadCount = (mails || []).filter(m => !m.read).length;
-  mailCount.textContent = unreadCount > 0 ? unreadCount : (mails ? mails.length : 0);
-  mailCount.title = unreadCount > 0 ? `${unreadCount}件未読` : `${mails ? mails.length : 0}件`;
+  const totalCount = mails ? mails.length : 0;
+  mailCount.textContent = unreadCount > 0 ? unreadCount : totalCount;
+  mailCount.title = unreadCount > 0 ? `${unreadCount}件未読` : `${totalCount}件`;
   mailCount.classList.toggle('has-unread', unreadCount > 0);
+  
+  // ナビゲーションバーのメールカウンターも更新
+  if (navMailCounter && navCounterValue) {
+    navCounterValue.textContent = totalCount;
+    navMailCounter.title = unreadCount > 0 ? `${unreadCount}件未読 / ${totalCount}件` : `${totalCount}件`;
+    // 未読がある場合は光る効果
+    navMailCounter.style.borderColor = unreadCount > 0 ? 'rgba(0, 255, 157, 0.5)' : 'rgba(0, 240, 255, 0.2)';
+    navMailCounter.style.background = unreadCount > 0 ? 'rgba(0, 255, 157, 0.15)' : 'rgba(0, 240, 255, 0.1)';
+    navMailCounter.style.color = unreadCount > 0 ? 'var(--neon-green)' : 'var(--neon-cyan)';
+  }
   
   if (!mails || mails.length === 0) {
     mailList.innerHTML = `

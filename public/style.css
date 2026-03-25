@@ -1375,6 +1375,35 @@ section {
   flex-shrink: 0;
 }
 
+/* メールカウンター（ナビバー用） */
+.nav-mail-counter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-sm);
+  color: var(--neon-cyan);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.nav-mail-counter:hover {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+.nav-mail-counter svg {
+  width: 16px;
+  height: 16px;
+}
+.nav-counter-value {
+  min-width: 18px;
+  text-align: center;
+}
+
 /* ハンバーガーボタン */
 .hamburger-btn {
   display: flex;
