@@ -1266,27 +1266,11 @@ function initEventListeners() {
   });
   document.getElementById('menu-api').addEventListener('click', () => {
     closeDrawer();
-    showToast('APIドキュメントは近日公開予定です', 'info');
+    openApiModal();
   });
   document.getElementById('menu-settings').addEventListener('click', () => {
     closeDrawer();
     openSettingsModal();
-  });
-  document.getElementById('menu-status').addEventListener('click', () => {
-    closeDrawer();
-    window.location.href = '/status.html';
-  });
-  document.getElementById('menu-news').addEventListener('click', () => {
-    closeDrawer();
-    window.location.href = '/news.html';
-  });
-  document.getElementById('menu-changelog').addEventListener('click', () => {
-    closeDrawer();
-    window.location.href = '/changelog.html';
-  });
-  document.getElementById('menu-support-chat').addEventListener('click', () => {
-    closeDrawer();
-    showToast('サポートチャットは近日公開予定です', 'info');
   });
 
   // New Address Confirm Modal
