@@ -91,12 +91,16 @@ app.post('/api/login', async (req, res) => {
     
     // ログイン成功
     const mails = await mailStore.getMails(normalized, password);
-    
+
+    // 累計受信数（削除されても減らない）を取得
+    const totalReceived = await mailStore.getCumulativeMailCount(normalized);
+
     res.json({
       success: true,
       message: 'ログインしました',
       address: normalized,
       count: mails.length,
+      totalReceived: totalReceived,
       mails: mails
     });
   } catch (err) {
@@ -119,18 +123,22 @@ app.post('/api/mailbox/:address', async (req, res) => {
     }
     
     const mails = await mailStore.getMails(address, password);
-    
+
     if (mails === null) {
       return res.status(401).json({
         success: false,
         error: '認証に失敗しました'
       });
     }
-    
+
+    // 累計受信数（削除されても減らない）を取得
+    const totalReceived = await mailStore.getCumulativeMailCount(address.toLowerCase().trim());
+
     res.json({
       success: true,
       address: address,
       count: mails.length,
+      totalReceived: totalReceived,
       mails: mails
     });
   } catch (err) {
