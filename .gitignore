@@ -75,7 +75,6 @@ logs
 *.log
 
 # PM2
-ecosystem.config.js
 .pm2/
 
 # Temporary folders
