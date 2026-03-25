@@ -1174,6 +1174,9 @@ let statsTimer = null;
 let statsUpdateInterval = 30000; // 30 seconds update interval
 
 function formatNumber(num) {
+  if (num === undefined || num === null || isNaN(num)) {
+    return '-';
+  }
   if (num >= 1000000) {
     return (num / 1000000).toFixed(1) + 'M';
   } else if (num >= 1000) {
@@ -1190,7 +1193,7 @@ async function updateGlobalStats() {
       const mailsEl = document.getElementById('stat-mails');
 
       if (addressesEl) {
-        const newValue = formatNumber(res.stats.mailboxes);
+        const newValue = formatNumber(res.stats.totalAddressesAllTime ?? res.stats.currentMailboxes ?? 0);
         if (addressesEl.textContent !== newValue) {
           addressesEl.classList.add('updating');
           addressesEl.textContent = newValue;
@@ -1199,7 +1202,7 @@ async function updateGlobalStats() {
       }
 
       if (mailsEl) {
-        const newValue = formatNumber(res.stats.totalMails);
+        const newValue = formatNumber(res.stats.totalMailsAllTime ?? res.stats.currentMails ?? 0);
         if (mailsEl.textContent !== newValue) {
           mailsEl.classList.add('updating');
           mailsEl.textContent = newValue;
