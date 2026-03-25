@@ -2188,6 +2188,36 @@ body.drawer-open {
   margin-top: var(--spacing-xs);
 }
 
+.api-example {
+  margin-top: var(--spacing-sm);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+}
+
+.api-example pre {
+  margin: 0;
+  padding: var(--spacing-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.api-example code {
+  color: var(--neon-cyan);
+  font-family: inherit;
+}
+
+/* PUT method style */
+.api-method.put {
+  background: #ffaa00;
+  color: var(--bg-primary);
+}
+
 /* Settings List */
 .settings-list {
   display: flex;

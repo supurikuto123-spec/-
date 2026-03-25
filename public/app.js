@@ -858,18 +858,8 @@ async function handleChangePassword(e) {
       state.currentPassword = newPw;
       saveSession(state.currentAddress, newPw);
       updateAddressDisplay(state.currentAddress, newPw);
-      // After password change, mark warning as unseen so user re-saves new credentials
-      const addr = state.currentAddress;
-      try {
-        let saved = JSON.parse(localStorage.getItem('passwordWarningSeen') || '{}');
-        if (typeof saved === 'boolean') saved = {};
-        delete saved[addr];
-        localStorage.setItem('passwordWarningSeen', JSON.stringify(saved));
-      } catch {}
       closeChangePasswordModal();
       showToast(t('passwordChanged'), 'success');
-      // Show the save-password warning so user saves the new password
-      setTimeout(openPasswordWarningModal, 400);
     } else {
       showToast(res.error || t('passwordChangeFailed'), 'error');
     }
@@ -889,47 +879,12 @@ function closeLoginModal() {
 }
 
 // ===== Password Warning Modal =====
-function openPasswordWarningModal() {
-  document.getElementById('warning-address-display').textContent = state.currentAddress || '';
-  document.getElementById('warning-password-display').textContent = state.currentPassword || '';
-  document.getElementById('password-warning-modal').classList.add('active');
-}
-
-function closePasswordWarningModal() {
-  document.getElementById('password-warning-modal').classList.remove('active');
-}
-
-// Whether the user has saved/acknowledged the password warning for the current address
-function hasSeenPasswordWarning(address) {
-  const addr = address || state.currentAddress;
-  if (!addr) return false;
-  try {
-    const saved = JSON.parse(localStorage.getItem('passwordWarningSeen') || '{}');
-    // Legacy flat boolean support
-    if (typeof saved === 'boolean') return saved;
-    return !!saved[addr];
-  } catch { return false; }
-}
-
-function markPasswordWarningSeen(address) {
-  const addr = address || state.currentAddress;
-  if (!addr) return;
-  try {
-    let saved = JSON.parse(localStorage.getItem('passwordWarningSeen') || '{}');
-    if (typeof saved === 'boolean') saved = {};
-    saved[addr] = true;
-    localStorage.setItem('passwordWarningSeen', JSON.stringify(saved));
-  } catch { localStorage.setItem('passwordWarningSeen', JSON.stringify({ [addr]: true })); }
-}
-
-// Show password warning if the address was NOT accessed via login flow
-// (i.e. auto-created this session) or if the password was changed
-function maybeShowPasswordWarning() {
-  if (!state.currentAddress) return;
-  if (!hasSeenPasswordWarning(state.currentAddress)) {
-    setTimeout(openPasswordWarningModal, 600);
-  }
-}
+// Password warning modal removed - passwords are always displayed in the UI
+function openPasswordWarningModal() { /* no-op */ }
+function closePasswordWarningModal() { /* no-op */ }
+function hasSeenPasswordWarning() { return true; }
+function markPasswordWarningSeen() { /* no-op */ }
+function maybeShowPasswordWarning() { /* no-op */ }
 
 // ===== New Address Confirm Modal =====
 function openNewAddressConfirmModal() {
@@ -1271,10 +1226,6 @@ function initEventListeners() {
     if (state.currentPassword) copyToClipboard(state.currentPassword);
   });
   
-  document.getElementById('warning-copy-btn')?.addEventListener('click', () => {
-    if (state.currentPassword) copyToClipboard(state.currentPassword);
-  });
-  
   document.getElementById('toggle-password-btn').addEventListener('click', togglePasswordVisibility);
   
   // Refresh
@@ -1367,12 +1318,6 @@ function initEventListeners() {
   // Confirm modal
   document.getElementById('confirm-cancel').addEventListener('click', handleConfirmCancel);
   document.getElementById('confirm-ok').addEventListener('click', handleConfirmOk);
-
-  // Password warning modal
-  document.getElementById('password-warning-ok').addEventListener('click', () => {
-    markPasswordWarningSeen(state.currentAddress);
-    closePasswordWarningModal();
-  });
 
   // Language switch
   document.querySelectorAll('.lang-btn').forEach(btn => {

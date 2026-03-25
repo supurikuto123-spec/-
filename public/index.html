@@ -140,18 +140,7 @@
 
     </div>
 
-    <!-- 登録ボタン (実装予定) -->
-    <div class="drawer-footer">
-      <button class="drawer-register-btn" id="menu-register" disabled>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <line x1="19" y1="8" x2="19" y2="14"/>
-          <line x1="22" y1="11" x2="16" y2="11"/>
-        </svg>
-        <span>登録</span>
-      </button>
-    </div>
+
   </div>
 
   <!-- Main Content -->
@@ -275,7 +264,7 @@
   <!-- API Modal -->
   <div class="modal" id="api-modal">
     <div class="modal-overlay"></div>
-    <div class="modal-content">
+    <div class="modal-content modal-content-lg">
       <div class="modal-header">
         <h3 data-i18n="apiDocs">API Documentation</h3>
         <button class="modal-close" id="api-modal-close">
@@ -285,12 +274,99 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="api-intro" style="margin-bottom:1rem;padding:0.75rem;background:var(--bg-secondary);border-radius:var(--radius-md);">
+          <p style="margin:0;font-size:0.875rem;color:var(--text-secondary);">
+            <strong>Base URL:</strong> <code>https://sutemeado.com</code><br>
+            <strong>Rate Limit:</strong> 100 requests/minute<br>
+            <strong>Auth:</strong> Password required for mailbox operations (POST body)
+          </p>
+        </div>
         <div class="api-list">
-          <div class="api-entry"><div class="api-meta"><span class="api-method get">GET</span><code>/api/new-address</code></div><p data-i18n="apiGetAddress">新規アドレスを作成</p></div>
-          <div class="api-entry"><div class="api-meta"><span class="api-method post">POST</span><code>/api/login</code></div><p data-i18n="apiLogin">ログイン</p></div>
-          <div class="api-entry"><div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address</code></div><p data-i18n="apiGetMails">メール一覧を取得</p></div>
-          <div class="api-entry"><div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address/:mailId</code></div><p data-i18n="apiDeleteMail">メールを削除</p></div>
-          <div class="api-entry"><div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/address/:address</code></div><p data-i18n="apiDeleteAddress">アドレスを削除</p></div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method get">GET</span><code>/api/new-address</code></div>
+            <p>新規アドレスを作成</p>
+            <div class="api-example"><pre><code>curl https://sutemeado.com/api/new-address
+
+// Response
+{
+  "success": true,
+  "address": "abc123@sutemeado.com",
+  "password": "xyz789pass",
+  "domain": "sutemeado.com"
+}</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method post">POST</span><code>/api/login</code></div>
+            <p>ログイン（アドレスとパスワードで認証）</p>
+            <div class="api-example"><pre><code>curl -X POST https://sutemeado.com/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"address":"abc123@sutemeado.com","password":"xyz789pass"}'
+
+// Response
+{
+  "success": true,
+  "address": "abc123@sutemeado.com",
+  "mails": [...]
+}</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address</code></div>
+            <p>メール一覧を取得</p>
+            <div class="api-example"><pre><code>curl -X POST "https://sutemeado.com/api/mailbox/abc123@sutemeado.com" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'
+
+// Response
+{
+  "success": true,
+  "address": "abc123@sutemeado.com",
+  "mails": [
+    {
+      "id": "mail_xxx",
+      "from": "sender@example.com",
+      "subject": "Hello",
+      "body": "Message text...",
+      "html": "&lt;p&gt;HTML version...&lt;/p&gt;",
+      "receivedAt": 1711234567890
+    }
+  ]
+}</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address/:mailId</code></div>
+            <p>特定のメールを取得</p>
+            <div class="api-example"><pre><code>curl -X POST "https://sutemeado.com/api/mailbox/abc123@sutemeado.com/mail_xxx" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address/:mailId</code></div>
+            <p>メールを削除</p>
+            <div class="api-example"><pre><code>curl -X DELETE "https://sutemeado.com/api/mailbox/abc123@sutemeado.com/mail_xxx" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address</code></div>
+            <p>全メールを削除</p>
+            <div class="api-example"><pre><code>curl -X DELETE "https://sutemeado.com/api/mailbox/abc123@sutemeado.com" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/address/:address</code></div>
+            <p>アドレスを削除（全メールも削除されます）</p>
+            <div class="api-example"><pre><code>curl -X DELETE "https://sutemeado.com/api/address/abc123@sutemeado.com" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method put">PUT</span><code>/api/address/:address/password</code></div>
+            <p>パスワードを変更</p>
+            <div class="api-example"><pre><code>curl -X PUT "https://sutemeado.com/api/address/abc123@sutemeado.com/password" \
+  -H "Content-Type: application/json" \
+  -d '{"currentPassword":"xyz789pass","newPassword":"newpass123"}'</code></pre></div>
+          </div>
         </div>
       </div>
     </div>
@@ -421,46 +497,7 @@
     <span class="toast-message" id="toast-message">Message</span>
   </div>
 
-  <!-- Password Warning Modal -->
-  <div class="modal" id="password-warning-modal">
-    <div class="modal-overlay"></div>
-    <div class="modal-content modal-content-sm">
-      <div class="modal-body modal-body-center">
-        <div class="confirm-icon info">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="16" x2="12" y2="12"/>
-            <line x1="12" y1="8" x2="12.01" y2="8"/>
-          </svg>
-        </div>
-        <h4 data-i18n="passwordWarningTitle" style="margin-top:0;">パスワードを保存してください</h4>
-        <p data-i18n="passwordWarningMessage" style="text-align:left;margin:0.75rem 0;">
-          再度アクセスするために、必ずパスワードを保存してください。
-        </p>
-        <div class="password-save-box">
-          <div class="password-save-row">
-            <span class="password-save-label">アドレス</span>
-            <code id="warning-address-display" class="password-save-value"></code>
-          </div>
-          <div class="password-save-row">
-            <span class="password-save-label">パスワード</span>
-            <div style="display:flex;align-items:center;gap:8px;min-width:0;">
-              <code id="warning-password-display" class="password-save-value"></code>
-              <button class="icon-btn" id="warning-copy-btn" title="Copy Password">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer modal-footer-center">
-        <button class="btn btn-primary" id="password-warning-ok" data-i18n="understood">了解しました</button>
-      </div>
-    </div>
-  </div>
+
 
   <!-- New Address Confirm Modal（ログイン中専用・削除ボタン付き） -->
   <div class="modal" id="new-address-confirm-modal">
