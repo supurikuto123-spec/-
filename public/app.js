@@ -587,7 +587,7 @@ function renderMailList(mails) {
   // 未読数と累計受信数を表示（削除しても減らない）
   const unreadCount = (mails || []).filter(m => !m.read).length;
   const totalCount = mails ? mails.length : 0;
-  const cumulativeCount = state.totalReceived || totalCount;
+  const cumulativeCount = state.totalReceived ?? totalCount;
   // バッジは累計受信数を表示（削除しても減らない）
   mailCount.textContent = cumulativeCount;
   mailCount.title = unreadCount > 0 ? `${unreadCount}件未読 / 累計${cumulativeCount}件` : `累計${cumulativeCount}件受信`;
