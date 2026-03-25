@@ -82,8 +82,7 @@ const i18n = {
     createNewAddressConfirm: 'ログイン情報を保存していない場合、現在のアドレスにはアクセスできなくなります。今後利用しない場合はアドレスを削除してください。\n\n新しいメールアドレスを作成しますか？',
     passwordWarningTitle: 'パスワードを保存してください',
     passwordWarningMessage: '再度アクセスするために、必ずパスワードを保存してください。',
-    understood: '了解しました',
-    receivedMail: '受信メール'
+    understood: '了解しました'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
@@ -162,8 +161,7 @@ const i18n = {
     createNewAddressConfirm: 'If you have not saved your login info, you will lose access to the current address. Delete the address first if you no longer need it.\n\nCreate a new email address?',
     passwordWarningTitle: 'Please Save Your Password',
     passwordWarningMessage: 'To access this address later, please save your password.',
-    understood: 'I Understand',
-    receivedMail: 'Inbox'
+    understood: 'I Understand'
   }
 };
 
@@ -570,39 +568,9 @@ function updateNavBadge() {
   return unreadCount;
 }
 
-// Update top mail counter meter
-function updateTopMailCounter(mails) {
-  const topMailCount = document.getElementById('top-mail-count');
-  const topMailFill = document.getElementById('top-mail-fill');
-  
-  if (!topMailCount || !topMailFill) return;
-  
-  const count = mails ? mails.length : 0;
-  const max = 100;
-  const percentage = Math.min((count / max) * 100, 100);
-  
-  // Update count
-  topMailCount.textContent = count;
-  topMailCount.classList.toggle('has-mails', count > 0);
-  topMailCount.classList.toggle('full', count >= max);
-  
-  // Update fill bar
-  topMailFill.style.width = percentage + '%';
-  topMailFill.classList.remove('warning', 'critical');
-  
-  if (percentage >= 90) {
-    topMailFill.classList.add('critical');
-  } else if (percentage >= 70) {
-    topMailFill.classList.add('warning');
-  }
-}
-
 function renderMailList(mails) {
   const mailList = document.getElementById('mail-list');
   const mailCount = document.getElementById('mail-count');
-  
-  // Update top counter meter
-  updateTopMailCounter(mails);
   
   // 未読数を表示
   const unreadCount = (mails || []).filter(m => !m.read).length;
