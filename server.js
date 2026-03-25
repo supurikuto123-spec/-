@@ -11,8 +11,8 @@ const PORT = process.env.PORT || 3000;
 const SMTP_PORT = process.env.SMTP_PORT || 2525;
 
 // DBパス設定（VPS永続化対策：絶対パスを使用）
-const DB_DIR = process.env.DB_DIR || path.join(__dirname, '.');
-const DB_PATH = process.env.DB_PATH || path.join(DB_DIR, 'data.db');
+// 環境変数 DB_PATH を最優先で使用（ecosystem.config.js で設定される）
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.db');
 
 // DBディレクトリが存在しない場合は作成
 try {
