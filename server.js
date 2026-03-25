@@ -30,8 +30,14 @@ app.get('/api/new-address', async (req, res) => {
       domain: 'sutemeado.com'
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: 'Failed to generate address' });
+    console.error('Generate address error:', err);
+    console.error('Error stack:', err.stack);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to generate address',
+      detail: err.message,
+      code: err.code || 'UNKNOWN'
+    });
   }
 });
 
