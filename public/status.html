@@ -347,10 +347,14 @@
         const data = await response.json();
         const endTime = performance.now();
         
-        document.getElementById('total-addresses').textContent = data.totalAddresses || '0';
-        document.getElementById('total-mails').textContent = data.totalMails || '0';
-        document.getElementById('active-mailboxes').textContent = data.activeMailboxes || '0';
-        document.getElementById('uptime').textContent = data.uptime || '-';
+        const stats = data.stats || {};
+        document.getElementById('total-addresses').textContent = stats.totalAddresses || stats.total_users || '0';
+        document.getElementById('total-mails').textContent = stats.totalMails || stats.total_emails || '0';
+        document.getElementById('active-mailboxes').textContent = stats.activeMailboxes || stats.active_mailboxes || '0';
+        const uptimeSeconds = data.uptime || 0;
+        const hours = Math.floor(uptimeSeconds / 3600);
+        const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+        document.getElementById('uptime').textContent = hours + '時間 ' + minutes + '分';
         document.getElementById('response-time').textContent = Math.round(endTime - startTime) + 'ms';
       } catch (error) {
         document.getElementById('total-addresses').textContent = '?';
