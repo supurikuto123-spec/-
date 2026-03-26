@@ -34,6 +34,17 @@ const mailStore = new MailStore(DB_PATH);
 // SQLiteデータベース初期化（ブログ用）
 const db = new Database(DB_PATH);
 
+// WALモード有効化（読み書き並行・ロック軽減）
+try {
+  db.prepare('PRAGMA journal_mode = WAL').run();
+  db.prepare('PRAGMA synchronous = NORMAL').run();
+  db.prepare('PRAGMA cache_size = -32000').run(); // 32MB
+  const result = db.prepare('PRAGMA journal_mode').get();
+  console.log(`🚀 WAL mode enabled: ${result['journal_mode']}`);
+} catch (err) {
+  console.warn('⚠️ WAL mode setup failed:', err.message);
+}
+
 // ブログテーブル作成
 db.exec(`
 CREATE TABLE IF NOT EXISTS blog_posts (
