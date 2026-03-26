@@ -39,8 +39,10 @@ try {
   db.prepare('PRAGMA journal_mode = WAL').run();
   db.prepare('PRAGMA synchronous = NORMAL').run();
   db.prepare('PRAGMA cache_size = -32000').run(); // 32MB
+  db.prepare('PRAGMA busy_timeout = 5000').run(); // 5秒待機でロック競合を回避
+  db.prepare('PRAGMA wal_autocheckpoint = 100').run(); // WAL自動チェックポイント
   const result = db.prepare('PRAGMA journal_mode').get();
-  console.log(`🚀 WAL mode enabled: ${result['journal_mode']}`);
+  console.log(`🚀 WAL mode enabled: ${result['journal_mode']}, busy_timeout: 5000ms`);
 } catch (err) {
   console.warn('⚠️ WAL mode setup failed:', err.message);
 }
