@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>稼働状況 - Sutemeado</title>
+  <meta name="description" content="Sutemeado一時メールサービスのシステム稼働状況を確認できます。">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .status-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+    .status-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .status-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .status-back-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      border-color: var(--accent-primary);
+    }
+    .status-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .status-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+    .status-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .status-indicator.online {
+      background: #00f5a0;
+      box-shadow: 0 0 10px #00f5a080;
+    }
+    .status-indicator.maintenance {
+      background: #ffb800;
+      box-shadow: 0 0 10px #ffb80080;
+    }
+    .status-indicator.offline {
+      background: #ff4757;
+      box-shadow: 0 0 10px #ff475780;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .status-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .status-card-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+    }
+    .status-card-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    .status-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .status-section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .status-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .status-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .status-list-item:last-child {
+      border-bottom: none;
+    }
+    .status-list-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .status-list-value {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .status-list-value.success {
+      color: #00f5a0;
+    }
+    .status-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent-primary);
+      color: #000;
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 2rem;
+    }
+    .refresh-btn:hover {
+      background: var(--accent-secondary);
+    }
+    .last-updated {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 640px) {
+      .status-page {
+        padding: 1rem;
+      }
+      .status-header {
+        flex-wrap: wrap;
+      }
+      .status-title {
+        font-size: 1.25rem;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="status-page">
+    <header class="status-header">
+      <a href="/" class="status-back-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12,19 5,12 12,5"/>
+        </svg>
+        戻る
+      </a>
+      <h1 class="status-title">稼働状況</h1>
+    </header>
+
+    <div class="last-updated" id="last-updated">
+      最終更新: 読み込み中...
+    </div>
+
+    <button class="refresh-btn" onclick="loadStatus()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+      最新情報を更新
+    </button>
+
+    <div class="status-grid">
+      <div class="status-card">
+        <div class="status-card-header">
+          <div class="status-indicator online"></div>
+          <span class="status-card-title">メール受信サービス</span>
+        </div>
+        <div class="status-card-value" id="total-addresses">-</div>
+        <div class="status-card-label">作成済みアドレス数</div>
+      </div>
+      <div class="status-card">
+        <div class="status-card-header">
+          <div class="status-indicator online"></div>
+          <span class="status-card-title">SMTPサーバー</span>
+        </div>
+        <div class="status-card-value" id="total-mails">-</div>
+        <div class="status-card-label">受信済みメール数</div>
+      </div>
+      <div class="status-card">
+        <div class="status-card-header">
+          <div class="status-indicator online"></div>
+          <span class="status-card-title">APIサービス</span>
+        </div>
+        <div class="status-card-value" id="active-mailboxes">-</div>
+        <div class="status-card-label">アクティブメールボックス</div>
+      </div>
+    </div>
+
+    <div class="status-section">
+      <h2 class="status-section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        システム状態
+      </h2>
+      <ul class="status-list">
+        <li class="status-list-item">
+          <span class="status-list-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+            Webサーバー
+          </span>
+          <span class="status-list-value success">正常稼働中</span>
+        </li>
+        <li class="status-list-item">
+          <span class="status-list-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22 6 12 13 2 6"/>
+            </svg>
+            SMTPサーバー (ポート2525)
+          </span>
+          <span class="status-list-value success">正常稼働中</span>
+        </li>
+        <li class="status-list-item">
+          <span class="status-list-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+            データベース
+          </span>
+          <span class="status-list-value success">正常稼働中</span>
+        </li>
+        <li class="status-list-item">
+          <span class="status-list-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+            APIエンドポイント
+          </span>
+          <span class="status-list-value success">正常稼働中</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="status-section">
+      <h2 class="status-section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        システム情報
+      </h2>
+      <ul class="status-list">
+        <li class="status-list-item">
+          <span class="status-list-label">現在の時刻</span>
+          <span class="status-list-value" id="current-time">-</span>
+        </li>
+        <li class="status-list-item">
+          <span class="status-list-label">サービス稼働時間</span>
+          <span class="status-list-value" id="uptime">-</span>
+        </li>
+        <li class="status-list-item">
+          <span class="status-list-label">APIレスポンス時間</span>
+          <span class="status-list-value" id="response-time">-</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="status-footer">
+      <p>&copy; 2026 Sutemeado - ステメアド</p>
+      <p style="margin-top: 0.5rem; font-size: 0.75rem;">システム状態は2分間隔で自動更新されます</p>
+    </div>
+  </div>
+
+  <script>
+    async function loadStatus() {
+      const startTime = performance.now();
+      
+      try {
+        const response = await fetch('/api/status');
+        const data = await response.json();
+        const endTime = performance.now();
+        
+        document.getElementById('total-addresses').textContent = data.totalAddresses || '0';
+        document.getElementById('total-mails').textContent = data.totalMails || '0';
+        document.getElementById('active-mailboxes').textContent = data.activeMailboxes || '0';
+        document.getElementById('uptime').textContent = data.uptime || '-';
+        document.getElementById('response-time').textContent = Math.round(endTime - startTime) + 'ms';
+      } catch (error) {
+        document.getElementById('total-addresses').textContent = '?';
+        document.getElementById('total-mails').textContent = '?';
+        document.getElementById('active-mailboxes').textContent = '?';
+        console.error('Status fetch failed:', error);
+      }
+      
+      document.getElementById('current-time').textContent = new Date().toLocaleString('ja-JP');
+      document.getElementById('last-updated').textContent = '最終更新: ' + new Date().toLocaleString('ja-JP');
+    }
+
+    // 初回読み込み
+    loadStatus();
+    
+    // 30秒ごとに自動更新
+    setInterval(loadStatus, 30000);
+  </script>
+</body>
+</html>

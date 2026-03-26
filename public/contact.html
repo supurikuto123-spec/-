@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お問い合わせ - Sutemeado</title>
+  <meta name="description" content="Sutemeado一時メールサービスへのお問い合わせはこちらから。">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .contact-page {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+    .contact-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .contact-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .contact-back-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      border-color: var(--accent-primary);
+    }
+    .contact-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .contact-intro {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .contact-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .contact-section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .contact-method {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+    .contact-method:hover {
+      border-color: var(--accent-primary);
+    }
+    .contact-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: var(--radius-md);
+      flex-shrink: 0;
+    }
+    .contact-icon svg {
+      color: #000;
+    }
+    .contact-info {
+      flex: 1;
+    }
+    .contact-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+    .contact-value {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .contact-link:hover {
+      text-decoration: underline;
+    }
+    .faq-section {
+      margin-top: 2rem;
+    }
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+    .faq-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .faq-question {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .faq-answer {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      padding-left: 0;
+    }
+    .contact-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .disclaimer {
+      background: #ffb80010;
+      border: 1px solid #ffb80030;
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 1.5rem;
+    }
+    .disclaimer-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: #ffb800;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+    .disclaimer-text {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    @media (max-width: 640px) {
+      .contact-page {
+        padding: 1rem;
+      }
+      .contact-header {
+        flex-wrap: wrap;
+      }
+      .contact-title {
+        font-size: 1.25rem;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+      .contact-method {
+        flex-direction: column;
+        text-align: center;
+      }
+      .contact-icon {
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="contact-page">
+    <header class="contact-header">
+      <a href="/" class="contact-back-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12,19 5,12 12,5"/>
+        </svg>
+        戻る
+      </a>
+      <h1 class="contact-title">お問い合わせ</h1>
+    </header>
+
+    <p class="contact-intro">
+      Sutemeadoに関するご質問・ご意見・不具合報告などがございましたら、以下の方法でご連絡ください。
+      通常2営業日以内にご返答いたします。
+    </p>
+
+    <div class="contact-section">
+      <h2 class="contact-section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        お問い合わせ方法
+      </h2>
+      <div class="contact-methods">
+        <div class="contact-method">
+          <div class="contact-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22 6 12 13 2 6"/>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <div class="contact-label">メールでのお問い合わせ</div>
+            <div class="contact-value">公式メールアドレスに直接ご連絡ください</div>
+            <a href="mailto:support@sutemeado.com" class="contact-link">
+              support@sutemeado.com
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-method">
+          <div class="contact-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <div class="contact-label">一時メールでのお問い合わせ</div>
+            <div class="contact-value">Sutemeadoのアドレスから直接送信いただけます</div>
+            <span class="contact-value" style="color: var(--text-muted);">作成したアドレスから support@sutemeado.com へ</span>
+          </div>
+        </div>
+
+        <div class="contact-method">
+          <div class="contact-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <div class="contact-label">GitHub Issues</div>
+            <div class="contact-value">技術的な問題や機能要望はGitHubで管理しています</div>
+            <a href="https://github.com/supurikuto123-spec/-/issues" target="_blank" rel="noopener noreferrer" class="contact-link">
+              GitHub Issuesを開く
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-section faq-section">
+      <h2 class="contact-section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        よくある質問
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          メールが届かない場合は？
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          ・送信側の迷惑メール設定を確認してください<br>
+          ・アドレスにタイプミスがないか確認してください<br>
+          ・5分程度待ってから受信ボックスを更新してください<br>
+          ・それでも届かない場合はお問い合わせください
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          パスワードを忘れた場合は？
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          パスワードは復元できません。新しいアドレスを作成してください。
+          重要なメールは必ず別途保存してください。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          アドレスはいつまで有効ですか？
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          アドレスは最後のアクセスから30日間有効です。30日間アクセスがない場合、
+          自動的に削除される場合があります。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          商用利用は可能ですか？
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          はい、商用利用も可能です。ただし、サービスの性質上、
+          重要な業務での使用は推奨しません。利用規約をご確認ください。
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <div class="disclaimer-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        注意事項
+      </div>
+      <p class="disclaimer-text">
+        ・お問い合わせ対応はベストエフォートで行っており、返答を保証するものではありません<br>
+        ・技術的な問い合わせはGitHub Issuesでの対応を優先します<br>
+        ・迷惑行為や業務妨害となるお問い合わせはお控えください
+      </p>
+    </div>
+
+    <div class="contact-footer">
+      <p>&copy; 2026 Sutemeado - ステメアド</p>
+    </div>
+  </div>
+</body>
+</html>
