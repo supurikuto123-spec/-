@@ -1252,10 +1252,13 @@ function initEventListeners() {
     closeDrawer();
     handleNewAddress();
   });
-  document.getElementById('menu-change-password').addEventListener('click', () => {
-    closeDrawer();
-    openChangePasswordModal();
-  });
+  const menuChangePw = document.getElementById('menu-change-password');
+  if (menuChangePw) {
+    menuChangePw.addEventListener('click', () => {
+      closeDrawer();
+      openChangePasswordModal();
+    });
+  }
   document.getElementById('menu-delete-all-mail').addEventListener('click', () => {
     closeDrawer();
     handleDeleteAllMail();
