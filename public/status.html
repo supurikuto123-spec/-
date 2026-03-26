@@ -329,24 +329,41 @@
   <script>
     async function loadStatus() {
       const startTime = performance.now();
+      const cacheBuster = '?_=' + Date.now();
       
       try {
-        const response = await fetch('/api/status');
+        const response = await fetch('/api/status' + cacheBuster);
+        if (!response.ok) {
+          throw new Error('HTTP error! status: ' + response.status);
+        }
         const data = await response.json();
+        console.log('Status API response:', data);
         const endTime = performance.now();
         
+        if (!data.success) {
+          throw new Error('API error: ' + (data.error || 'Unknown error'));
+        }
+        
         const stats = data.stats || {};
-        document.getElementById('stat-addresses').textContent = (stats.mailboxes || stats.currentMailboxes || stats.totalAddressesAllTime || 0).toLocaleString();
-        document.getElementById('stat-mails').textContent = (stats.totalMails || stats.currentMails || stats.totalMailsAllTime || 0).toLocaleString();
+        console.log('Stats object:', stats);
+        
+        // Try different field names for compatibility
+        const addresses = stats.mailboxes || stats.currentMailboxes || stats.totalAddressesAllTime || stats.total_addresses || 0;
+        const mails = stats.totalMails || stats.currentMails || stats.totalMailsAllTime || stats.total_mails || 0;
+        
+        document.getElementById('stat-addresses').textContent = addresses.toLocaleString();
+        document.getElementById('stat-mails').textContent = mails.toLocaleString();
+        
         const uptimeSeconds = data.uptime || 0;
         const hours = Math.floor(uptimeSeconds / 3600);
         const minutes = Math.floor((uptimeSeconds % 3600) / 60);
         document.getElementById('uptime').textContent = hours + '時間 ' + minutes + '分';
         document.getElementById('response-time').textContent = Math.round(endTime - startTime) + 'ms';
       } catch (error) {
-        document.getElementById('stat-addresses').textContent = '?';
-        document.getElementById('stat-mails').textContent = '?';
         console.error('Status fetch failed:', error);
+        document.getElementById('stat-addresses').textContent = 'エラー';
+        document.getElementById('stat-mails').textContent = 'エラー';
+        document.getElementById('uptime').textContent = '取得失敗';
       }
       
       document.getElementById('last-updated').textContent = '最終更新: ' + new Date().toLocaleString('ja-JP');

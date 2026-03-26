@@ -1363,57 +1363,64 @@ function stopGlobalStats() {
 
 // ===== Event Listeners =====
 function initEventListeners() {
+  // 安全にイベントリスナーを追加するヘルパー
+  function addListener(id, event, handler) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener(event, handler);
+    } else {
+      console.warn(`Element not found: #${id}`);
+    }
+  }
+
   // Hamburger / Drawer
-  document.getElementById('menu-toggle').addEventListener('click', openDrawer);
-  document.getElementById('drawer-close').addEventListener('click', closeDrawer);
-  document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
+  addListener('menu-toggle', 'click', openDrawer);
+  addListener('drawer-close', 'click', closeDrawer);
+  addListener('drawer-overlay', 'click', closeDrawer);
 
   // Drawer menu items
-  document.getElementById('menu-login').addEventListener('click', () => {
+  addListener('menu-login', 'click', () => {
     closeDrawer();
     openLoginModal();
   });
-  document.getElementById('menu-login-other').addEventListener('click', () => {
+  addListener('menu-login-other', 'click', () => {
     closeDrawer();
     // ログイン中: 警告なしで直接ログインモーダルを開く
     openLoginModal();
   });
-  document.getElementById('menu-new-address').addEventListener('click', () => {
+  addListener('menu-new-address', 'click', () => {
     closeDrawer();
     handleNewAddress();
   });
-  const menuChangePw = document.getElementById('menu-change-password');
-  if (menuChangePw) {
-    menuChangePw.addEventListener('click', () => {
-      closeDrawer();
-      openChangePasswordModal();
-    });
-  }
-  document.getElementById('menu-delete-all-mail').addEventListener('click', () => {
+  addListener('menu-change-password', 'click', () => {
+    closeDrawer();
+    openChangePasswordModal();
+  });
+  addListener('menu-delete-all-mail', 'click', () => {
     closeDrawer();
     handleDeleteAllMail();
   });
-  document.getElementById('menu-delete-address').addEventListener('click', () => {
+  addListener('menu-delete-address', 'click', () => {
     closeDrawer();
     handleDeleteAddress();
   });
-  document.getElementById('menu-api').addEventListener('click', () => {
+  addListener('menu-api', 'click', () => {
     closeDrawer();
     openApiModal();
   });
-  document.getElementById('menu-settings').addEventListener('click', () => {
+  addListener('menu-settings', 'click', () => {
     closeDrawer();
     openSettingsModal();
   });
 
   // New Address Confirm Modal
-  document.getElementById('new-addr-cancel').addEventListener('click', closeNewAddressConfirmModal);
-  document.getElementById('new-addr-ok').addEventListener('click', async () => {
+  addListener('new-addr-cancel', 'click', closeNewAddressConfirmModal);
+  addListener('new-addr-ok', 'click', async () => {
     closeNewAddressConfirmModal();
     clearSession();
     await autoCreateAddress(true);
   });
-  document.getElementById('new-addr-delete').addEventListener('click', () => {
+  addListener('new-addr-delete', 'click', () => {
     // 削除確認ポップアップ（キャンセル時は新規作成モーダルに戻る）
     closeNewAddressConfirmModal();
     const msg = state.currentLang === 'ja'
@@ -1442,45 +1449,45 @@ function initEventListeners() {
   });
 
   // Forms
-  document.getElementById('modal-login-form').addEventListener('submit', handleLogin);
+  addListener('modal-login-form', 'submit', handleLogin);
   
   // Copy buttons
-  document.getElementById('copy-address-btn').addEventListener('click', () => {
+  addListener('copy-address-btn', 'click', () => {
     if (state.currentAddress) copyToClipboard(state.currentAddress);
   });
   
-  document.getElementById('copy-password-btn').addEventListener('click', () => {
+  addListener('copy-password-btn', 'click', () => {
     if (state.currentPassword) copyToClipboard(state.currentPassword);
   });
   
-  document.getElementById('toggle-password-btn').addEventListener('click', togglePasswordVisibility);
+  addListener('toggle-password-btn', 'click', togglePasswordVisibility);
   
   // Refresh
-  document.getElementById('refresh-btn').addEventListener('click', refreshMailbox);
+  addListener('refresh-btn', 'click', refreshMailbox);
   
   // Auto refresh toggle
-  document.getElementById('auto-refresh').addEventListener('change', toggleAutoRefresh);
+  addListener('auto-refresh', 'change', toggleAutoRefresh);
   
   // Modal closes
-  document.getElementById('api-modal-close').addEventListener('click', closeApiModal);
-  document.getElementById('settings-modal-close').addEventListener('click', closeSettingsModal);
-  document.getElementById('mail-modal-close').addEventListener('click', closeMailModal);
-  document.getElementById('modal-close-btn').addEventListener('click', closeMailModal);
-  document.getElementById('modal-delete-btn').addEventListener('click', handleDeleteMail);
-  document.getElementById('login-modal-close').addEventListener('click', closeLoginModal);
-  document.getElementById('change-password-modal-close').addEventListener('click', closeChangePasswordModal);
+  addListener('api-modal-close', 'click', closeApiModal);
+  addListener('settings-modal-close', 'click', closeSettingsModal);
+  addListener('mail-modal-close', 'click', closeMailModal);
+  addListener('modal-close-btn', 'click', closeMailModal);
+  addListener('modal-delete-btn', 'click', handleDeleteMail);
+  addListener('login-modal-close', 'click', closeLoginModal);
+  addListener('change-password-modal-close', 'click', closeChangePasswordModal);
 
   // Settings actions (外観のみ)
-  document.getElementById('theme-toggle-btn').addEventListener('click', () => {
+  addListener('theme-toggle-btn', 'click', () => {
     toggleTheme();
     closeSettingsModal();
   });
   // info-card のパスワード欄横の鉛筆ボタン
-  document.getElementById('change-password-inline-btn').addEventListener('click', openChangePasswordModal);
+  addListener('change-password-inline-btn', 'click', openChangePasswordModal);
 
   // Change password form
-  document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
-  document.getElementById('change-password-modal-close').addEventListener('click', closeChangePasswordModal);
+  addListener('change-password-form', 'submit', handleChangePassword);
+  addListener('change-password-modal-close', 'click', closeChangePasswordModal);
 
   // 強度メーター
   document.getElementById('new-password').addEventListener('input', function() {
