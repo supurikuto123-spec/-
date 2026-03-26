@@ -145,6 +145,9 @@ app.post('/api/login', async (req, res) => {
 
     // 累計受信数（削除されても減らない）を取得
     const totalReceived = await mailStore.getCumulativeMailCount(normalized);
+    
+    // パスワードバージョンを取得（セッション管理用）
+    const passwordVersion = await mailStore.getPasswordVersion(normalized);
 
     res.json({
       success: true,
@@ -152,6 +155,7 @@ app.post('/api/login', async (req, res) => {
       address: normalized,
       count: mails.length,
       totalReceived: totalReceived,
+      passwordVersion: passwordVersion,
       mails: mails
     });
   } catch (err) {
@@ -355,7 +359,7 @@ app.put('/api/address/:address/password', async (req, res) => {
       });
     }
     
-    if (!result) {
+    if (!result || !result.success) {
       return res.status(500).json({
         success: false,
         error: 'パスワードの変更に失敗しました'
@@ -364,7 +368,8 @@ app.put('/api/address/:address/password', async (req, res) => {
     
     res.json({
       success: true,
-      message: 'パスワードを変更しました'
+      message: 'パスワードを変更しました',
+      passwordVersion: result.passwordVersion
     });
   } catch (err) {
     console.error(err);
@@ -570,6 +575,144 @@ app.get('/api/blog/settings', (req, res) => {
 // ルートページ
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// ===== Simple CMS for News & Changelog =====
+const CMS_DIR = path.join(path.dirname(DB_PATH), 'cms');
+if (!fs.existsSync(CMS_DIR)) {
+  fs.mkdirSync(CMS_DIR, { recursive: true });
+}
+
+const CMS_FILES = {
+  news: path.join(CMS_DIR, 'news.json'),
+  changelog: path.join(CMS_DIR, 'changelog.json')
+};
+
+// 初期ファイル作成
+Object.entries(CMS_FILES).forEach(([key, filePath]) => {
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, JSON.stringify({ items: [] }, null, 2));
+  }
+});
+
+// CMS読み込みヘルパー
+function loadCmsData(type) {
+  try {
+    const data = fs.readFileSync(CMS_FILES[type], 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    return { items: [] };
+  }
+}
+
+// CMS保存ヘルパー
+function saveCmsData(type, data) {
+  fs.writeFileSync(CMS_FILES[type], JSON.stringify(data, null, 2));
+}
+
+// お知らせ一覧取得
+app.get('/api/cms/news', (req, res) => {
+  try {
+    const data = loadCmsData('news');
+    // 新しい順にソート
+    const items = data.items.sort((a, b) => new Date(b.date) - new Date(a.date));
+    res.json({ success: true, items });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 更新履歴一覧取得
+app.get('/api/cms/changelog', (req, res) => {
+  try {
+    const data = loadCmsData('changelog');
+    // 新しい順にソート
+    const items = data.items.sort((a, b) => new Date(b.date) - new Date(a.date));
+    res.json({ success: true, items });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// CMS管理用認証ミドルウェア（簡易的なパスワード認証）
+const CMS_PASSWORD = process.env.CMS_PASSWORD || 'admin123';
+
+function cmsAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || authHeader !== `Bearer ${CMS_PASSWORD}`) {
+    return res.status(401).json({ success: false, error: '認証に失敗しました' });
+  }
+  next();
+}
+
+// お知らせ追加
+app.post('/api/cms/news', cmsAuth, (req, res) => {
+  try {
+    const { title, content, badge = 'new' } = req.body;
+    if (!title || !content) {
+      return res.status(400).json({ success: false, error: 'タイトルと本文は必須です' });
+    }
+
+    const data = loadCmsData('news');
+    const newItem = {
+      id: Date.now().toString(),
+      title,
+      content,
+      badge,
+      date: new Date().toISOString()
+    };
+
+    data.items.push(newItem);
+    saveCmsData('news', data);
+
+    res.json({ success: true, item: newItem });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 更新履歴追加
+app.post('/api/cms/changelog', cmsAuth, (req, res) => {
+  try {
+    const { version, changes, badge = 'minor' } = req.body;
+    if (!version || !changes || !Array.isArray(changes)) {
+      return res.status(400).json({ success: false, error: 'バージョンと変更リストは必須です' });
+    }
+
+    const data = loadCmsData('changelog');
+    const newItem = {
+      id: Date.now().toString(),
+      version,
+      badge,
+      date: new Date().toISOString(),
+      changes
+    };
+
+    data.items.push(newItem);
+    saveCmsData('changelog', data);
+
+    res.json({ success: true, item: newItem });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// CMS項目削除
+app.delete('/api/cms/:type/:id', cmsAuth, (req, res) => {
+  try {
+    const { type, id } = req.params;
+    if (!CMS_FILES[type]) {
+      return res.status(400).json({ success: false, error: '無効なタイプです' });
+    }
+
+    const data = loadCmsData(type);
+    data.items = data.items.filter(item => item.id !== id);
+    saveCmsData(type, data);
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // エラーハンドリング

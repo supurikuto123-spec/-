@@ -176,13 +176,15 @@ const CONFIG = {
   STORAGE_KEY: 'sutemeado_session',
   LANG_KEY: 'sutemeado_lang',
   READ_KEY: 'sutemeado_read',
-  THEME_KEY: 'sutemeado_theme'
+  THEME_KEY: 'sutemeado_theme',
+  PWD_VERSION_KEY: 'sutemeado_pwd_ver'
 };
 
 // ===== State =====
 const state = {
   currentAddress: null,
   currentPassword: null,
+  passwordVersion: 1,
   mails: [],
   totalReceived: 0,
   autoRefresh: true,
@@ -885,10 +887,15 @@ async function handleChangePassword(e) {
     const res = await api.changePassword(state.currentAddress, state.currentPassword, newPw);
     if (res.success) {
       state.currentPassword = newPw;
-      saveSession(state.currentAddress, newPw);
+      // 新しいパスワードバージョンを保存
+      const newVersion = res.passwordVersion || (state.passwordVersion + 1);
+      state.passwordVersion = newVersion;
+      saveSession(state.currentAddress, newPw, newVersion);
       updateAddressDisplay(state.currentAddress, newPw);
       closeChangePasswordModal();
       showToast(t('passwordChanged'), 'success');
+      // パスワード変更成功後、他セッション無効化の説明を表示
+      showPasswordChangedNotice();
     } else {
       showToast(res.error || t('passwordChangeFailed'), 'error');
     }
@@ -897,6 +904,18 @@ async function handleChangePassword(e) {
   } finally {
     submitBtn.disabled = false;
   }
+}
+
+// パスワード変更後の通知
+function showPasswordChangedNotice() {
+  showConfirm(
+    'パスワードを変更しました',
+    'パスワードが変更されたため、他の端末・ブラウザでは自動的にログアウトされました。\n\n新しいパスワードで再度ログインする必要があります。',
+    () => {
+      // OKクリックで何もしない（閉じるだけ）
+    },
+    'info'
+  );
 }
 
 function openLoginModal() {
@@ -955,10 +974,15 @@ async function handleLogin(e) {
     const res = await api.login(address, password);
     
     if (res.success) {
+      // パスワードバージョンを保存
+      const pwdVersion = res.passwordVersion || 1;
+      state.passwordVersion = pwdVersion;
+      // セッションをlocalStorageに保存
+      saveSession(address, password, pwdVersion);
       updateAddressDisplay(address, password);
       state.mails = res.mails || [];
       state.totalReceived = res.totalReceived ?? state.mails.length;
-      console.log('Login API response:', { count: res.count, totalReceived: res.totalReceived, mailsLength: res.mails?.length });
+      console.log('Login API response:', { count: res.count, totalReceived: res.totalReceived, mailsLength: res.mails?.length, passwordVersion: pwdVersion });
       // Restore read state from localStorage
       const readIds = loadReadIds(address);
       state.mails = (state.mails || []).map(m => ({ ...m, read: readIds.has(m.id) }));
@@ -967,6 +991,8 @@ async function handleLogin(e) {
       closeLoginModal();
       showToast(t('login') + ' ' + t('success'), 'success');
       startAutoRefresh();
+      // パスワードバージョンチェックを開始
+      startPasswordVersionCheck();
     } else {
       showToast(res.error || t('invalidCredentials'), 'error');
     }
@@ -992,6 +1018,9 @@ async function autoCreateAddress(isManualCreation = false) {
     const res = await api.newAddress();
 
     if (res.success) {
+      // 新規作成時はパスワードバージョン=1
+      state.passwordVersion = 1;
+      saveSession(res.address, res.password, 1);
       updateAddressDisplay(res.address, res.password);
       state.mails = [];
       renderMailList([]);
@@ -1016,6 +1045,103 @@ async function autoCreateAddress(isManualCreation = false) {
 async function handleCreateAddress(e) {
   if (e) e.preventDefault();
   await autoCreateAddress();
+}
+
+// ===== Session Management =====
+function saveSession(address, password, passwordVersion = 1) {
+  try {
+    const session = {
+      address,
+      password,
+      passwordVersion,
+      savedAt: Date.now()
+    };
+    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(session));
+  } catch (e) {
+    console.warn('Failed to save session:', e);
+  }
+}
+
+function loadSession() {
+  try {
+    const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.warn('Failed to load session:', e);
+  }
+  return null;
+}
+
+function clearSession() {
+  try {
+    localStorage.removeItem(CONFIG.STORAGE_KEY);
+    localStorage.removeItem(CONFIG.PWD_VERSION_KEY);
+  } catch (e) {
+    console.warn('Failed to clear session:', e);
+  }
+}
+
+// パスワードバージョンチェック（他セッションでのパスワード変更検知）
+let passwordVersionTimer = null;
+
+function startPasswordVersionCheck() {
+  stopPasswordVersionCheck();
+  // 30秒ごとにパスワードバージョンをチェック
+  passwordVersionTimer = setInterval(checkPasswordVersion, 30000);
+}
+
+function stopPasswordVersionCheck() {
+  if (passwordVersionTimer) {
+    clearInterval(passwordVersionTimer);
+    passwordVersionTimer = null;
+  }
+}
+
+async function checkPasswordVersion() {
+  if (!state.currentAddress || !state.currentPassword) return;
+  
+  try {
+    const res = await api.login(state.currentAddress, state.currentPassword);
+    if (res.success) {
+      const serverVersion = res.passwordVersion || 1;
+      const localVersion = state.passwordVersion || 1;
+      
+      // サーバーのバージョンがローカルより新しい = 他でパスワードが変更された
+      if (serverVersion > localVersion) {
+        // 強制ログアウト
+        handleForcedLogout();
+      }
+    }
+  } catch (err) {
+    console.warn('Password version check failed:', err);
+  }
+}
+
+// 強制ログアウト処理
+function handleForcedLogout() {
+  stopPasswordVersionCheck();
+  stopAutoRefresh();
+  clearSession();
+  
+  state.currentAddress = null;
+  state.currentPassword = null;
+  state.passwordVersion = 1;
+  state.mails = [];
+  
+  showLoggedOutView();
+  
+  // ポップアップ表示
+  showConfirm(
+    'パスワードが変更されました',
+    'このアカウントのパスワードが他の端末・ブラウザで変更されました。\n\nセキュリティのため、自動的にログアウトしました。\n新しいパスワードで再度ログインしてください。',
+    () => {
+      // OKクリックでログインモーダルを表示
+      openLoginModal();
+    },
+    'info'
+  );
 }
 
 async function refreshMailbox() {
@@ -1108,8 +1234,10 @@ function handleDeleteAddress() {
           clearSession();
           state.currentAddress = null;
           state.currentPassword = null;
+          state.passwordVersion = 1;
           state.mails = [];
           stopAutoRefresh();
+          stopPasswordVersionCheck();
           showToast(t('deleteAddress'), 'success');
           // 削除後は新しいアドレスを自動生成（ページリロード不要）
           await autoCreateAddress();
@@ -1129,8 +1257,10 @@ function handleLogout() {
   clearSession();
   state.currentAddress = null;
   state.currentPassword = null;
+  state.passwordVersion = 1;
   state.mails = [];
   stopAutoRefresh();
+  stopPasswordVersionCheck();
   showLoggedOutView();
   showToast(t('logout'), 'success');
 }
@@ -1470,6 +1600,29 @@ async function init() {
     try {
       const res = await api.login(session.address, session.password);
       if (res.success) {
+        // パスワードバージョンを復元・確認
+        const serverVersion = res.passwordVersion || 1;
+        const localVersion = session.passwordVersion || 1;
+        
+        if (serverVersion < localVersion) {
+          // ローカルの方が新しい（異常状態）→サーバーに同期
+          state.passwordVersion = localVersion;
+        } else if (serverVersion > localVersion) {
+          // サーバーの方が新しい（他で変更された）→強制ログアウト
+          clearSession();
+          showLoggedOutView();
+          showConfirm(
+            'パスワードが変更されました',
+            'このアカウントのパスワードが他の端末・ブラウザで変更されました。\n\nセキュリティのため、自動的にログアウトしました。\n新しいパスワードで再度ログインしてください。',
+            () => { openLoginModal(); },
+            'info'
+          );
+          return;
+        } else {
+          state.passwordVersion = serverVersion;
+        }
+        
+        saveSession(session.address, session.password, state.passwordVersion);
         updateAddressDisplay(session.address, session.password);
         state.mails = (res.mails || []);
         state.totalReceived = res.totalReceived ?? state.mails.length;
@@ -1478,6 +1631,7 @@ async function init() {
         renderMailList(state.mails);
         showMailboxView();
         startAutoRefresh();
+        startPasswordVersionCheck();
       } else {
         clearSession();
         // Auto-create new address instead of showing auth view

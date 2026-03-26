@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMS管理パネル - Sutemeado</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .admin-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+    .admin-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .admin-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .admin-back-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      border-color: var(--accent-primary);
+    }
+    .admin-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .admin-intro {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    .login-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .login-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--accent-primary);
+      color: #000;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-primary)40;
+    }
+    .btn-danger {
+      background: #ff4757;
+      color: #fff;
+    }
+    .btn-danger:hover {
+      background: #ff3344;
+    }
+    .btn-block {
+      width: 100%;
+    }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    .tab {
+      padding: 0.75rem 1.25rem;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+    .tab.active {
+      background: var(--accent-primary)20;
+      color: var(--accent-primary);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .form-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.75rem 1rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      resize: vertical;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+    .form-select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .form-select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .item-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .item-info {
+      flex: 1;
+    }
+    .item-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+    .item-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .item-content {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+    .item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn-sm {
+      padding: 0.5rem;
+      font-size: 0.75rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.125rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.625rem;
+      font-weight: 700;
+    }
+    .badge-new {
+      background: #00f5a020;
+      color: #00f5a0;
+    }
+    .badge-update {
+      background: #00d4ff20;
+      color: #00d4ff;
+    }
+    .badge-important {
+      background: #ff475720;
+      color: #ff4757;
+    }
+    .changes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .change-input-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .change-type-select {
+      width: 100px;
+      flex-shrink: 0;
+    }
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 9999;
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .toast.success {
+      border-color: #00f5a0;
+    }
+    .toast.error {
+      border-color: #ff4757;
+    }
+    @media (max-width: 640px) {
+      .admin-page {
+        padding: 1rem;
+      }
+      .tabs {
+        flex-wrap: wrap;
+      }
+      .item-card {
+        flex-direction: column;
+      }
+      .change-input-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .change-type-select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-page">
+    <header class="admin-header">
+      <a href="/" class="admin-back-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12,19 5,12 12,5"/>
+        </svg>
+        戻る
+      </a>
+      <h1 class="admin-title">CMS管理パネル</h1>
+    </header>
+
+    <p class="admin-intro">お知らせと更新状況を簡単に投稿・管理できます。</p>
+
+    <!-- Login Section -->
+    <div id="login-section" class="login-section">
+      <div class="login-title">管理者ログイン</div>
+      <div class="form-group">
+        <label class="form-label">パスワード</label>
+        <input type="password" id="admin-password" class="form-input" placeholder="管理パスワードを入力">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="login()">ログイン</button>
+    </div>
+
+    <!-- Main Content (Hidden until login) -->
+    <div id="main-content" style="display:none;">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('news')">お知らせ投稿</button>
+        <button class="tab" onclick="switchTab('changelog')">更新状況投稿</button>
+        <button class="tab" onclick="switchTab('list')">投稿一覧</button>
+      </div>
+
+      <!-- News Tab -->
+      <div id="news-tab" class="tab-content active">
+        <div class="form-section">
+          <div class="form-section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <path d="M22 6l-10 7L2 6"/>
+            </svg>
+            新しいお知らせを投稿
+          </div>
+          <div class="form-group">
+            <label class="form-label">タイトル</label>
+            <input type="text" id="news-title" class="form-input" placeholder="お知らせのタイトル">
+          </div>
+          <div class="form-group">
+            <label class="form-label">バッジ</label>
+            <select id="news-badge" class="form-select">
+              <option value="new">NEW（新機能）</option>
+              <option value="update">UPDATE（更新）</option>
+              <option value="important">重要</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">本文</label>
+            <textarea id="news-content" class="form-textarea" placeholder="お知らせの内容を入力&#10;改行はそのまま反映されます"></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="postNews()">投稿する</button>
+        </div>
+      </div>
+
+      <!-- Changelog Tab -->
+      <div id="changelog-tab" class="tab-content">
+        <div class="form-section">
+          <div class="form-section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            新しい更新履歴を投稿
+          </div>
+          <div class="form-group">
+            <label class="form-label">バージョン</label>
+            <input type="text" id="changelog-version" class="form-input" placeholder="例：v2.1.0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">バッジ</label>
+            <select id="changelog-badge" class="form-select">
+              <option value="minor">MINOR（マイナー）</option>
+              <option value="major">MAJOR（メジャー）</option>
+              <option value="patch">PATCH（パッチ）</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">変更点</label>
+            <div id="changes-container" class="changes-list">
+              <div class="change-input-row">
+                <select class="form-select change-type-select">
+                  <option value="feat">FEAT（新機能）</option>
+                  <option value="fix">FIX（修正）</option>
+                  <option value="improve">IMPROVE（改善）</option>
+                  <option value="docs">DOCS（ドキュメント）</option>
+                </select>
+                <input type="text" class="form-input change-desc-input" placeholder="変更内容">
+              </div>
+            </div>
+            <button class="btn btn-sm" onclick="addChangeRow()" style="margin-top:0.5rem;">+ 変更点を追加</button>
+          </div>
+          <button class="btn btn-primary" onclick="postChangelog()">投稿する</button>
+        </div>
+      </div>
+
+      <!-- List Tab -->
+      <div id="list-tab" class="tab-content">
+        <div class="form-section">
+          <div class="form-section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="4" y1="6" x2="20" y2="6"/>
+              <line x1="4" y1="12" x2="20" y2="12"/>
+              <line x1="4" y1="18" x2="20" y2="18"/>
+            </svg>
+            投稿一覧
+          </div>
+          <div id="items-list" class="item-list">
+            <p style="color:var(--text-muted);text-align:center;">読み込み中...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="/news.html" style="color:var(--accent-primary);text-decoration:none;margin-right:1rem;">お知らせページを見る</a>
+      <a href="/changelog.html" style="color:var(--accent-primary);text-decoration:none;">更新状況ページを見る</a>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <span id="toast-message">メッセージ</span>
+  </div>
+
+  <script>
+    let adminToken = localStorage.getItem('cms_admin_token') || '';
+    let currentTab = 'news';
+
+    // 初期チェック
+    if (adminToken) {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+      loadItemsList();
+    }
+
+    function login() {
+      const password = document.getElementById('admin-password').value;
+      if (!password) {
+        showToast('パスワードを入力してください', 'error');
+        return;
+      }
+      adminToken = password;
+      localStorage.setItem('cms_admin_token', adminToken);
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+      loadItemsList();
+      showToast('ログインしました', 'success');
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tab + '-tab').classList.add('active');
+      
+      if (tab === 'list') {
+        loadItemsList();
+      }
+    }
+
+    function addChangeRow() {
+      const container = document.getElementById('changes-container');
+      const row = document.createElement('div');
+      row.className = 'change-input-row';
+      row.innerHTML = `
+        <select class="form-select change-type-select">
+          <option value="feat">FEAT（新機能）</option>
+          <option value="fix">FIX（修正）</option>
+          <option value="improve">IMPROVE（改善）</option>
+          <option value="docs">DOCS（ドキュメント）</option>
+        </select>
+        <input type="text" class="form-input change-desc-input" placeholder="変更内容">
+        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">削除</button>
+      `;
+      container.appendChild(row);
+    }
+
+    async function postNews() {
+      const title = document.getElementById('news-title').value;
+      const content = document.getElementById('news-content').value;
+      const badge = document.getElementById('news-badge').value;
+
+      if (!title || !content) {
+        showToast('タイトルと本文を入力してください', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/cms/news', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({ title, content, badge })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast('お知らせを投稿しました', 'success');
+          document.getElementById('news-title').value = '';
+          document.getElementById('news-content').value = '';
+        } else {
+          showToast(data.error || '投稿に失敗しました', 'error');
+        }
+      } catch (err) {
+        showToast('エラー：' + err.message, 'error');
+      }
+    }
+
+    async function postChangelog() {
+      const version = document.getElementById('changelog-version').value;
+      const badge = document.getElementById('changelog-badge').value;
+
+      const rows = document.querySelectorAll('.change-input-row');
+      const changes = [];
+      rows.forEach(row => {
+        const type = row.querySelector('.change-type-select').value;
+        const desc = row.querySelector('.change-desc-input').value;
+        if (desc.trim()) {
+          changes.push({ type, desc });
+        }
+      });
+
+      if (!version || changes.length === 0) {
+        showToast('バージョンと変更点を入力してください', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/cms/changelog', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          },
+          body: JSON.stringify({ version, badge, changes })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast('更新履歴を投稿しました', 'success');
+          document.getElementById('changelog-version').value = '';
+          // Reset changes to single empty row
+          document.getElementById('changes-container').innerHTML = `
+            <div class="change-input-row">
+              <select class="form-select change-type-select">
+                <option value="feat">FEAT（新機能）</option>
+                <option value="fix">FIX（修正）</option>
+                <option value="improve">IMPROVE（改善）</option>
+                <option value="docs">DOCS（ドキュメント）</option>
+              </select>
+              <input type="text" class="form-input change-desc-input" placeholder="変更内容">
+            </div>
+          `;
+        } else {
+          showToast(data.error || '投稿に失敗しました', 'error');
+        }
+      } catch (err) {
+        showToast('エラー：' + err.message, 'error');
+      }
+    }
+
+    async function loadItemsList() {
+      const container = document.getElementById('items-list');
+      container.innerHTML = '<p style="color:var(--text-muted);text-align:center;">読み込み中...</p>';
+
+      try {
+        const [newsRes, changelogRes] = await Promise.all([
+          fetch('/api/cms/news'),
+          fetch('/api/cms/changelog')
+        ]);
+
+        const newsData = await newsRes.json();
+        const changelogData = await changelogRes.json();
+
+        let html = '';
+
+        if (newsData.success && newsData.items.length > 0) {
+          html += '<h3 style="color:var(--text-primary);margin-bottom:1rem;">お知らせ</h3>';
+          html += newsData.items.map(item => `
+            <div class="item-card">
+              <div class="item-info">
+                <div class="item-title">${escapeHtml(item.title)}</div>
+                <div class="item-meta">
+                  <span class="badge badge-${item.badge}">${item.badge.toUpperCase()}</span>
+                  ${new Date(item.date).toLocaleDateString('ja-JP')}
+                </div>
+                <div class="item-content">${escapeHtml(item.content)}</div>
+              </div>
+              <div class="item-actions">
+                <button class="btn btn-danger btn-sm" onclick="deleteItem('news', '${item.id}')">削除</button>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        if (changelogData.success && changelogData.items.length > 0) {
+          html += '<h3 style="color:var(--text-primary);margin:1.5rem 0 1rem;">更新履歴</h3>';
+          html += changelogData.items.map(item => `
+            <div class="item-card">
+              <div class="item-info">
+                <div class="item-title">${escapeHtml(item.version)}</div>
+                <div class="item-meta">
+                  <span class="badge badge-${item.badge}">${item.badge.toUpperCase()}</span>
+                  ${new Date(item.date).toLocaleDateString('ja-JP')}
+                </div>
+                <div class="item-content">
+                  ${item.changes.map(c => `• [${c.type}] ${c.desc}`).join('<br>')}
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="btn btn-danger btn-sm" onclick="deleteItem('changelog', '${item.id}')">削除</button>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        if (html === '') {
+          html = '<p style="color:var(--text-muted);text-align:center;">投稿はありません</p>';
+        }
+
+        container.innerHTML = html;
+      } catch (err) {
+        container.innerHTML = `<p style="color:#ff4757;text-align:center;">読み込みエラー：${err.message}</p>`;
+      }
+    }
+
+    async function deleteItem(type, id) {
+      if (!confirm('本当に削除しますか？')) return;
+
+      try {
+        const res = await fetch(`/api/cms/${type}/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${adminToken}`
+          }
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast('削除しました', 'success');
+          loadItemsList();
+        } else {
+          showToast(data.error || '削除に失敗しました', 'error');
+        }
+      } catch (err) {
+        showToast('エラー：' + err.message, 'error');
+      }
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = message;
+      toast.className = 'toast ' + type;
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

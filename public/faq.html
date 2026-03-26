@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>よくある質問 - Sutemeado</title>
-  <meta name="description" content="Sutemeado一時メールサービスのよくある質問と回答です。">
+  <meta name="description" content="Sutemeado一時メールサービスのよくある質問と回答です。サービスの仕組み・使い方・安全性・保存期間などを掲載しています。">
   <meta name="theme-color" content="#0a0a0f">
   <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     .faq-page {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 2rem 1.5rem;
       min-height: 100vh;
@@ -53,19 +53,20 @@
       color: var(--text-primary);
       margin: 0;
     }
-    .faq-subtitle {
+    .faq-intro {
       color: var(--text-secondary);
       margin-bottom: 2rem;
+      line-height: 1.7;
     }
-    .faq-section {
+    .faq-toc {
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       padding: 1.5rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
-    .faq-section-title {
-      font-size: 1.125rem;
+    .faq-toc-title {
+      font-size: 1rem;
       font-weight: 600;
       color: var(--text-primary);
       margin-bottom: 1rem;
@@ -73,10 +74,60 @@
       align-items: center;
       gap: 0.5rem;
     }
+    .faq-toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.5rem;
+    }
+    .faq-toc-item a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+    .faq-toc-item a:hover {
+      background: var(--bg-primary);
+      color: var(--accent-primary);
+    }
+    .faq-toc-item a::before {
+      content: '#';
+      color: var(--accent-primary);
+      font-weight: 600;
+    }
+    .faq-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      scroll-margin-top: 2rem;
+    }
+    .faq-section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--accent-primary);
+    }
+    .faq-section-title svg {
+      color: var(--accent-primary);
+    }
     .faq-item {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       border-bottom: 1px solid var(--border-color);
-      padding-bottom: 1rem;
+      padding-bottom: 1.5rem;
     }
     .faq-item:last-child {
       border-bottom: none;
@@ -86,28 +137,70 @@
     .faq-question {
       font-weight: 600;
       color: var(--text-primary);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 1rem;
+      line-height: 1.5;
     }
     .faq-question::before {
-      content: 'Q.';
-      color: var(--accent-primary);
+      content: 'Q';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: #000;
       font-weight: 700;
+      font-size: 0.75rem;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
     .faq-answer {
       color: var(--text-secondary);
-      font-size: 0.875rem;
-      line-height: 1.6;
-      padding-left: 1.5rem;
+      font-size: 0.9375rem;
+      line-height: 1.8;
+      padding-left: 2rem;
     }
-    .faq-answer::before {
-      content: 'A.';
-      color: var(--accent-secondary);
-      font-weight: 700;
-      margin-left: -1.5rem;
-      margin-right: 0.5rem;
+    .faq-answer p {
+      margin-bottom: 0.75rem;
+    }
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+    .faq-answer ul {
+      margin: 0.75rem 0;
+      padding-left: 1.25rem;
+    }
+    .faq-answer li {
+      margin-bottom: 0.5rem;
+    }
+    .faq-answer strong {
+      color: var(--text-primary);
+    }
+    .faq-warning {
+      background: #ffb80015;
+      border: 1px solid #ffb80040;
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.875rem;
+    }
+    .faq-warning strong {
+      color: #ffb800;
+    }
+    .faq-tip {
+      background: #00f5a015;
+      border: 1px solid #00f5a040;
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.875rem;
+    }
+    .faq-tip strong {
+      color: #00f5a0;
     }
     .faq-footer {
       margin-top: 3rem;
@@ -116,6 +209,41 @@
       text-align: center;
       font-size: 0.875rem;
       color: var(--text-muted);
+    }
+    .contact-cta {
+      background: linear-gradient(135deg, var(--accent-primary)20, var(--accent-secondary)20);
+      border: 1px solid var(--accent-primary)40;
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .contact-cta-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .contact-cta-text {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    .contact-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent-primary);
+      color: #000;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .contact-cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-primary)40;
     }
     @media (max-width: 640px) {
       .faq-page {
@@ -128,6 +256,12 @@
         font-size: 1.25rem;
         width: 100%;
         margin-top: 0.5rem;
+      }
+      .faq-toc-list {
+        grid-template-columns: 1fr;
+      }
+      .faq-answer {
+        padding-left: 0;
       }
     }
   </style>
@@ -145,51 +279,427 @@
       <h1 class="faq-title">よくある質問</h1>
     </header>
 
-    <p class="faq-subtitle">Sutemeadoのご利用に関するよくある質問と回答です。</p>
+    <p class="faq-intro">
+      このページでは、Sutemeado（ステメアド）が提供する「一時メールアドレス（使い捨てメール・捨てメアド）」サービスについて、仕組み・使い方・安全性・保存期間などを掲載しています。一般的なユーザーから、Webエンジニア・アプリ開発者・テスターなど「一時メールを使いこなしたい人」向けの内容までカバーしています。
+    </p>
 
-    <div class="faq-section">
-      <h2 class="faq-section-title">
+    <nav class="faq-toc">
+      <div class="faq-toc-title">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="18" x2="20" y2="18"/>
+        </svg>
+        目次
+      </div>
+      <ul class="faq-toc-list">
+        <li class="faq-toc-item"><a href="#sec-what">サービス全体について</a></li>
+        <li class="faq-toc-item"><a href="#sec-how">使い方・基本仕様・挙動</a></li>
+        <li class="faq-toc-item"><a href="#sec-security">セキュリティ・プライバシー・匿名性</a></li>
+        <li class="faq-toc-item"><a href="#sec-lifetime">保存期間・有効期限・データ削除</a></li>
+        <li class="faq-toc-item"><a href="#sec-usage">おすすめの使い方・NGな使い方</a></li>
+        <li class="faq-toc-item"><a href="#sec-trouble">メールが届かない／表示がおかしい</a></li>
+        <li class="faq-toc-item"><a href="#sec-dev">開発者・テスター向けの利用</a></li>
+        <li class="faq-toc-item"><a href="#sec-legal">法的な観点・禁止事項・免責事項</a></li>
+      </ul>
+    </nav>
+
+    <!-- 1. サービス全体について -->
+    <section class="faq-section" id="sec-what">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="16" x2="12" y2="12"/>
           <line x1="12" y1="8" x2="12" y2="8"/>
         </svg>
-        基本について
+        サービス全体について（概要・特徴・他サービスとの違い）
       </h2>
 
       <div class="faq-item">
-        <div class="faq-question">メールが届かない場合は？</div>
+        <div class="faq-question">一時メール・使い捨てメールアドレスとは何ですか？</div>
         <div class="faq-answer">
-          ・送信側の迷惑メール設定を確認してください<br>
-          ・アドレスにタイプミスがないか確認してください<br>
-          ・5分程度待ってから受信ボックスを更新してください<br>
-          ・それでも届かない場合はお問い合わせください
+          <p>一時メール・使い捨てメールアドレスとは、一定期間だけ利用して破棄できるメールアドレスのことです。Sutemeadoでは、ブラウザでサイトにアクセスするだけでランダムなメールボックスIDが生成され、<code>xxxxxx@sutemeado.com</code>形式の一時メールアドレスが自動で割り当てられます。メール受信に特化しており、会員登録や本名・電話番号などの個人情報は<strong>一切必要ありません</strong>。</p>
         </div>
       </div>
 
       <div class="faq-item">
-        <div class="faq-question">パスワードを忘れた場合は？</div>
+        <div class="faq-question">なぜ一時メール（捨てメアド）を使う人が多いのですか？</div>
         <div class="faq-answer">
-          パスワードは復元できません。新しいアドレスを作成してください。
-          重要なメールは必ず別途保存してください。
+          <p>一時メールは<strong>「本物のメールアドレスをあまり公開したくない場面」</strong>でよく使われます。例えば：</p>
+          <ul>
+            <li>ちょっと試したいだけの海外サービス</li>
+            <li>信頼性がよく分からないサイト</li>
+            <li>メールアドレスを入れると広告メールが大量に来そうなフォーム</li>
+          </ul>
+          <p>メインのメールアドレスを登録してしまうと、迷惑メールが増えたり、長期間にわたってお知らせが届き続ける可能性があります。そのようなときに一時メールを使うことで、「テストやお試しには使うが、後腐れなく破棄できる」というメリットがあります。</p>
         </div>
       </div>
 
       <div class="faq-item">
-        <div class="faq-question">アドレスはいつまで有効ですか？</div>
+        <div class="faq-question">Sutemeadoの特徴は何ですか？</div>
         <div class="faq-answer">
-          アドレスは最後のアクセスから30日間有効です。30日間アクセスがない場合、
-          自動的に削除される場合があります。
+          <p>Sutemeadoは、<strong>シンプルさとスピード</strong>を重視した「一時メール受信専用サイト」です。</p>
+          <ul>
+            <li>デザインはミニマルで、ページ読み込み後すぐにメールアドレスが表示</li>
+            <li>パスワードでいつでもアクセス可能（ブラウザを変えてもログインできて安心）</li>
+            <li>UXを損なうような余計な画面遷移や広告クリックの強要はなし</li>
+            <li>FAQ・使い方・概要・利用規約・プライバシーポリシー・お問い合わせページを揃え、透明性高く運営</li>
+          </ul>
         </div>
       </div>
 
       <div class="faq-item">
-        <div class="faq-question">商用利用は可能ですか？</div>
+        <div class="faq-question">無料で使えますか？今後有料化する予定はありますか？</div>
         <div class="faq-answer">
-          はい、商用利用も可能です。ただし、サービスの性質上、
-          重要な業務での使用は推奨しません。利用規約をご確認ください。
+          <p>現在、Sutemeadoは<strong>完全無料</strong>で提供しており、登録料や月額料金などは一切不要です。将来的にサービスを継続するための運営コストは広告収入などでまかなう想定ですが、有料課金が必須になるような「課金しないと何もできない」サービスにする予定はありません。</p>
         </div>
       </div>
+
+      <div class="faq-item">
+        <div class="faq-question">携帯・スマホからでも利用できますか？PC限定ですか？</div>
+        <div class="faq-answer">
+          <p>スマートフォン・タブレット・PCのいずれからも利用可能です。ブラウザ（Chrome / Safari / Edge など）で sutemeado.com を開くだけで、端末やOSに依存せず一時メールアドレスを使えます。ただし、極端に古いブラウザや、JavaScriptを無効にしている環境では正しく表示されない可能性があります。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 使い方・基本仕様・挙動 -->
+    <section class="faq-section" id="sec-how">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <line x1="10" y1="9" x2="8" y2="9"/>
+        </svg>
+        使い方・基本仕様・挙動
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">基本的な使い方の流れを教えてください</div>
+        <div class="faq-answer">
+          <p>ざっくりとした使い方の流れは次の通りです：</p>
+          <ul>
+            <li><strong>1.</strong> ブラウザで sutemeado.com にアクセスします</li>
+            <li><strong>2.</strong> 画面上部に表示される「現在の一時メールアドレス」をコピーします</li>
+            <li><strong>3.</strong> 試したいサービスやフォームの「メールアドレス入力欄」にそのアドレスを貼り付けて送信します</li>
+            <li><strong>4.</strong> 数秒〜数十秒ほど待つと、画面下部の受信一覧にメールが届きます</li>
+            <li><strong>5.</strong> メールをクリックすると本文が表示されます</li>
+          </ul>
+          <div class="faq-tip">
+            <strong>ヒント：</strong> パスワードは必ず保存してください。同じアドレスに再度アクセスするには、メールアドレスとパスワードが必要です。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">メールアドレスは毎回変わりますか？同じアドレスを使い続けることはできますか？</div>
+        <div class="faq-answer">
+          <p>はい、同じアドレスを使い続けることができます。Sutemeadoでは<strong>パスワードでアクセス</strong>する仕組みになっているため、ブラウザのクッキーや端末に依存せず、どこからでも同じメールボックスにアクセスできます。</p>
+          <p>まったく新しいアドレスに切り替えたい場合は、画面の「新しいメールアドレスを作成」ボタンを利用してください。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">メールはどのくらいの頻度で自動更新されますか？手動更新は必要ですか？</div>
+        <div class="faq-answer">
+          <p>受信一覧は<strong>約5秒ごと</strong>で自動更新されます。そのため、何もしなくても画面を開いたままにしておけば、ある程度リアルタイムにメールの到着が反映されます。すぐに反映させたい場合には「更新」ボタンをクリックすることで、即座に最新の状態を取得することができます。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">添付ファイル付きのメールも受信できますか？</div>
+        <div class="faq-answer">
+          <p>添付ファイル付きのメール自体は受信対象になりますが、ファイルの種類やサイズ、送信元サービスの仕様により、正しく開けない・ダウンロードできない場合があります。特にセキュリティリスクの高い実行ファイル（.exe など）は、開く前によくご確認ください。</p>
+          <div class="faq-warning">
+            <strong>注意：</strong> 重要なファイルの受け取りや長期保存が必要なファイルのやり取りには、一時メールではなく、通常のメールアドレスの利用を強くおすすめします。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">日本語メールやHTMLメールの表示は対応していますか？</div>
+        <div class="faq-answer">
+          <p>日本語のテキストメールおよび一般的なHTMLメールの表示を前提に作られていますが、一部のメールクライアント固有の装飾やスクリプトを含むメールは、崩れて表示されることがあります。特に、外部の画像リソースやスタイルシートに大きく依存しているメールは、送信元の仕様変更などの影響でレイアウト崩れが起きることがあります。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">送信（こちらからメールを送る）機能はありますか？</div>
+        <div class="faq-answer">
+          <p>現時点のSutemeadoは<strong>「受信専用の一時メールサービス」</strong>です。迷惑メール送信やなりすましといった悪用防止の観点から、一時メールアドレスから任意の宛先へメールを送信する機能は提供していません。今後も、送信機能を一般向けに開放する予定はありません。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. セキュリティ・プライバシー・匿名性 -->
+    <section class="faq-section" id="sec-security">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        セキュリティ・プライバシー・匿名性
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">Sutemeadoは安全ですか？HTTPSに対応していますか？</div>
+        <div class="faq-answer">
+          <p>Sutemeadoは<strong>HTTPS（TLS）による暗号化通信</strong>に対応しており、ブラウザとサーバー間の通信は第三者から直接読み取られにくいよう保護されています。ただし、インターネット上のメールの仕組みそのものはもともと「絵はがきのようなもの」とよく例えられるように、経路上のすべてが完全に暗号化されているわけではありません。</p>
+          <div class="faq-warning">
+            <strong>重要：</strong> 非常に機密性の高い情報のやり取りをしたい場合は、一時メールではなく、暗号化メールやPGPなど、より強固な手段の利用を検討してください。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">匿名性はどこまで保証されますか？IPアドレスは保存されますか？</div>
+        <div class="faq-answer">
+          <p>一時メールは「メールアドレスの匿名性」を重視したサービスです。Sutemeadoでは、登録時に本名や電話番号、住所を入力する必要はなく、ブラウザにアクセスするだけで使うことができます。</p>
+          <p>しかし、インターネットサービスである以上、アクセスログやエラーログなど最低限の技術的情報（IPアドレスやUser-Agent等）が一時的にサーバーに記録される場合があります。この点は、ほとんどのウェブサービスと同様です。プライバシーの詳細は<a href="/privacy.html" style="color:var(--accent-primary);">プライバシーポリシー</a>をご確認ください。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">他人に自分のメールを見られる可能性はありますか？</div>
+        <div class="faq-answer">
+          <p>一時メールサービス全般に言えることですが、「メールアドレスとパスワード」を知られてしまうと、同じ受信ボックスを開かれる可能性があります。Sutemeadoでは、ランダムな文字列のアドレスと、設定されたパスワードの両方が必要な仕様にすることで、第三者からのアクセスを困難にするよう配慮しています。</p>
+          <div class="faq-warning">
+            <strong>注意：</strong> 完全な秘匿性を保証するものではありません。どうしても第三者に見られては困る情報や、本名・住所・クレジットカード情報などは、一時メール経由で受信しないことを強くおすすめします。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">重要なアカウント（銀行・メインSNSなど）に使ってもいいですか？</div>
+        <div class="faq-answer">
+          <p><strong>結論としてはおすすめしません。</strong>パスワードリセットが必要になるような重要アカウントを一時メールで登録してしまうと、後からメールボックスにアクセスできなくなったり、期限切れでメールが消えてしまい、アカウント復旧が困難になるリスクがあります。これは海外の一時メールサービスでも実際によくあるトラブルとして報告されています。</p>
+          <p>重要なアカウントには、<strong>必ず自分が長期的に管理できる通常のメールアドレス</strong>を利用してください。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">スパムメールや危険なリンクを踏んでしまう心配は？</div>
+        <div class="faq-answer">
+          <p>一時メールであっても、届くメールの安全性は保証されません。不審なリンクや添付ファイルを開くかどうかは、最終的にはユーザー自身の判断になります。「一時メールだから安全」ではなく、「本物のメールアドレスを晒さないための盾」として考えていただくのが適切です。</p>
+          <div class="faq-tip">
+            <strong>対策：</strong> 明らかに不審な送信元・タイトルのメールは、中身を開かず無視することをおすすめします。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 保存期間・有効期限・データ削除 -->
+    <section class="faq-section" id="sec-lifetime">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        保存期間・有効期限・データ削除について
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">メールはどのくらい保存されますか？</div>
+        <div class="faq-answer">
+          <p>Sutemeadoでは、サーバーの負荷や運用ポリシーに応じて保存件数・期間を適宜調整していますが、基本的な方針としては<strong>「最新の一定件数（目安として10件前後）を短期間保持し、古いメールから順次削除していく」</strong>という動作になっています。</p>
+          <div class="faq-tip">
+            <strong>ポイント：</strong> 一時メールは「長期間の保管」ではなく「テストや一時的な受信」のための仕組みである点をご理解ください。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">メールやアドレスが消えたあとに復元することはできますか？</div>
+        <div class="faq-answer">
+          <p><strong>一度削除されたメールの復元はできません。</strong>サーバー側でバックアップから個別にメールを取り出すといった対応も、一時メールの性質上行っていません。重要な情報や後から見返す可能性がある内容は、必要に応じてコピー・スクリーンショットなどで必ず別途保存してください。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">アドレス自体に「期限」はありますか？</div>
+        <div class="faq-answer">
+          <p>Sutemeadoでは「何分で必ず失効」というような固定のタイマー制ではなく、主にサーバー側の負荷・ログ管理の都合でアドレスやメールデータがクリーンアップされます。そのため、しばらくアクセスがなかったメールボックスは、あるタイミングで自然に消えることがあります。<strong>「いつ消えても問題ない用途」でお使いください。</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. おすすめの使い方・NGな使い方・ユースケース集 -->
+    <section class="faq-section" id="sec-usage">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 20h9"/>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+        おすすめの使い方・NGな使い方・ユースケース集
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">おすすめの使い方（一般ユーザー編）</div>
+        <div class="faq-answer">
+          <p>一般的なユーザー向けの、代表的な使い方は次の通りです：</p>
+          <ul>
+            <li>気になるけれど信頼性がよく分からないサービスの「お試し登録」</li>
+            <li>すぐに解除できるとは限らないメルマガ・キャンペーン登録</li>
+            <li>ダウンロードリンク取得のためだけにメールアドレスが必要な場面</li>
+            <li>クーポン受け取り・会員登録前の動作確認</li>
+          </ul>
+          <p>こうした用途で一時メールを使うことで、メインのメールアドレスが迷惑メールであふれたり、長期間にわたって広告メールが届き続けたりするリスクを減らすことができます。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">おすすめの使い方（開発者・テスター編）</div>
+        <div class="faq-answer">
+          <p>開発者・テスターにとって、一時メールは非常に便利な道具です：</p>
+          <ul>
+            <li>Webアプリの「新規登録」「パスワードリセット」「メール通知」の動作確認</li>
+            <li>フォームからの送信テストや、メールテンプレートの表示崩れチェック</li>
+            <li>多言語メールの文面を、実際のメールとしてどのように見えるか確認する用途</li>
+            <li>ステージング環境やローカル環境からのテスト配信先として使う</li>
+          </ul>
+          <p>開発中、テストのたびに自分の個人アドレスや社用アドレスを使うと、受信トレイがテストメールで埋まりやすくなります。一時メールを使えば、テスト用のメールはテスト用の箱に隔離されるので、実運用のメールときれいに分けることができます。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">やめておいた方がよい使い方（NG例）</div>
+        <div class="faq-answer">
+          <p>便利な反面、「一時メールには向いていない」ケースもあります：</p>
+          <ul>
+            <li>銀行口座、証券口座など金融サービスのアカウント登録</li>
+            <li>メインで使うSNSアカウント（X / Instagram / Facebook など）の登録</li>
+            <li>身分証アップロードなどの本人確認が必須のサービス</li>
+            <li>長期にわたり連絡が届く前提のサブスク契約や重要なお知らせ</li>
+          </ul>
+          <div class="faq-warning">
+            <strong>警告：</strong> これらの用途で一時メールを使うと、後から「メールが見られなくなった」「パスワードをリセットできない」といったトラブルに直結します。一時メールはあくまで「テスト用・お試し用・短期利用」に留めてください。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">認証コード（ワンタイムパスワード）受信に使っても大丈夫ですか？</div>
+        <div class="faq-answer">
+          <p>技術的には、メールに記載された認証コードを受信して利用することはできます。しかし、一時メールは短期間でメールが削除されるため、後からログインし直したり、再度コードを確認したりする用途には向きません。</p>
+          <p>また、一部のサービスは「捨てメアドドメイン」を丸ごとブロックしており、「そもそも認証メールが届かない」というケースもあります。一時メールを使う場合は、「認証が通らなくても最悪構わない場面」に限定してください。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. メールが届かない／表示がおかしい -->
+    <section class="faq-section" id="sec-trouble">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        メールが届かない／表示がおかしいときの対処
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">メールが届きません。何を確認すればいいですか？</div>
+        <div class="faq-answer">
+          <p>メールが届かない場合、次のようなポイントを順番に確認してみてください：</p>
+          <ul>
+            <li>メールアドレスをコピーする際に、前後に空白や改行が紛れ込んでいないか</li>
+            <li>送信先のアドレスを間違えていないか（似た文字列との打ち間違いに注意）</li>
+            <li>送信元サービス側で「sutemeado.com を含む一時メール」ブロックしていないか</li>
+            <li>送信からまだ数秒しか経っていない場合は、しばらく待ってから「更新」ボタンで再読み込みする</li>
+            <li>サービス側が「メール送信完了」と表示していても、内部でエラーになっている可能性もあります</li>
+          </ul>
+          <p>特定のサービスだけがどうしても届かない場合、そのサービス側が「一時メール全般」を拒否している可能性があります。その場合は、通常のメールアドレスを使用するしかない場合もあります。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">メール本文が真っ白です。壊れているのでしょうか？</div>
+        <div class="faq-answer">
+          <p>HTML形式のメールの場合、外部の画像やスタイルシートがブロックされていたり、JavaScriptに依存した特殊なレイアウトになっていると、正常に表示されない場合があります。送信元のメールクライアントがOutlookや一部の独自サービスの場合、レイアウトが崩れたり、真っ白に見えたりすることがあります。</p>
+          <div class="faq-tip">
+            <strong>対処法：</strong> 重要なメールであれば、別途Gmailなどの通常のメールクライアントでも表示できるか確認することをおすすめします。
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">スマホだと表示が崩れています。対処法はありますか？</div>
+        <div class="faq-answer">
+          <p>スマホの画面幅が極端に狭い場合や、フォントサイズの自動拡大が有効になっている場合、本文が読みづらくなることがあります。ブラウザの「PC版サイトを表示」機能を試してみると、レイアウトが見やすくなることがあります。それでも読みにくい場合は、テキストをコピーしてメモ帳アプリなどに貼り付けて読む方法もあります。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 開発者・テスター向けの利用 -->
+    <section class="faq-section" id="sec-dev">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+        開発者・テスター向けの利用に関する質問
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">Webアプリや自作サービスのメール送信テストに使ってもいいですか？</div>
+        <div class="faq-answer">
+          <p>はい、<strong>テスト用途での利用は歓迎です</strong>。会員登録メール・パスワードリセットメール・通知メールなど、実際にメールが届くかどうか、どのような表示になるかといった確認にご活用ください。ただし、スパム行為に該当するような大量送信・不特定多数への広告メール送信テストなどは利用規約違反となる場合がありますのでお控えください。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">APIはありますか？自動テストに組み込みたいです</div>
+        <div class="faq-answer">
+          <p>はい、<a href="/" onclick="event.preventDefault(); alert('トップページで「API」メニューをご確認ください');" style="color:var(--accent-primary);">APIを提供しています</a>。詳細はトップページの「API」メニューからご確認ください。</p>
+          <p>自動テストに組み込む場合は、ブラウザを経由したE2Eテスト（Selenium / Playwrightなど）で画面上に表示されるメールを取得する形もご利用いただけます。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">負荷テストや大量メール送信のテストに使っても大丈夫ですか？</div>
+        <div class="faq-answer">
+          <p>大量のメールを一度に送信するような負荷テスト用途での利用は<strong>お控えください</strong>。サービス全体の安定運用のため、過剰な負荷と判断したアクセスについては、一時的な制限やアクセスブロックなどの対応を行う場合があります。大規模なテストを計画している場合は、事前に<a href="/contact.html" style="color:var(--accent-primary);">お問い合わせ</a>からご相談ください。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. 法的な観点・禁止事項・免責事項 -->
+    <section class="faq-section" id="sec-legal">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        法的な観点・禁止事項・免責事項
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">違法行為や迷惑行為に使うことはできますか？</div>
+        <div class="faq-answer">
+          <p>Sutemeadoを含む一時メールサービスを、<strong>違法行為・迷惑行為・嫌がらせ行為などに利用することは固くお断りしています。</strong>サービスの特性上、一定の匿名性はありますが、法令に基づく要請があった場合には、関係各所と協力する場合があります。詳細は<a href="/terms.html" style="color:var(--accent-primary);">利用規約</a>を必ずご確認ください。</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">サービスの利用によって発生したトラブルは誰の責任ですか？</div>
+        <div class="faq-answer">
+          <p>Sutemeadoは「現状有姿（As Is）」で提供しており、利用者が本サービスを利用したことにより発生した損害・トラブルなどについては、<strong>原則として責任を負いません</strong>。一時メールというサービスの特性上、データ消失やメール未達などのリスクを理解したうえでご利用ください。くわしくは<a href="/terms.html" style="color:var(--accent-primary);">利用規約</a>をご参照ください。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <div class="contact-cta">
+      <div class="contact-cta-title">さらに質問がありますか？</div>
+      <div class="contact-cta-text">お問い合わせはInstagram DMからお気軽にどうぞ</div>
+      <a href="https://instagram.com/not_rare.tar" target="_blank" rel="noopener noreferrer" class="contact-cta-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+        @not_rare.tar にDMする
+      </a>
     </div>
 
     <div class="faq-footer">
