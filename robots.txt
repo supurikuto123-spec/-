@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Allow: /api/blog/posts
+Allow: /api/blog/popular
+Allow: /api/blog/categories
+Allow: /api/blog/post/
 Disallow: /data/
 Disallow: /lib/
 
