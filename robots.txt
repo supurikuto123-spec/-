@@ -1,3 +1,7 @@
 User-agent: *
 Disallow: /api/
-Sitemap: https://tomy634.com/sitemap.xml
+Allow: /api/blog/posts
+Allow: /api/blog/popular
+Allow: /api/blog/categories
+Allow: /api/blog/post/
+Sitemap: https://sutemeado.com/sitemap.xml
