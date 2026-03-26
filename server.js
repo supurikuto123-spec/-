@@ -32,7 +32,6 @@ console.log(`💾 Database path: ${DB_PATH}`);
 const mailStore = new MailStore(DB_PATH);
 
 // SQLiteデータベース初期化（ブログ用）
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.db');
 const db = new Database(DB_PATH);
 
 // ブログテーブル作成
