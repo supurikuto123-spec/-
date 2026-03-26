@@ -188,6 +188,11 @@
       font-size: 0.875rem;
       color: var(--text-muted);
     }
+    .changelog-empty {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--text-muted);
+    }
     @media (max-width: 640px) {
       .changelog-page {
         padding: 1rem;
@@ -230,6 +235,8 @@
     <p class="changelog-subtitle">Sutemeadoのバージョン履歴と変更ログです。</p>
 
     <div class="timeline">
+      <!-- テンプレート: ここから新しいバージョンを追加 -->
+      <!--
       <div class="timeline-item">
         <div class="timeline-date">2026年3月26日</div>
         <div class="timeline-version">
@@ -240,152 +247,31 @@
           <ul class="timeline-changes">
             <li class="timeline-change">
               <span class="change-type feat">FEAT</span>
-              <span class="change-desc">サイト案内メニューを追加（稼働状況・お知らせ・更新状況・お問い合わせ）</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">稼働状況ページを実装、リアルタイムでシステム状態を確認可能</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type improve">IMPROVE</span>
-              <span class="change-desc">ドロワーメニューの構造を改善</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-date">2026年3月25日</div>
-        <div class="timeline-version">
-          v2.0.1
-          <span class="timeline-badge patch">PATCH</span>
-        </div>
-        <div class="timeline-content">
-          <ul class="timeline-changes">
-            <li class="timeline-change">
-              <span class="change-type fix">FIX</span>
-              <span class="change-desc">データベースがGit管理下にありアップデート時にデータが消える問題を修正</span>
+              <span class="change-desc">新機能の説明</span>
             </li>
             <li class="timeline-change">
               <span class="change-type fix">FIX</span>
-              <span class="change-desc">server.jsの重複DB定義による構文エラーを修正</span>
+              <span class="change-desc">バグ修正の説明</span>
             </li>
             <li class="timeline-change">
-              <span class="change-type fix">FIX</span>
-              <span class="change-desc">update.shが未完成のmainブランチを参照していた問題を修正</span>
+              <span class="change-type improve">IMPROVE</span>
+              <span class="change-desc">改善の説明</span>
             </li>
           </ul>
         </div>
       </div>
+      -->
 
-      <div class="timeline-item">
-        <div class="timeline-date">2026年3月24日</div>
-        <div class="timeline-version">
-          v2.0.0
-          <span class="timeline-badge major">MAJOR</span>
-        </div>
-        <div class="timeline-content">
-          <ul class="timeline-changes">
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">ネオンテーマの新デザインを正式リリース</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">パスワード認証機能を追加</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">グローバル統計メーターを追加</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">ブログ機能を追加</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type improve">IMPROVE</span>
-              <span class="change-desc">モバイルレスポンシブ対応を強化</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type improve">IMPROVE</span>
-              <span class="change-desc">SMTPサーバーの安定性を向上</span>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <!-- バッジの種類: major (メジャー), minor (マイナー), patch (パッチ) -->
+      <!-- 変更タイプ: feat (新機能), fix (修正), improve (改善), docs (ドキュメント) -->
 
-      <div class="timeline-item">
-        <div class="timeline-date">2026年3月20日</div>
-        <div class="timeline-version">
-          v1.2.0
-          <span class="timeline-badge minor">MINOR</span>
-        </div>
-        <div class="timeline-content">
-          <ul class="timeline-changes">
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">APIドキュメントページを追加</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type improve">IMPROVE</span>
-              <span class="change-desc">メール本文の表示を改善</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-date">2026年3月15日</div>
-        <div class="timeline-version">
-          v1.1.0
-          <span class="timeline-badge minor">MINOR</span>
-        </div>
-        <div class="timeline-content">
-          <ul class="timeline-changes">
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">利用規約・プライバシーポリシーページを追加</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type improve">IMPROVE</span>
-              <span class="change-desc">SEO対策を強化（メタタグ、構造化データ）</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-date">2026年3月10日</div>
-        <div class="timeline-version">
-          v1.0.0
-          <span class="timeline-badge major">MAJOR</span>
-        </div>
-        <div class="timeline-content">
-          <ul class="timeline-changes">
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">Sutemeado一時メールサービスを正式リリース</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">一時メールアドレスの生成機能</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">SMTPサーバーによるメール受信機能</span>
-            </li>
-            <li class="timeline-change">
-              <span class="change-type feat">FEAT</span>
-              <span class="change-desc">REST APIの提供</span>
-            </li>
-          </ul>
-        </div>
+      <div class="changelog-empty">
+        <p>準備中</p>
       </div>
     </div>
 
     <div class="changelog-footer">
       <p>&copy; 2026 Sutemeado - ステメアド</p>
-      <p style="margin-top: 0.5rem; font-size: 0.75rem;">バージョン番号はSemantic Versioningに基づいています</p>
     </div>
   </div>
 </body>

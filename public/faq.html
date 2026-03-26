@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>よくある質問 - Sutemeado</title>
+  <meta name="description" content="Sutemeado一時メールサービスのよくある質問と回答です。">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .faq-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+    .faq-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .faq-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .faq-back-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      border-color: var(--accent-primary);
+    }
+    .faq-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .faq-subtitle {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    .faq-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .faq-section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+    .faq-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .faq-question {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .faq-question::before {
+      content: 'Q.';
+      color: var(--accent-primary);
+      font-weight: 700;
+    }
+    .faq-answer {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      padding-left: 1.5rem;
+    }
+    .faq-answer::before {
+      content: 'A.';
+      color: var(--accent-secondary);
+      font-weight: 700;
+      margin-left: -1.5rem;
+      margin-right: 0.5rem;
+    }
+    .faq-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    @media (max-width: 640px) {
+      .faq-page {
+        padding: 1rem;
+      }
+      .faq-header {
+        flex-wrap: wrap;
+      }
+      .faq-title {
+        font-size: 1.25rem;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="faq-page">
+    <header class="faq-header">
+      <a href="/" class="faq-back-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12,19 5,12 12,5"/>
+        </svg>
+        戻る
+      </a>
+      <h1 class="faq-title">よくある質問</h1>
+    </header>
+
+    <p class="faq-subtitle">Sutemeadoのご利用に関するよくある質問と回答です。</p>
+
+    <div class="faq-section">
+      <h2 class="faq-section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="8"/>
+        </svg>
+        基本について
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">メールが届かない場合は？</div>
+        <div class="faq-answer">
+          ・送信側の迷惑メール設定を確認してください<br>
+          ・アドレスにタイプミスがないか確認してください<br>
+          ・5分程度待ってから受信ボックスを更新してください<br>
+          ・それでも届かない場合はお問い合わせください
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">パスワードを忘れた場合は？</div>
+        <div class="faq-answer">
+          パスワードは復元できません。新しいアドレスを作成してください。
+          重要なメールは必ず別途保存してください。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">アドレスはいつまで有効ですか？</div>
+        <div class="faq-answer">
+          アドレスは最後のアクセスから30日間有効です。30日間アクセスがない場合、
+          自動的に削除される場合があります。
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">商用利用は可能ですか？</div>
+        <div class="faq-answer">
+          はい、商用利用も可能です。ただし、サービスの性質上、
+          重要な業務での使用は推奨しません。利用規約をご確認ください。
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-footer">
+      <p>&copy; 2026 Sutemeado - ステメアド</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -130,34 +130,6 @@
     .contact-link:hover {
       text-decoration: underline;
     }
-    .faq-section {
-      margin-top: 2rem;
-    }
-    .faq-item {
-      margin-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 1rem;
-    }
-    .faq-item:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-    .faq-question {
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .faq-answer {
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      line-height: 1.6;
-      padding-left: 0;
-    }
     .contact-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
@@ -224,7 +196,6 @@
 
     <p class="contact-intro">
       Sutemeadoに関するご質問・ご意見・不具合報告などがございましたら、以下の方法でご連絡ください。
-      通常2営業日以内にご返答いたします。
     </p>
 
     <div class="contact-section">
@@ -238,15 +209,16 @@
         <div class="contact-method">
           <div class="contact-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-              <polyline points="22 6 12 13 2 6"/>
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
             </svg>
           </div>
           <div class="contact-info">
-            <div class="contact-label">メールでのお問い合わせ</div>
-            <div class="contact-value">公式メールアドレスに直接ご連絡ください</div>
-            <a href="mailto:support@sutemeado.com" class="contact-link">
-              support@sutemeado.com
+            <div class="contact-label">Instagram DM</div>
+            <div class="contact-value">@not_rare.tar へのダイレクトメッセージでお問い合わせください</div>
+            <a href="https://instagram.com/not_rare.tar" target="_blank" rel="noopener noreferrer" class="contact-link">
+              @not_rare.tar を開く
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                 <polyline points="15 3 21 3 21 9"/>
@@ -254,104 +226,6 @@
               </svg>
             </a>
           </div>
-        </div>
-
-        <div class="contact-method">
-          <div class="contact-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-          </div>
-          <div class="contact-info">
-            <div class="contact-label">一時メールでのお問い合わせ</div>
-            <div class="contact-value">Sutemeadoのアドレスから直接送信いただけます</div>
-            <span class="contact-value" style="color: var(--text-muted);">作成したアドレスから support@sutemeado.com へ</span>
-          </div>
-        </div>
-
-        <div class="contact-method">
-          <div class="contact-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-            </svg>
-          </div>
-          <div class="contact-info">
-            <div class="contact-label">GitHub Issues</div>
-            <div class="contact-value">技術的な問題や機能要望はGitHubで管理しています</div>
-            <a href="https://github.com/supurikuto123-spec/-/issues" target="_blank" rel="noopener noreferrer" class="contact-link">
-              GitHub Issuesを開く
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                <polyline points="15 3 21 3 21 9"/>
-                <line x1="10" y1="14" x2="21" y2="3"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="contact-section faq-section">
-      <h2 class="contact-section-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="16" x2="12" y2="12"/>
-          <line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-        よくある質問
-      </h2>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          メールが届かない場合は？
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-        <div class="faq-answer">
-          ・送信側の迷惑メール設定を確認してください<br>
-          ・アドレスにタイプミスがないか確認してください<br>
-          ・5分程度待ってから受信ボックスを更新してください<br>
-          ・それでも届かない場合はお問い合わせください
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          パスワードを忘れた場合は？
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-        <div class="faq-answer">
-          パスワードは復元できません。新しいアドレスを作成してください。
-          重要なメールは必ず別途保存してください。
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          アドレスはいつまで有効ですか？
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-        <div class="faq-answer">
-          アドレスは最後のアクセスから30日間有効です。30日間アクセスがない場合、
-          自動的に削除される場合があります。
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          商用利用は可能ですか？
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-        <div class="faq-answer">
-          はい、商用利用も可能です。ただし、サービスの性質上、
-          重要な業務での使用は推奨しません。利用規約をご確認ください。
         </div>
       </div>
     </div>
@@ -367,7 +241,6 @@
       </div>
       <p class="disclaimer-text">
         ・お問い合わせ対応はベストエフォートで行っており、返答を保証するものではありません<br>
-        ・技術的な問い合わせはGitHub Issuesでの対応を優先します<br>
         ・迷惑行為や業務妨害となるお問い合わせはお控えください
       </p>
     </div>

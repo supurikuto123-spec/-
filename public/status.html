@@ -233,24 +233,16 @@
           <div class="status-indicator online"></div>
           <span class="status-card-title">メール受信サービス</span>
         </div>
-        <div class="status-card-value" id="total-addresses">-</div>
-        <div class="status-card-label">作成済みアドレス数</div>
+        <div class="status-card-value" id="stat-addresses">-</div>
+        <div class="status-card-label">作成アドレス</div>
       </div>
       <div class="status-card">
         <div class="status-card-header">
           <div class="status-indicator online"></div>
           <span class="status-card-title">SMTPサーバー</span>
         </div>
-        <div class="status-card-value" id="total-mails">-</div>
-        <div class="status-card-label">受信済みメール数</div>
-      </div>
-      <div class="status-card">
-        <div class="status-card-header">
-          <div class="status-indicator online"></div>
-          <span class="status-card-title">APIサービス</span>
-        </div>
-        <div class="status-card-value" id="active-mailboxes">-</div>
-        <div class="status-card-label">アクティブメールボックス</div>
+        <div class="status-card-value" id="stat-mails">-</div>
+        <div class="status-card-label">受信メール</div>
       </div>
     </div>
 
@@ -312,15 +304,11 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="16" x2="12" y2="12"/>
-          <line x1="12" y1="8" x2="12.01" y2="8"/>
+          <line x1="12" y1="8" x2="12" y2="8"/>
         </svg>
         システム情報
       </h2>
       <ul class="status-list">
-        <li class="status-list-item">
-          <span class="status-list-label">現在の時刻</span>
-          <span class="status-list-value" id="current-time">-</span>
-        </li>
         <li class="status-list-item">
           <span class="status-list-label">サービス稼働時間</span>
           <span class="status-list-value" id="uptime">-</span>
@@ -348,9 +336,8 @@
         const endTime = performance.now();
         
         const stats = data.stats || {};
-        document.getElementById('total-addresses').textContent = stats.totalAddresses || stats.total_users || '0';
-        document.getElementById('total-mails').textContent = stats.totalMails || stats.total_emails || '0';
-        document.getElementById('active-mailboxes').textContent = stats.activeMailboxes || stats.active_mailboxes || '0';
+        document.getElementById('stat-addresses').textContent = (stats.totalAddresses || stats.total_users || 0).toLocaleString();
+        document.getElementById('stat-mails').textContent = (stats.totalMails || stats.total_emails || 0).toLocaleString();
         const uptimeSeconds = data.uptime || 0;
         const hours = Math.floor(uptimeSeconds / 3600);
         const minutes = Math.floor((uptimeSeconds % 3600) / 60);
@@ -363,7 +350,6 @@
         console.error('Status fetch failed:', error);
       }
       
-      document.getElementById('current-time').textContent = new Date().toLocaleString('ja-JP');
       document.getElementById('last-updated').textContent = '最終更新: ' + new Date().toLocaleString('ja-JP');
     }
 
