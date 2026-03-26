@@ -54,11 +54,14 @@ fi
 if [ -d ".git" ]; then
     echo "🔄 既存のリポジトリを更新..."
     git fetch origin
-    git reset --hard origin/main
+    # 完成版ブランチを使用
+    git checkout genspark_ai_developer
+    git reset --hard origin/genspark_ai_developer
 else
     echo "📥 リポジトリをクローン..."
     rm -rf * .* 2>/dev/null || true
-    git clone $REPO_URL .
+    # 完成版ブランチを指定してクローン
+    git clone --branch genspark_ai_developer --single-branch $REPO_URL .
 fi
 
 # 依存関係をインストール

@@ -30,7 +30,9 @@ echo "📂 現在のブランチ: $CURRENT_BRANCH"
 # 最新のコードを取得
 echo "📥 GitHubから最新コードを取得..."
 git fetch origin
-git reset --hard origin/main
+# 完成版ブランチを使用
+git checkout genspark_ai_developer
+git reset --hard origin/genspark_ai_developer
 
 # 依存関係を更新
 echo "📦 依存関係を確認..."
