@@ -83,8 +83,17 @@ console.log('✅ Blog database initialized');
 
 // ミドルウェア
 app.use(cors());
-app.use(express.json());
-app.use(express.static('public'));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.static('public', { maxAge: '1h' }));
+
+// リクエストタイムアウトミドルウェア（30秒）
+app.use((req, res, next) => {
+  req.setTimeout(30000, () => {
+    console.error(`[TIMEOUT] Request timeout: ${req.method} ${req.url}`);
+    res.status(504).json({ success: false, error: 'Request timeout' });
+  });
+  next();
+});
 
 // ===== API Routes =====
 
@@ -375,6 +384,11 @@ app.put('/api/address/:address/password', async (req, res) => {
     console.error(err);
     res.status(500).json({ success: false, error: 'Server error' });
   }
+});
+
+// 軽量ヘルスチェック（ロードバランサー/監視用）
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: Date.now() });
 });
 
 // サーバーステータス
@@ -747,41 +761,51 @@ async function startServer() {
       callback();
     },
     
-    // メール受信時の処理
+    // メール受信時の処理（非同期化してイベントループをブロックしない）
     onData(stream, session, callback) {
-      simpleParser(stream)
+      // タイムアウト設定（30秒）
+      const timeout = setTimeout(() => {
+        console.error('⏱️ SMTP processing timeout');
+        callback(new Error('Processing timeout'));
+      }, 30000);
+      
+      simpleParser(stream, { maxSize: 10 * 1024 * 1024 }) // 10MB制限
         .then(async parsed => {
+          clearTimeout(timeout);
           console.log(`📨 Email received: From=${parsed.from?.text}, Subject=${parsed.subject}`);
-          console.log(`   To: ${parsed.to?.text || 'N/A'}`);
           
           // 宛先アドレスを抽出
-          const recipients = [];
+          const recipients = new Set();
           
           if (parsed.to) {
             if (Array.isArray(parsed.to)) {
               parsed.to.forEach(addr => {
-                if (addr.address) recipients.push(addr.address.toLowerCase());
+                if (addr.address) recipients.add(addr.address.toLowerCase());
               });
             } else if (parsed.to.address) {
-              recipients.push(parsed.to.address.toLowerCase());
+              recipients.add(parsed.to.address.toLowerCase());
             }
           }
           
           // envelope.rcptTo からも取得（BCC対応）
           if (session.envelope && session.envelope.rcptTo) {
             session.envelope.rcptTo.forEach(addr => {
-              const email = addr.address.toLowerCase();
-              if (!recipients.includes(email)) {
-                recipients.push(email);
-              }
+              recipients.add(addr.address.toLowerCase());
             });
           }
           
-          console.log(`   Recipients: ${recipients.join(', ')}`);
+          const recipientList = Array.from(recipients).filter(r => r.endsWith('@sutemeado.com'));
+          console.log(`   Recipients: ${recipientList.join(', ') || 'none'}`);
           
-          // 各宛先にメールを保存
-          for (const address of recipients) {
-            if (address.endsWith('@sutemeado.com')) {
+          // 大量の宛先を制限（スパム対策）
+          if (recipientList.length > 50) {
+            console.warn(`   ⚠️ Too many recipients (${recipientList.length}), limiting to 50`);
+            recipientList.splice(50);
+          }
+          
+          // 非同期でメールを処理（イベントループをブロックしない）
+          setImmediate(async () => {
+            for (const address of recipientList) {
               try {
                 const mail = await mailStore.addMail(address, {
                   subject: parsed.subject || '(件名なし)',
@@ -790,20 +814,22 @@ async function startServer() {
                   html: parsed.html || null
                 });
                 if (mail) {
-                  console.log(`   ✅ Saved to mailbox: ${address} (ID: ${mail.id})`);
+                  console.log(`   ✅ Saved: ${address} (ID: ${mail.id})`);
                 } else {
-                  console.log(`   ⚠️ Mailbox not found for: ${address}`);
+                  console.log(`   ⚠️ Mailbox not found: ${address}`);
                 }
               } catch (err) {
-                console.error(`   ❌ Error saving mail for ${address}:`, err);
+                console.error(`   ❌ Error saving for ${address}:`, err.message);
               }
             }
-          }
+          });
           
+          // すぐにcallbackを呼び出し（非同期処理はバックグラウンドで続行）
           callback();
         })
         .catch(err => {
-          console.error('❌ Failed to parse email:', err);
+          clearTimeout(timeout);
+          console.error('❌ Failed to parse email:', err.message);
           callback(new Error('Failed to parse email'));
         });
     }
