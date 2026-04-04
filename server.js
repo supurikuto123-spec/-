@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const { SMTPServer } = require('smtp-server');
 const simpleParser = require('mailparser').simpleParser;
 const MailStore = require('./lib/mailstore');
@@ -10,12 +11,41 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const SMTP_PORT = process.env.SMTP_PORT || 2525;
 
-// メールストアの初期化
-const mailStore = new MailStore();
+// DBパス設定（VPS永続化対策：絶対パスを使用）
+// 環境変数 DB_PATH を最優先で使用（ecosystem.config.js で設定される）
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.db');
+
+// DBディレクトリが存在しない場合は作成
+try {
+  const dbDir = path.dirname(DB_PATH);
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+    console.log(`📁 Created DB directory: ${dbDir}`);
+  }
+} catch (err) {
+  console.error('⚠️ Failed to create DB directory:', err.message);
+}
+
+console.log(`💾 Database path: ${DB_PATH}`);
+
+// メールストアの初期化（明示的なDBパスを渡す）
+const mailStore = new MailStore(DB_PATH);
 
 // SQLiteデータベース初期化（ブログ用）
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.db');
 const db = new Database(DB_PATH);
+
+// WALモード有効化（読み書き並行・ロック軽減）
+try {
+  db.prepare('PRAGMA journal_mode = WAL').run();
+  db.prepare('PRAGMA synchronous = NORMAL').run();
+  db.prepare('PRAGMA cache_size = -32000').run(); // 32MB
+  db.prepare('PRAGMA busy_timeout = 5000').run(); // 5秒待機でロック競合を回避
+  db.prepare('PRAGMA wal_autocheckpoint = 100').run(); // WAL自動チェックポイント
+  const result = db.prepare('PRAGMA journal_mode').get();
+  console.log(`🚀 WAL mode enabled: ${result['journal_mode']}, busy_timeout: 5000ms`);
+} catch (err) {
+  console.warn('⚠️ WAL mode setup failed:', err.message);
+}
 
 // ブログテーブル作成
 db.exec(`
@@ -66,85 +96,348 @@ console.log('✅ Blog database initialized');
 
 // ミドルウェア
 app.use(cors());
-app.use(express.json());
-app.use(express.static('public'));
+app.use(express.json({ limit: '10mb' }));
+
+// ===== SEO: 301リダイレクト設定 =====
+// 1. www → non-www 統一
+app.use((req, res, next) => {
+  if (req.headers.host && req.headers.host.startsWith('www.')) {
+    const newHost = req.headers.host.replace(/^www\./, '');
+    const newUrl = `https://${newHost}${req.url}`;
+    return res.redirect(301, newUrl);
+  }
+  next();
+});
+
+// 2. /index.html → / 統一
+app.get('/index.html', (req, res) => {
+  res.redirect(301, '/');
+});
+
+// 静的ファイル配信
+app.use(express.static('public', { maxAge: '1h' }));
+
+// リクエストタイムアウトミドルウェア（30秒）
+app.use((req, res, next) => {
+  req.setTimeout(30000, () => {
+    console.error(`[TIMEOUT] Request timeout: ${req.method} ${req.url}`);
+    res.status(504).json({ success: false, error: 'Request timeout' });
+  });
+  next();
+});
 
 // ===== API Routes =====
 
-// 新しいメールアドレスを生成
-app.get('/api/new-address', (req, res) => {
-  const address = mailStore.generateAddress();
-  res.json({
-    success: true,
-    address: address,
-    domain: 'sutemeado.com'
-  });
-});
-
-// 特定のアドレスのメールを取得
-app.get('/api/mailbox/:address', (req, res) => {
-  const { address } = req.params;
-  const mails = mailStore.getMails(address);
-  
-  res.json({
-    success: true,
-    address: address,
-    count: mails.length,
-    mails: mails
-  });
-});
-
-// 特定のメールの詳細を取得
-app.get('/api/mailbox/:address/:mailId', (req, res) => {
-  const { address, mailId } = req.params;
-  const mail = mailStore.getMail(address, mailId);
-  
-  if (!mail) {
-    return res.status(404).json({
+// 新しいメールアドレスを生成（パスワード付き）
+app.get('/api/new-address', async (req, res) => {
+  try {
+    const result = await mailStore.generateAddress();
+    res.json({
+      success: true,
+      address: result.address,
+      password: result.password,
+      domain: 'sutemeado.com'
+    });
+  } catch (err) {
+    console.error('Generate address error:', err);
+    console.error('Error stack:', err.stack);
+    res.status(500).json({
       success: false,
-      error: 'メールが見つかりません'
+      error: 'Failed to generate address',
+      detail: err.message,
+      code: err.code || 'UNKNOWN'
     });
   }
-  
-  res.json({
-    success: true,
-    mail: mail
-  });
 });
 
-// メールを削除
-app.delete('/api/mailbox/:address/:mailId', (req, res) => {
-  const { address, mailId } = req.params;
-  const deleted = mailStore.deleteMail(address, mailId);
-  
-  res.json({
-    success: deleted,
-    message: deleted ? 'メールを削除しました' : 'メールが見つかりません'
-  });
+// ログイン（メールボックスへのアクセス）
+app.post('/api/login', async (req, res) => {
+  try {
+    const { address, password } = req.body;
+    
+    if (!address || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'メールアドレスとパスワードを入力してください'
+      });
+    }
+    
+    const normalized = address.toLowerCase().trim();
+    
+    // アドレスが存在するかチェック
+    if (!(await mailStore.addressExists(normalized))) {
+      return res.status(404).json({
+        success: false,
+        error: 'メールアドレスが見つかりません'
+      });
+    }
+    
+    // パスワード検証
+    if (!(await mailStore.verifyPassword(normalized, password))) {
+      return res.status(401).json({
+        success: false,
+        error: 'パスワードが正しくありません'
+      });
+    }
+    
+    // ログイン成功
+    const mails = await mailStore.getMails(normalized, password);
+
+    // 累計受信数（削除されても減らない）を取得
+    const totalReceived = await mailStore.getCumulativeMailCount(normalized);
+    
+    // パスワードバージョンを取得（セッション管理用）
+    const passwordVersion = await mailStore.getPasswordVersion(normalized);
+
+    res.json({
+      success: true,
+      message: 'ログインしました',
+      address: normalized,
+      count: mails.length,
+      totalReceived: totalReceived,
+      passwordVersion: passwordVersion,
+      mails: mails
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
 });
 
-// 全メールを削除
-app.delete('/api/mailbox/:address', (req, res) => {
-  const { address } = req.params;
-  mailStore.clearMails(address);
-  
-  res.json({
-    success: true,
-    message: '全てのメールを削除しました'
-  });
+// 特定のアドレスのメールを取得（パスワード必須）
+app.post('/api/mailbox/:address', async (req, res) => {
+  try {
+    const { address } = req.params;
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        error: 'パスワードが必要です'
+      });
+    }
+    
+    const mails = await mailStore.getMails(address, password);
+
+    if (mails === null) {
+      return res.status(401).json({
+        success: false,
+        error: '認証に失敗しました'
+      });
+    }
+
+    // 累計受信数（削除されても減らない）を取得
+    const totalReceived = await mailStore.getCumulativeMailCount(address.toLowerCase().trim());
+
+    res.json({
+      success: true,
+      address: address,
+      count: mails.length,
+      totalReceived: totalReceived,
+      mails: mails
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// 特定のメールの詳細を取得（パスワード必須）
+app.post('/api/mailbox/:address/:mailId', async (req, res) => {
+  try {
+    const { address, mailId } = req.params;
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        error: 'パスワードが必要です'
+      });
+    }
+    
+    const mail = await mailStore.getMail(address, password, mailId);
+    
+    if (mail === null) {
+      return res.status(401).json({
+        success: false,
+        error: '認証に失敗しました'
+      });
+    }
+    
+    if (mail === false || !mail) {
+      return res.status(404).json({
+        success: false,
+        error: 'メールが見つかりません'
+      });
+    }
+    
+    res.json({
+      success: true,
+      mail: mail
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// メールを削除（パスワード必須）
+app.delete('/api/mailbox/:address/:mailId', async (req, res) => {
+  try {
+    const { address, mailId } = req.params;
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        error: 'パスワードが必要です'
+      });
+    }
+    
+    const result = await mailStore.deleteMail(address, password, mailId);
+    
+    if (result === null) {
+      return res.status(401).json({
+        success: false,
+        error: '認証に失敗しました'
+      });
+    }
+    
+    res.json({
+      success: result,
+      message: result ? 'メールを削除しました' : 'メールが見つかりません'
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// 全メールを削除（パスワード必須）
+app.delete('/api/mailbox/:address', async (req, res) => {
+  try {
+    const { address } = req.params;
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        error: 'パスワードが必要です'
+      });
+    }
+    
+    const result = await mailStore.clearMails(address, password);
+    
+    if (result === null) {
+      return res.status(401).json({
+        success: false,
+        error: '認証に失敗しました'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: '全てのメールを削除しました'
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// アドレスを完全に削除（パスワード必須）
+app.delete('/api/address/:address', async (req, res) => {
+  try {
+    const { address } = req.params;
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        error: 'パスワードが必要です'
+      });
+    }
+    
+    const result = await mailStore.deleteAddress(address, password);
+    
+    if (result === null) {
+      return res.status(401).json({
+        success: false,
+        error: '認証に失敗しました'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'アドレスを削除しました'
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// パスワード変更（パスワード必須）
+app.put('/api/address/:address/password', async (req, res) => {
+  try {
+    const { address } = req.params;
+    const { currentPassword, newPassword } = req.body;
+    
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        error: '現在のパスワードと新しいパスワードが必要です'
+      });
+    }
+    
+    const result = await mailStore.changePassword(address, currentPassword, newPassword);
+    
+    if (result === null) {
+      return res.status(401).json({
+        success: false,
+        error: '認証に失敗しました（現在のパスワードが正しくありません）'
+      });
+    }
+    
+    if (!result || !result.success) {
+      return res.status(500).json({
+        success: false,
+        error: 'パスワードの変更に失敗しました'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'パスワードを変更しました',
+      passwordVersion: result.passwordVersion
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// 軽量ヘルスチェック（ロードバランサー/監視用）
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: Date.now() });
 });
 
 // サーバーステータス
-app.get('/api/status', (req, res) => {
-  const stats = mailStore.getStats();
-  res.json({
-    success: true,
-    status: 'running',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-    stats: stats,
-    smtpPort: SMTP_PORT
-  });
+app.get('/api/status', async (req, res) => {
+  try {
+    const stats = await mailStore.getStats();
+    res.json({
+      success: true,
+      status: 'running',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+      stats: stats,
+      smtpPort: SMTP_PORT
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
 });
 
 // ===== Blog API Routes =====
@@ -329,6 +622,144 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// ===== Simple CMS for News & Changelog =====
+const CMS_DIR = path.join(path.dirname(DB_PATH), 'cms');
+if (!fs.existsSync(CMS_DIR)) {
+  fs.mkdirSync(CMS_DIR, { recursive: true });
+}
+
+const CMS_FILES = {
+  news: path.join(CMS_DIR, 'news.json'),
+  changelog: path.join(CMS_DIR, 'changelog.json')
+};
+
+// 初期ファイル作成
+Object.entries(CMS_FILES).forEach(([key, filePath]) => {
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, JSON.stringify({ items: [] }, null, 2));
+  }
+});
+
+// CMS読み込みヘルパー
+function loadCmsData(type) {
+  try {
+    const data = fs.readFileSync(CMS_FILES[type], 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    return { items: [] };
+  }
+}
+
+// CMS保存ヘルパー
+function saveCmsData(type, data) {
+  fs.writeFileSync(CMS_FILES[type], JSON.stringify(data, null, 2));
+}
+
+// お知らせ一覧取得
+app.get('/api/cms/news', (req, res) => {
+  try {
+    const data = loadCmsData('news');
+    // 新しい順にソート
+    const items = data.items.sort((a, b) => new Date(b.date) - new Date(a.date));
+    res.json({ success: true, items });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 更新履歴一覧取得
+app.get('/api/cms/changelog', (req, res) => {
+  try {
+    const data = loadCmsData('changelog');
+    // 新しい順にソート
+    const items = data.items.sort((a, b) => new Date(b.date) - new Date(a.date));
+    res.json({ success: true, items });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// CMS管理用認証ミドルウェア（簡易的なパスワード認証）
+const CMS_PASSWORD = process.env.CMS_PASSWORD || 'admin123';
+
+function cmsAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || authHeader !== `Bearer ${CMS_PASSWORD}`) {
+    return res.status(401).json({ success: false, error: '認証に失敗しました' });
+  }
+  next();
+}
+
+// お知らせ追加
+app.post('/api/cms/news', cmsAuth, (req, res) => {
+  try {
+    const { title, content, badge = 'new' } = req.body;
+    if (!title || !content) {
+      return res.status(400).json({ success: false, error: 'タイトルと本文は必須です' });
+    }
+
+    const data = loadCmsData('news');
+    const newItem = {
+      id: Date.now().toString(),
+      title,
+      content,
+      badge,
+      date: new Date().toISOString()
+    };
+
+    data.items.push(newItem);
+    saveCmsData('news', data);
+
+    res.json({ success: true, item: newItem });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 更新履歴追加
+app.post('/api/cms/changelog', cmsAuth, (req, res) => {
+  try {
+    const { version, changes, badge = 'minor' } = req.body;
+    if (!version || !changes || !Array.isArray(changes)) {
+      return res.status(400).json({ success: false, error: 'バージョンと変更リストは必須です' });
+    }
+
+    const data = loadCmsData('changelog');
+    const newItem = {
+      id: Date.now().toString(),
+      version,
+      badge,
+      date: new Date().toISOString(),
+      changes
+    };
+
+    data.items.push(newItem);
+    saveCmsData('changelog', data);
+
+    res.json({ success: true, item: newItem });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// CMS項目削除
+app.delete('/api/cms/:type/:id', cmsAuth, (req, res) => {
+  try {
+    const { type, id } = req.params;
+    if (!CMS_FILES[type]) {
+      return res.status(400).json({ success: false, error: '無効なタイプです' });
+    }
+
+    const data = loadCmsData(type);
+    data.items = data.items.filter(item => item.id !== id);
+    saveCmsData(type, data);
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // エラーハンドリング
 app.use((err, req, res, next) => {
   console.error('Error:', err);
@@ -338,86 +769,116 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Expressサーバー起動
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Sutemeado API server running on port ${PORT}`);
-  console.log(`📧 API: http://localhost:${PORT}`);
-});
+async function startServer() {
+  await mailStore.init();
+  console.log('📦 Database initialized');
 
-// ===== SMTP Server =====
-const smtpServer = new SMTPServer({
-  port: SMTP_PORT,
-  host: '0.0.0.0',
-  banner: 'Sutemeado SMTP Server',
-  disabledCommands: ['AUTH', 'STARTTLS'],
-  
-  // 接続ログ
-  onConnect(session, callback) {
-    console.log(`📥 SMTP Connection from: ${session.remoteAddress}`);
-    callback();
-  },
-  
-  // メール受信時の処理
-  onData(stream, session, callback) {
-    simpleParser(stream)
-      .then(parsed => {
-        console.log(`📨 Email received: From=${parsed.from?.text}, Subject=${parsed.subject}`);
-        console.log(`   To: ${parsed.to?.text || 'N/A'}`);
-        
-        // 宛先アドレスを抽出
-        const recipients = [];
-        
-        if (parsed.to) {
-          if (Array.isArray(parsed.to)) {
-            parsed.to.forEach(addr => {
-              if (addr.address) recipients.push(addr.address.toLowerCase());
-            });
-          } else if (parsed.to.address) {
-            recipients.push(parsed.to.address.toLowerCase());
+  // Expressサーバー起動
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Sutemeado API server running on port ${PORT}`);
+    console.log(`📧 API: http://localhost:${PORT}`);
+  });
+
+  // ===== SMTP Server =====
+  const smtpServer = new SMTPServer({
+    port: SMTP_PORT,
+    host: '0.0.0.0',
+    banner: 'Sutemeado SMTP Server',
+    disabledCommands: ['AUTH', 'STARTTLS'],
+    
+    // 接続ログ
+    onConnect(session, callback) {
+      console.log(`📥 SMTP Connection from: ${session.remoteAddress}`);
+      callback();
+    },
+    
+    // メール受信時の処理（非同期化してイベントループをブロックしない）
+    onData(stream, session, callback) {
+      // タイムアウト設定（30秒）
+      const timeout = setTimeout(() => {
+        console.error('⏱️ SMTP processing timeout');
+        callback(new Error('Processing timeout'));
+      }, 30000);
+      
+      simpleParser(stream, { maxSize: 10 * 1024 * 1024 }) // 10MB制限
+        .then(async parsed => {
+          clearTimeout(timeout);
+          console.log(`📨 Email received: From=${parsed.from?.text}, Subject=${parsed.subject}`);
+          
+          // 宛先アドレスを抽出
+          const recipients = new Set();
+          
+          if (parsed.to) {
+            if (Array.isArray(parsed.to)) {
+              parsed.to.forEach(addr => {
+                if (addr.address) recipients.add(addr.address.toLowerCase());
+              });
+            } else if (parsed.to.address) {
+              recipients.add(parsed.to.address.toLowerCase());
+            }
           }
-        }
-        
-        // envelope.rcptTo からも取得（BCC対応）
-        if (session.envelope && session.envelope.rcptTo) {
-          session.envelope.rcptTo.forEach(addr => {
-            const email = addr.address.toLowerCase();
-            if (!recipients.includes(email)) {
-              recipients.push(email);
+          
+          // envelope.rcptTo からも取得（BCC対応）
+          if (session.envelope && session.envelope.rcptTo) {
+            session.envelope.rcptTo.forEach(addr => {
+              recipients.add(addr.address.toLowerCase());
+            });
+          }
+          
+          const recipientList = Array.from(recipients).filter(r => r.endsWith('@sutemeado.com'));
+          console.log(`   Recipients: ${recipientList.join(', ') || 'none'}`);
+          
+          // 大量の宛先を制限（スパム対策）
+          if (recipientList.length > 50) {
+            console.warn(`   ⚠️ Too many recipients (${recipientList.length}), limiting to 50`);
+            recipientList.splice(50);
+          }
+          
+          // 非同期でメールを処理（イベントループをブロックしない）
+          setImmediate(async () => {
+            for (const address of recipientList) {
+              try {
+                const mail = await mailStore.addMail(address, {
+                  subject: parsed.subject || '(件名なし)',
+                  from: parsed.from?.text || parsed.from?.address || 'unknown@example.com',
+                  body: parsed.text || parsed.html || '(本文なし)',
+                  html: parsed.html || null
+                });
+                if (mail) {
+                  console.log(`   ✅ Saved: ${address} (ID: ${mail.id})`);
+                } else {
+                  console.log(`   ⚠️ Mailbox not found: ${address}`);
+                }
+              } catch (err) {
+                console.error(`   ❌ Error saving for ${address}:`, err.message);
+              }
             }
           });
-        }
-        
-        console.log(`   Recipients: ${recipients.join(', ')}`);
-        
-        // 各宛先にメールを保存
-        recipients.forEach(address => {
-          if (address.endsWith('@sutemeado.com')) {
-            const mail = mailStore.addMail(address, {
-              subject: parsed.subject || '(件名なし)',
-              from: parsed.from?.text || parsed.from?.address || 'unknown@example.com',
-              body: parsed.text || parsed.html || '(本文なし)',
-              html: parsed.html || null
-            });
-            console.log(`   ✅ Saved to mailbox: ${address} (ID: ${mail.id})`);
-          }
+          
+          // すぐにcallbackを呼び出し（非同期処理はバックグラウンドで続行）
+          callback();
+        })
+        .catch(err => {
+          clearTimeout(timeout);
+          console.error('❌ Failed to parse email:', err.message);
+          callback(new Error('Failed to parse email'));
         });
-        
-        callback();
-      })
-      .catch(err => {
-        console.error('❌ Failed to parse email:', err);
-        callback(new Error('Failed to parse email'));
-      });
-  }
-});
+    }
+  });
 
-// SMTPサーバー起動
-smtpServer.listen(SMTP_PORT, '0.0.0.0', () => {
-  console.log(`📬 SMTP Server running on port ${SMTP_PORT}`);
-  console.log(`   Port: ${SMTP_PORT}`);
-});
+  // SMTPサーバー起動
+  smtpServer.listen(SMTP_PORT, '0.0.0.0', () => {
+    console.log(`📬 SMTP Server running on port ${SMTP_PORT}`);
+    console.log(`   Port: ${SMTP_PORT}`);
+  });
 
-// エラーハンドリング
-smtpServer.on('error', (err) => {
-  console.error('SMTP Server Error:', err);
+  // エラーハンドリング
+  smtpServer.on('error', (err) => {
+    console.error('SMTP Server Error:', err);
+  });
+}
+
+startServer().catch(err => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });

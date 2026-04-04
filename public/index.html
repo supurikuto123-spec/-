@@ -1,138 +1,1101 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="neon">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sutemeado - シンプルな一時メール</title>
-  <meta name="description" content="登録不要、シンプルな一時メールサービス。24時間限定の使い捨てメールアドレスを即座に発行。">
-  <link rel="stylesheet" href="style.css">
+  <title>捨てメアド・一時メール | 登録不要ですぐ使える Sutemeado</title>
+  <meta name="description" content="Sutemeadoは登録不要で使える一時メールサービスです。捨てメアドをすぐ発行でき、パスワードで再アクセス可能。迷惑メール対策やサービス登録時のメール受信用に使えます。">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="keywords" content="一時メール, 使い捨てメール, 仮想メール, 迷惑メール防止, プライバシー保護, セキュリティ">
+  <meta name="author" content="Sutemeado">
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <meta name="google" content="notranslate">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://sutemeado.com/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sutemeado.com/">
+  <meta property="og:title" content="Sutemeado - 一時メールサービス">
+  <meta property="og:description" content="登録不要、パスワードでいつでもアクセスできる一時メールサービス。迷惑メールを避け、プライバシーを守りましょう。">
+  <meta property="og:image" content="https://sutemeado.com/og-image.png">
+  <meta property="og:locale" content="ja_JP">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://sutemeado.com/">
+  <meta property="twitter:title" content="Sutemeado - 一時メールサービス">
+  <meta property="twitter:description" content="登録不要、パスワードでいつでもアクセスできる一時メールサービス。迷惑メールを避け、プライバシーを守りましょう。">
+  <meta property="twitter:image" content="https://sutemeado.com/og-image.png">
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20260324c">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=20260324c">
+  <link rel="stylesheet" href="/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Sutemeado - 一時メールサービス",
+    "url": "https://sutemeado.com/",
+    "description": "登録不要、パスワードでいつでもアクセスできる一時メールサービス。迷惑メールを避け、プライバシーを守りましょう。",
+    "applicationCategory": "CommunicationApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "inLanguage": ["ja", "en"],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Sutemeado",
+      "url": "https://sutemeado.com/"
+    }
+  }
+  </script>
 </head>
 <body>
-  <div class="ambient-light"></div>
-  
-  <header class="header">
-    <div class="logo">
-      <span class="logo-icon">📧</span>
-      <span class="logo-text">Sutemeado</span>
+  <!-- Navigation: ブランド + ハンバーガーボタンのみ -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="nav-logo-wrap">
+        <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <span class="nav-title">Sutemeado</span>
     </div>
-    <div class="header-status">
-      <span class="status-indicator online"></span>
-      <span class="status-text">サービス稼働中</span>
+
+    <!-- 右側: メールカウンター + 言語 + ハンバーガー -->
+    <div class="nav-right">
+      <!-- メールカウンター（ログイン中のみ表示） -->
+      <div class="nav-mail-counter" id="nav-mail-counter" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span class="nav-counter-value" id="nav-counter-value">0</span>
+      </div>
+
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="ja">JA</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <button class="hamburger-btn" id="menu-toggle" aria-label="メニュー">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
-  </header>
+  </nav>
 
-  <main class="container">
-    <!-- アドレス表示セクション -->
-    <section class="address-card">
-      <h1 class="section-title">あなたの一時メールアドレス</h1>
-      
-      <div class="address-display">
-        <div class="address-box">
-          <span id="email-address">loading...</span>
-          <button class="icon-btn" id="copy-btn" title="コピー">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
-          </button>
-        </div>
-        <p class="address-hint">このアドレスは24時間有効です</p>
-      </div>
+  <!-- ドロワーオーバーレイ -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
 
-      <div class="address-actions">
-        <button class="btn btn-primary" id="new-address-btn">
-          <span>🎲</span> 新しいアドレス
+  <!-- ドロワーメニュー -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">メニュー</span>
+      <button class="drawer-close" id="drawer-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+
+      <!-- === ログアウト中のみ表示 === -->
+      <div class="drawer-section" id="drawer-loggedout-section">
+        <button class="drawer-item" id="menu-login">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span data-i18n="login">ログイン</span>
         </button>
-        <button class="btn btn-secondary" id="refresh-btn">
-          <span>🔄</span> 更新
+      </div>
+
+      <!-- === ログイン中のみ表示 === -->
+      <div class="drawer-section" id="drawer-loggedin-section" style="display:none;">
+        <div class="drawer-section-label">アカウント</div>
+
+        <button class="drawer-item" id="menu-login-other">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span data-i18n="login">別アカウントでログイン</span>
+        </button>
+
+        <button class="drawer-item" id="menu-new-address">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span data-i18n="newAddress">新しいメールアドレスを作成</span>
+        </button>
+
+        <div class="drawer-divider"></div>
+        <div class="drawer-section-label">危険な操作</div>
+
+        <button class="drawer-item drawer-item-danger" id="menu-delete-all-mail">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          <span data-i18n="deleteAllMail">全メール削除</span>
+        </button>
+
+        <button class="drawer-item drawer-item-danger" id="menu-delete-address">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/>
+            <path d="M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+          <span data-i18n="deleteAddress">アドレスを削除</span>
         </button>
       </div>
-    </section>
 
-    <!-- メールリストセクション -->
-    <section class="mailbox-section">
-      <div class="section-header">
-        <h2 class="section-title">受信メール <span class="badge" id="mail-count">0</span></h2>
-        <div class="auto-refresh">
-          <label class="toggle">
-            <input type="checkbox" id="auto-refresh" checked>
-            <span class="toggle-slider"></span>
-            <span class="toggle-label">自動更新</span>
-          </label>
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label">サイト案内</div>
+
+      <button class="drawer-item" id="menu-howto" onclick="location.href='/how-to-use.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <line x1="10" y1="9" x2="8" y2="9"/>
+        </svg>
+        <span>使い方</span>
+      </button>
+
+      <button class="drawer-item" id="menu-status" onclick="location.href='/status.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        <span>稼働状況</span>
+      </button>
+
+      <button class="drawer-item" id="menu-news" onclick="location.href='/news.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <path d="M22 6l-10 7L2 6"/>
+        </svg>
+        <span>お知らせ</span>
+      </button>
+
+      <button class="drawer-item" id="menu-changelog" onclick="location.href='/changelog.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <line x1="10" y1="9" x2="8" y2="9"/>
+        </svg>
+        <span>更新状況</span>
+      </button>
+
+      <button class="drawer-item" id="menu-faq" onclick="location.href='/faq.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="8"/>
+        </svg>
+        <span>よくある質問</span>
+      </button>
+
+      <button class="drawer-item" id="menu-contact" onclick="location.href='/contact.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span>お問い合わせ</span>
+      </button>
+
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label">その他</div>
+
+      <button class="drawer-item" id="menu-api">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+        </svg>
+        <span data-i18n="apiDocs">API ドキュメント</span>
+      </button>
+
+      <button class="drawer-item" id="menu-settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span data-i18n="settings">設定</span>
+      </button>
+
+    </div>
+
+    <!-- メニュー下部：法的リンク -->
+    <div class="drawer-footer">
+      <div class="drawer-footer-links">
+        <a href="/terms.html" class="drawer-footer-link" data-i18n="termsOfService">利用規約</a>
+        <span class="drawer-footer-separator">|</span>
+        <a href="/privacy.html" class="drawer-footer-link" data-i18n="privacyPolicy">プライバシー・クッキー</a>
+      </div>
+      <p class="drawer-footer-copy">&copy; 2026 Sutemeado</p>
+    </div>
+
+
+  </div>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- SEO H1 -->
+    <h1 class="seo-h1" style="position:absolute;left:-9999px;">捨てメアド・一時メール - 登録不要で使い捨て可能なSutemeado</h1>
+    
+    <div class="mailbox-container" id="mailbox-view">
+      <!-- Address Info Card -->
+      <div class="info-card">
+        <div class="info-section">
+          <label class="info-label" data-i18n="yourAddress">あなたのアドレス</label>
+          <div class="info-value-box">
+            <code id="display-address" class="info-value">-</code>
+            <button class="icon-btn" id="copy-address-btn" title="Copy">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="info-divider"></div>
+        
+        <div class="info-section">
+          <label class="info-label" data-i18n="yourPassword">パスワード</label>
+          <div class="info-value-box">
+            <code id="display-password" class="info-value info-value-password">••••••••••</code>
+            <button class="icon-btn" id="toggle-password-btn" title="Show/Hide">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eye-icon">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+            <button class="icon-btn" id="copy-password-btn" title="Copy">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+            <button class="icon-btn icon-btn-edit" id="change-password-inline-btn" title="パスワードを変更">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="mail-list" id="mail-list">
-        <div class="empty-state">
-          <div class="empty-icon">📭</div>
-          <p>メールはまだ届いていません</p>
-          <p class="empty-sub">アドレスをコピーして登録・確認に使ってください</p>
+      <!-- Mail List -->
+      <div class="mail-card">
+        <div class="mail-header-bar">
+          <h2 class="mail-title">
+            <span data-i18n="inbox">受信箱</span>
+            <span class="mail-count" id="mail-count">0</span>
+          </h2>
+          <div class="mail-actions">
+            <label class="toggle-sm">
+              <input type="checkbox" id="auto-refresh" checked>
+              <span class="toggle-slider-sm"></span>
+              <span data-i18n="autoRefresh">自動更新</span>
+            </label>
+            <button class="icon-btn icon-btn-refresh" id="refresh-btn" title="更新">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"/>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="mail-list" id="mail-list">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p data-i18n="creating">アドレスを生成中...</p>
+          </div>
         </div>
       </div>
-    </section>
-
-    <!-- 使い方セクション -->
-    <section class="info-section">
-      <h2 class="section-title">使い方</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <p>アドレスをコピー</p>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <p>サービスに登録</p>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <p>メールを受信</p>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <footer class="footer">
-    <p>© 2024 Sutemeado - Simple Temporary Email Service</p>
-    <p class="footer-hint">プライバシー保護のため、メールは24時間後に自動削除されます</p>
-  </footer>
+  <!-- SEO Content Sections: Service Description, Usage Guide, Safety, FAQ -->
+  <section class="seo-content" style="max-width:900px;margin:3rem auto;padding:0 1.5rem;" aria-label="サービス詳細情報">
+    
+    <!-- サービス概要 -->
+    <div class="content-section" style="margin-bottom:3rem;padding:2rem;background:var(--bg-secondary);border-radius:var(--radius-lg);border:1px solid var(--border-color);">
+      <h2 style="font-size:1.5rem;font-weight:700;color:var(--text-primary);margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        Sutemeado（ステメアド）とは？
+      </h2>
+      <p style="color:var(--text-secondary);line-height:1.8;margin-bottom:1rem;">
+        Sutemeadoは、<strong>登録不要ですぐに使える一時メール（使い捨てメール・捨てメアド）サービス</strong>です。ブラウザにアクセスするだけで、ランダムなメールアドレス（例：<code>xxxxxx@sutemeado.com</code>）が自動生成され、すぐにメールを受信できます。
+      </p>
+      <p style="color:var(--text-secondary);line-height:1.8;margin-bottom:1rem;">
+        迷惑メールやスパムメールを避けたいとき、試したいサービスにメアドを登録したいけど本アドレスは教えたくないとき、開発テスト用にメール受信が必要なときなど、さまざまな場面でご活用いただけます。
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.5rem;">
+        <div style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);text-align:center;">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--accent-primary);">登録不要</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary);">メールアドレス不要・個人情報不要</div>
+        </div>
+        <div style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);text-align:center;">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--accent-primary);">即座に使用</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary);">アクセスしてすぐメアド発行</div>
+        </div>
+        <div style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);text-align:center;">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--accent-primary);">完全無料</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary);">月額料金・課金なし</div>
+        </div>
+      </div>
+    </div>
 
-  <!-- メール詳細モーダル -->
-  <div class="modal" id="mail-modal">
-    <div class="modal-content">
+    <!-- 3ステップ使い方 -->
+    <div class="content-section" style="margin-bottom:3rem;padding:2rem;background:var(--bg-secondary);border-radius:var(--radius-lg);border:1px solid var(--border-color);">
+      <h2 style="font-size:1.5rem;font-weight:700;color:var(--text-primary);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.75rem;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <line x1="10" y1="9" x2="8" y2="9"/>
+        </svg>
+        3ステップで簡単に使える
+      </h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;">
+        <div style="padding:1.5rem;background:var(--bg-primary);border-radius:var(--radius-md);border-left:4px solid var(--accent-primary);">
+          <div style="font-size:1.25rem;font-weight:700;color:var(--accent-primary);margin-bottom:0.5rem;">STEP 1: アクセス</div>
+          <p style="color:var(--text-secondary);font-size:0.9375rem;line-height:1.6;">
+            ブラウザで <strong>sutemeado.com</strong> にアクセス。自動的に一時メールアドレスが生成されます。
+          </p>
+        </div>
+        <div style="padding:1.5rem;background:var(--bg-primary);border-radius:var(--radius-md);border-left:4px solid var(--accent-primary);">
+          <div style="font-size:1.25rem;font-weight:700;color:var(--accent-primary);margin-bottom:0.5rem;">STEP 2: コピー</div>
+          <p style="color:var(--text-secondary);font-size:0.9375rem;line-height:1.6;">
+            表示されたメールアドレスをコピー。パスワードも必ず保存してください（後でログインに必要です）。
+          </p>
+        </div>
+        <div style="padding:1.5rem;background:var(--bg-primary);border-radius:var(--radius-md);border-left:4px solid var(--accent-primary);">
+          <div style="font-size:1.25rem;font-weight:700;color:var(--accent-primary);margin-bottom:0.5rem;">STEP 3: 受信</div>
+          <p style="color:var(--text-secondary);font-size:0.9375rem;line-height:1.6;">
+            試したいサービスのメールアドレス欄に貼り付け。届いたメールは画面下部で確認できます（約5秒自動更新）。
+          </p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:1.5rem;">
+        <a href="/how-to-use.html" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:var(--accent-primary);color:#000;text-decoration:none;border-radius:var(--radius-md);font-weight:600;">
+          詳しい使い方ガイドを見る
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- 安全性 -->
+    <div class="content-section" style="margin-bottom:3rem;padding:2rem;background:var(--bg-secondary);border-radius:var(--radius-lg);border:1px solid var(--border-color);">
+      <h2 style="font-size:1.5rem;font-weight:700;color:var(--text-primary);margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        安全性とプライバシー保護
+      </h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;">
+        <div style="padding:1rem;">
+          <h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            HTTPS暗号化対応
+          </h3>
+          <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;">ブラウザとサーバー間の通信はTLS暗号化で保護され、第三者からの傍受を防ぎます。</p>
+        </div>
+        <div style="padding:1rem;">
+          <h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            パスワード保護
+          </h3>
+          <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;">各メールアドレスには固有のパスワードが設定され、ブラウザを変えてもログインできます。</p>
+        </div>
+        <div style="padding:1rem;">
+          <h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            個人情報不要
+          </h3>
+          <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;">名前、電話番号、住所など一切不要。ブラウザでアクセスするだけですぐに使えます。</p>
+        </div>
+      </div>
+      <div style="margin-top:1.5rem;padding:1rem;background:#ffb80010;border:1px solid #ffb80030;border-radius:var(--radius-md);">
+        <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;margin:0;">
+          <strong style="color:#ffb800;">注意：</strong>一時メールは短期間で削除されるため、銀行口座や重要なSNSアカウントの登録には使用しないでください。詳しくは<a href="/faq.html" style="color:var(--accent-primary);">FAQ</a>をご確認ください。
+        </p>
+      </div>
+    </div>
+
+    <!-- おすすめユースケース -->
+    <div class="content-section" style="margin-bottom:3rem;padding:2rem;background:var(--bg-secondary);border-radius:var(--radius-lg);border:1px solid var(--border-color);">
+      <h2 style="font-size:1.5rem;font-weight:700;color:var(--text-primary);margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+          <line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+        こんな場面で便利です
+      </h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;">
+        <div style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);">
+          <h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem;">📧 スパム対策</h3>
+          <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;">信頼性不明なサイトでの登録、キャンペーン応募、メルマガ登録時に使用して、本アドレスへの迷惑メール流入を防ぐ</p>
+        </div>
+        <div style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);">
+          <h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem;">🧪 開発・テスト</h3>
+          <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;">Webアプリのメール送信機能テスト、新規登録フロー確認、パスワードリセット動作確認など、開発作業を効率化</p>
+        </div>
+        <div style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);">
+          <h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem;">🌐 海外サービス</h3>
+          <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;">試したいけどちょっと不安な海外サイトへの一時的な登録、ダウンロードリンク取得など</p>
+        </div>
+        <div style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);">
+          <h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem;">🎁 特典・クーポン</h3>
+          <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;">新規登録特典やクーポン受け取りなど、一度きりの利用でメールアドレスが必要な場面</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQプレビュー -->
+    <div class="content-section" style="margin-bottom:3rem;padding:2rem;background:var(--bg-secondary);border-radius:var(--radius-lg);border:1px solid var(--border-color);">
+      <h2 style="font-size:1.5rem;font-weight:700;color:var(--text-primary);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.75rem;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        よくある質問
+      </h2>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <details style="background:var(--bg-primary);border-radius:var(--radius-md);overflow:hidden;">
+          <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:600;color:var(--text-primary);list-style:none;display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:var(--accent-primary);">Q.</span>
+            一時メールとは何ですか？
+          </summary>
+          <div style="padding:0 1.25rem 1.25rem;color:var(--text-secondary);line-height:1.7;">
+            一時メール（使い捨てメール・捨てメアド）は、一定期間だけ利用して破棄できるメールアドレスです。Sutemeadoでは、ブラウザでサイトにアクセスするだけで自動的に生成され、迷惑メール対策やプライバシー保護に役立ちます。
+          </div>
+        </details>
+        <details style="background:var(--bg-primary);border-radius:var(--radius-md);overflow:hidden;">
+          <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:600;color:var(--text-primary);list-style:none;display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:var(--accent-primary);">Q.</span>
+            無料で使えますか？
+          </summary>
+          <div style="padding:0 1.25rem 1.25rem;color:var(--text-secondary);line-height:1.7;">
+            はい、Sutemeadoは<strong>完全無料</strong>で提供しています。登録料や月額料金などは一切不要で、広告収入で運営しています。
+          </div>
+        </details>
+        <details style="background:var(--bg-primary);border-radius:var(--radius-md);overflow:hidden;">
+          <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:600;color:var(--text-primary);list-style:none;display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:var(--accent-primary);">Q.</span>
+            メールはどのくらい保存されますか？
+          </summary>
+          <div style="padding:0 1.25rem 1.25rem;color:var(--text-secondary);line-height:1.7;">
+            最新の一定件数を短期間保持し、古いメールから順次削除していきます。長期保存が必要なメールは、必ず別途保存してください。
+          </div>
+        </details>
+        <details style="background:var(--bg-primary);border-radius:var(--radius-md);overflow:hidden;">
+          <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:600;color:var(--text-primary);list-style:none;display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:var(--accent-primary);">Q.</span>
+            スマートフォンでも使えますか？
+          </summary>
+          <div style="padding:0 1.25rem 1.25rem;color:var(--text-secondary);line-height:1.7;">
+            はい、スマートフォン・タブレット・PCのどれからでも利用可能です。ブラウザでsutemeado.comを開くだけで、端末やOSに依存せず使えます。
+          </div>
+        </details>
+      </div>
+      <div style="text-align:center;margin-top:1.5rem;">
+        <a href="/faq.html" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);text-decoration:none;border-radius:var(--radius-md);font-weight:600;">
+          すべてのFAQを見る
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- 内部リンクセクション -->
+    <div class="content-section" style="margin-bottom:2rem;padding:2rem;background:var(--bg-secondary);border-radius:var(--radius-lg);border:1px solid var(--border-color);">
+      <h2 style="font-size:1.25rem;font-weight:700;color:var(--text-primary);margin-bottom:1rem;">関連ページ</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+        <a href="/how-to-use.html" style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);text-decoration:none;color:var(--text-primary);border:1px solid var(--border-color);transition:all 0.2s;">
+          <div style="font-weight:600;margin-bottom:0.25rem;">📖 使い方ガイド</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary);">詳細な手順と便利な機能</div>
+        </a>
+        <a href="/faq.html" style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);text-decoration:none;color:var(--text-primary);border:1px solid var(--border-color);transition:all 0.2s;">
+          <div style="font-weight:600;margin-bottom:0.25rem;">❓ よくある質問</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary);">セキュリティ・保存期間など</div>
+        </a>
+        <a href="/blog.html" style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);text-decoration:none;color:var(--text-primary);border:1px solid var(--border-color);transition:all 0.2s;">
+          <div style="font-weight:600;margin-bottom:0.25rem;">📝 ブログ</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary);">最新情報と使い方</div>
+        </a>
+        <a href="/status.html" style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);text-decoration:none;color:var(--text-primary);border:1px solid var(--border-color);transition:all 0.2s;">
+          <div style="font-weight:600;margin-bottom:0.25rem;">📊 稼働状況</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary);">システム状態確認</div>
+        </a>
+        <a href="/terms.html" style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);text-decoration:none;color:var(--text-primary);border:1px solid var(--border-color);transition:all 0.2s;">
+          <div style="font-weight:600;margin-bottom:0.25rem;">📜 利用規約</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary);">サービス利用条件</div>
+        </a>
+        <a href="/privacy.html" style="padding:1rem;background:var(--bg-primary);border-radius:var(--radius-md);text-decoration:none;color:var(--text-primary);border:1px solid var(--border-color);transition:all 0.2s;">
+          <div style="font-weight:600;margin-bottom:0.25rem;">🔒 プライバシーポリシー</div>
+          <div style="font-size:0.875rem;color:var(--text-secondary);">個人情報の取り扱い</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- フッター内部リンク -->
+    <footer class="seo-footer" style="text-align:center;padding:2rem;border-top:1px solid var(--border-color);color:var(--text-muted);font-size:0.875rem;">
+      <p style="margin-bottom:1rem;">
+        <strong style="color:var(--text-secondary);">Sutemeado - 登録不要の一時メールサービス</strong>
+      </p>
+      <p style="margin-bottom:0.5rem;">
+        キーワード: <a href="/" style="color:var(--accent-primary);">一時メール</a> | <a href="/" style="color:var(--accent-primary);">使い捨てメール</a> | <a href="/" style="color:var(--accent-primary);">捨てメアド</a> | <a href="/" style="color:var(--accent-primary);">仮想メール</a> | <a href="/" style="color:var(--accent-primary);">迷惑メール防止</a>
+      </p>
+      <p style="margin-bottom:1rem;">
+        <a href="/terms.html" style="color:var(--text-secondary);">利用規約</a> | 
+        <a href="/privacy.html" style="color:var(--text-secondary);">プライバシーポリシー</a> | 
+        <a href="/contact.html" style="color:var(--text-secondary);">お問い合わせ</a>
+      </p>
+      <p>&copy; 2026 Sutemeado. All rights reserved.</p>
+    </footer>
+  </section>
+
+  <!-- Login Modal -->
+  <div class="modal" id="login-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-sm">
       <div class="modal-header">
-        <h3 id="modal-subject">件名</h3>
-        <button class="modal-close" id="modal-close">&times;</button>
+        <h3 data-i18n="login">ログイン</h3>
+        <button class="modal-close" id="login-modal-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
       <div class="modal-body">
-        <div class="mail-meta">
-          <div class="meta-row">
-            <span class="meta-label">From:</span>
-            <span id="modal-from">sender@example.com</span>
+        <form class="auth-form" id="modal-login-form">
+          <div class="form-group">
+            <label class="form-label" data-i18n="emailAddress">メールアドレス</label>
+            <div class="input-wrapper">
+              <input type="email" id="login-address" class="form-input" placeholder="xxxxxx@sutemeado.com" required style="min-width:0;" autocomplete="username">
+            </div>
           </div>
-          <div class="meta-row">
-            <span class="meta-label">受信日時:</span>
-            <span id="modal-date">2024/01/01 00:00:00</span>
+          <div class="form-group">
+            <label class="form-label" data-i18n="password">パスワード</label>
+            <div class="input-wrapper">
+              <input type="password" id="login-password" class="form-input" placeholder="••••••••" required style="min-width:0;" autocomplete="current-password">
+              <button type="button" class="btn-icon btn-icon-sm" id="toggle-login-password" title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="mail-body" id="modal-body">
-          メール本文
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" id="modal-delete">削除</button>
-        <button class="btn btn-primary" id="modal-close-btn">閉じる</button>
+          <button type="submit" class="btn btn-primary btn-large" id="login-btn">
+            <span data-i18n="loginBtn">ログイン</span>
+          </button>
+        </form>
       </div>
     </div>
   </div>
 
-  <!-- トースト通知 -->
-  <div class="toast" id="toast"></div>
+  <!-- API Modal -->
+  <div class="modal" id="api-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-lg">
+      <div class="modal-header">
+        <h3 data-i18n="apiDocs">API Documentation</h3>
+        <button class="modal-close" id="api-modal-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="api-intro" style="margin-bottom:1rem;padding:0.75rem;background:var(--bg-secondary);border-radius:var(--radius-md);">
+          <p style="margin:0;font-size:0.875rem;color:var(--text-secondary);">
+            <strong>Base URL:</strong> <code>https://sutemeado.com</code><br>
+            <strong>Rate Limit:</strong> 100 requests/minute<br>
+            <strong>Auth:</strong> Password required for mailbox operations (POST body)
+          </p>
+        </div>
+        <div class="api-list">
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method get">GET</span><code>/api/new-address</code></div>
+            <p>新規アドレスを作成</p>
+            <div class="api-example"><pre><code>curl https://sutemeado.com/api/new-address
 
-  <script src="app.js"></script>
+// Response
+{
+  "success": true,
+  "address": "abc123@sutemeado.com",
+  "password": "xyz789pass",
+  "domain": "sutemeado.com"
+}</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method post">POST</span><code>/api/login</code></div>
+            <p>ログイン（アドレスとパスワードで認証）</p>
+            <div class="api-example"><pre><code>curl -X POST https://sutemeado.com/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"address":"abc123@sutemeado.com","password":"xyz789pass"}'
+
+// Response
+{
+  "success": true,
+  "address": "abc123@sutemeado.com",
+  "mails": [...]
+}</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address</code></div>
+            <p>メール一覧を取得</p>
+            <div class="api-example"><pre><code>curl -X POST "https://sutemeado.com/api/mailbox/abc123@sutemeado.com" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'
+
+// Response
+{
+  "success": true,
+  "address": "abc123@sutemeado.com",
+  "mails": [
+    {
+      "id": "mail_xxx",
+      "from": "sender@example.com",
+      "subject": "Hello",
+      "body": "Message text...",
+      "html": "&lt;p&gt;HTML version...&lt;/p&gt;",
+      "receivedAt": 1711234567890
+    }
+  ]
+}</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address/:mailId</code></div>
+            <p>特定のメールを取得</p>
+            <div class="api-example"><pre><code>curl -X POST "https://sutemeado.com/api/mailbox/abc123@sutemeado.com/mail_xxx" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address/:mailId</code></div>
+            <p>メールを削除</p>
+            <div class="api-example"><pre><code>curl -X DELETE "https://sutemeado.com/api/mailbox/abc123@sutemeado.com/mail_xxx" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address</code></div>
+            <p>全メールを削除</p>
+            <div class="api-example"><pre><code>curl -X DELETE "https://sutemeado.com/api/mailbox/abc123@sutemeado.com" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/address/:address</code></div>
+            <p>アドレスを削除（全メールも削除されます）</p>
+            <div class="api-example"><pre><code>curl -X DELETE "https://sutemeado.com/api/address/abc123@sutemeado.com" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"xyz789pass"}'</code></pre></div>
+          </div>
+          <div class="api-entry">
+            <div class="api-meta"><span class="api-method put">PUT</span><code>/api/address/:address/password</code></div>
+            <p>パスワードを変更</p>
+            <div class="api-example"><pre><code>curl -X PUT "https://sutemeado.com/api/address/abc123@sutemeado.com/password" \
+  -H "Content-Type: application/json" \
+  -d '{"currentPassword":"xyz789pass","newPassword":"newpass123"}'</code></pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal: 外観のみ -->
+  <div class="modal" id="settings-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-sm">
+      <div class="modal-header">
+        <h3 data-i18n="settings">設定</h3>
+        <button class="modal-close" id="settings-modal-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-list">
+          <!-- 外観切替 -->
+          <button class="settings-item" id="theme-toggle-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <span id="theme-toggle-label">ライトモード</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal" id="change-password-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-sm">
+      <div class="modal-header">
+        <h3 data-i18n="changePassword">パスワード変更</h3>
+        <button class="modal-close" id="change-password-modal-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="auth-form" id="change-password-form">
+          <div class="form-group">
+            <label class="form-label" data-i18n="newPassword">新しいパスワード</label>
+            <div class="input-wrapper">
+              <input type="password" id="new-password" class="form-input" placeholder="••••••••" required style="min-width:0;" autocomplete="new-password">
+              <button type="button" class="btn-icon btn-icon-sm" id="toggle-new-password" title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+            <div class="pw-strength-wrap" id="pw-strength-wrap" style="display:none;">
+              <div class="pw-strength-bar"><div class="pw-strength-fill" id="pw-strength-fill"></div></div>
+              <span class="pw-strength-label" id="pw-strength-label"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="confirmPassword">パスワード（確認）</label>
+            <div class="input-wrapper">
+              <input type="password" id="confirm-new-password" class="form-input" placeholder="••••••••" required style="min-width:0;" autocomplete="new-password">
+              <button type="button" class="btn-icon btn-icon-sm" id="toggle-confirm-password" title="Show/Hide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+            <p class="pw-match-msg" id="pw-match-msg"></p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-large" id="change-password-submit-btn">
+            <span data-i18n="changePassword">パスワード変更</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mail Detail Modal -->
+  <div class="modal" id="mail-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-lg">
+      <div class="modal-header">
+        <h3 id="modal-subject">-</h3>
+        <button class="modal-close" id="mail-modal-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="mail-detail-meta">
+          <div class="meta-item"><span class="meta-label" data-i18n="from">From:</span><span id="modal-from" class="meta-value">-</span></div>
+          <div class="meta-item"><span class="meta-label" data-i18n="to">To:</span><span id="modal-to" class="meta-value">-</span></div>
+          <div class="meta-item"><span class="meta-label" data-i18n="date">Date:</span><span id="modal-date" class="meta-value">-</span></div>
+        </div>
+        <div class="mail-detail-body" id="modal-body-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="modal-delete-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          <span data-i18n="delete">削除</span>
+        </button>
+        <button class="btn btn-secondary" id="modal-close-btn" data-i18n="close">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <span class="toast-message" id="toast-message">Message</span>
+  </div>
+
+
+
+  <!-- New Address Confirm Modal（ログイン中専用・削除ボタン付き） -->
+  <div class="modal" id="new-address-confirm-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-sm">
+      <div class="modal-body modal-body-center">
+        <h4 id="new-addr-modal-title" style="margin-top:0;">新しいメールアドレスを作成</h4>
+        <p id="new-addr-modal-msg" style="white-space:pre-line;text-align:left;margin:0.75rem 0;font-size:0.9rem;color:var(--text-secondary);">
+          ログイン情報を保存していない場合、現在のアドレスにはアクセスできなくなります。<br><br>今後このアドレスを利用しない場合は、削除してから新規作成することを推奨します。
+        </p>
+      </div>
+      <div class="modal-footer new-addr-footer">
+        <button class="btn btn-secondary" id="new-addr-cancel">戻る</button>
+        <button class="btn btn-primary" id="new-addr-ok">作成する</button>
+        <button class="btn btn-danger" id="new-addr-delete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+          <span>削除する</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal" id="confirm-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-content-xs">
+      <div class="modal-body modal-body-center">
+        <h4 id="confirm-title" style="margin-top:0;">Confirm</h4>
+        <p id="confirm-message" style="white-space:pre-line;"></p>
+      </div>
+      <div class="modal-footer modal-footer-center">
+        <button class="btn btn-secondary" id="confirm-cancel" data-i18n="cancel">キャンセル</button>
+        <button class="btn btn-primary" id="confirm-ok" data-i18n="confirm">確認</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO Content Section: サービス説明 -->
+  <section class="seo-content" id="about-service">
+    <div class="seo-container">
+      <h2>一時メール・使い捨てメール「Sutemeado」とは？</h2>
+      <p>Sutemeado（捨てメアド）は、<strong>登録不要・完全無料</strong>で使える一時メールサービスです。スパム防止やプライバシー保護に最適な、使い捨て可能なメールアドレスを即座に発行できます。</p>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>登録不要ですぐ使える</h3>
+          <p>メールアドレスとパスワードを入力するだけで、即座に一時メールアドレスを取得できます。個人情報の入力は一切不要です。</p>
+        </div>
+        <div class="feature-card">
+          <h3>完全無料で利用可能</h3>
+          <p>料金は一切かかりません。広告収入で運営しているため、ユーザーは無料で一時メールサービスを利用できます。</p>
+        </div>
+        <div class="feature-card">
+          <h3>30日間の保持期間</h3>
+          <p>受信したメールは30日間保持されます。パスワードを設定することで、アドレスを保護し後から確認することも可能です。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO Content Section: 3ステップ使い方 -->
+  <section class="seo-content" id="how-to-use">
+    <div class="seo-container">
+      <h2>3ステップで簡単に使える一時メール</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step-number">1</span>
+          <h3>アドレスを作成</h3>
+          <p>トップページで好きなメールアドレスとパスワードを入力して「作成」ボタンをクリック</p>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <h3>メールアドレスをコピー</h3>
+          <p>生成された一時メールアドレスをコピーして、サービス登録や配信先に入力</p>
+        </div>
+        <div class="step">
+          <span class="step-number">3</span>
+          <h3>メールを受信</h3>
+          <p>Sutemeadoで受信メールを確認。パスワードを入力してログインすればいつでも確認可能</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO Content Section: 安全性 -->
+  <section class="seo-content" id="safety">
+    <div class="seo-container">
+      <h2>安全性・プライバシー保護</h2>
+      <ul class="safety-list">
+        <li><strong>HTTPS対応：</strong>全通信は暗号化されており、安全に利用できます</li>
+        <li><strong>パスワード保護：</strong>作成したアドレスにパスワードを設定し、他人からのアクセスを防止</li>
+        <li><strong>個人情報不要：</strong>メールアドレス作成に個人情報は一切不要</li>
+        <li><strong>自動削除：</strong>30日後にメールが自動削除され、プライバシーを保護</li>
+        <li><strong>スパム防止：</strong>自分の本メールアドレスを登録先に教える必要がない</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SEO Content Section: ユースケース -->
+  <section class="seo-content" id="use-cases">
+    <div class="seo-container">
+      <h2>一時メール・捨てメアドの活用シーン</h2>
+      <div class="usecase-grid">
+        <div class="usecase-item">
+          <h4>スパムメール防止</h4>
+          <p>不明なサイトへの登録時に使い捨てメールを使用し、自分の本メールアドレスを守る</p>
+        </div>
+        <div class="usecase-item">
+          <h4>開発・テスト用途</h4>
+          <p>アプリ開発時のメール送信テストに利用。複数アドレスで同時テストも可能</p>
+        </div>
+        <div class="usecase-item">
+          <h4>海外サービスの登録</h4>
+          <p>日本未対応の海外サービスやSNS登録時に使用。安全に試せる</p>
+        </div>
+        <div class="usecase-item">
+          <h4>キャンペーン・特典受け取り</h4>
+          <p>メルマガ登録が必要なキャンペーン参加時に使用。後から簡単に削除</p>
+        </div>
+        <div class="usecase-item">
+          <h4>掲示板・フォーム投稿</h4>
+          <p>匿名性が必要な場面で、実メールアドレスを公開せずにコミュニケーション</p>
+        </div>
+        <div class="usecase-item">
+          <h4>Eコマースの会員登録</h4>
+          <p>一度きりの購入時に使用。購入後はメールアドレスごと削除可能</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO Content Section: FAQ -->
+  <section class="seo-content" id="faq-section">
+    <div class="seo-container">
+      <h2>よくある質問（FAQ）</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>一時メールは無料ですか？</summary>
+          <p>はい、Sutemeadoは完全無料で利用できます。広告収入で運営しているため、ユーザーは無料で一時メールサービスを利用できます。</p>
+        </details>
+        <details class="faq-item">
+          <summary>メールはどれくらい保持されますか？</summary>
+          <p>受信したメールは30日間保持されます。30日経過すると自動的に削除されます。</p>
+        </details>
+        <details class="faq-item">
+          <summary>パスワードを忘れた場合は？</summary>
+          <p>パスワードは復元できません。新しい一時メールアドレスを作成してください。</p>
+        </details>
+        <details class="faq-item">
+          <summary>スマートフォンでも使えますか？</summary>
+          <p>はい、スマートフォン・タブレットからもブラウザでアクセスして利用可能です。専用アプリは不要です。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO Content Section: 関連ページ -->
+  <section class="seo-content" id="related-links">
+    <div class="seo-container">
+      <h2>関連ページ</h2>
+      <nav class="related-nav">
+        <a href="/faq.html" class="related-link">よくある質問（FAQ）</a>
+        <a href="/how-to-use.html" class="related-link">詳しい使い方ガイド</a>
+        <a href="/terms.html" class="related-link">利用規約</a>
+        <a href="/privacy.html" class="related-link">プライバシーポリシー</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-links">
+        <a href="/">一時メール</a>
+        <a href="/">使い捨てメール</a>
+        <a href="/">捨てメアド</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/terms.html">利用規約</a>
+        <a href="/privacy.html">プライバシー</a>
+      </div>
+      <p class="copyright">&copy; 2026 Sutemeado - 登録不要の一時メールサービス</p>
+    </div>
+  </footer>
+
+  <style>
+    .seo-content { background: #f8f9fa; padding: 2rem 1rem; border-top: 1px solid #e9ecef; }
+    .seo-container { max-width: 800px; margin: 0 auto; }
+    .seo-content h2 { color: #212529; margin-bottom: 1rem; font-size: 1.5rem; }
+    .seo-content h3 { color: #495057; margin: 1rem 0 0.5rem; font-size: 1.1rem; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .feature-card { background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .steps { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+    .step { flex: 1; min-width: 200px; background: white; padding: 1rem; border-radius: 8px; text-align: center; }
+    .step-number { display: inline-block; width: 2rem; height: 2rem; background: #0d6efd; color: white; border-radius: 50%; line-height: 2rem; font-weight: bold; margin-bottom: 0.5rem; }
+    .safety-list { list-style: none; padding: 0; }
+    .safety-list li { padding: 0.5rem 0; border-bottom: 1px solid #dee2e6; }
+    .usecase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .usecase-item { background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #0d6efd; }
+    .faq-list { margin-top: 1rem; }
+    .faq-item { background: white; margin-bottom: 0.5rem; border-radius: 8px; overflow: hidden; }
+    .faq-item summary { padding: 1rem; cursor: pointer; font-weight: 600; }
+    .faq-item p { padding: 0 1rem 1rem; margin: 0; color: #6c757d; }
+    .related-nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .related-link { background: white; padding: 0.75rem 1rem; border-radius: 8px; text-decoration: none; color: #0d6efd; border: 1px solid #0d6efd; }
+    .related-link:hover { background: #0d6efd; color: white; }
+    .site-footer { background: #212529; color: white; padding: 2rem 1rem; margin-top: 2rem; }
+    .footer-container { max-width: 800px; margin: 0 auto; text-align: center; }
+    .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+    .footer-links a { color: #adb5bd; text-decoration: none; }
+    .footer-links a:hover { color: white; }
+    .copyright { color: #6c757d; font-size: 0.9rem; }
+  </style>
+
+  <script src="app.js?v=20260326e"></script>
 </body>
 </html>

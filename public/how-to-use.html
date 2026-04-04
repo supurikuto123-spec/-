@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>使い方 - Sutemeado</title>
+  <meta name="description" content="Sutemeado一時メールサービスの使い方ガイド。初めての方でも簡単に使えるステップバイステップの説明です。">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="keywords" content="一時メール, 使い捨てメール, 捨てメアド, 使い方, 使い方ガイド, 一時メールサービス">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sutemeado.com/how-to-use.html">
+  <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .guide-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+    .guide-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .guide-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .guide-back-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      border-color: var(--accent-primary);
+    }
+    .guide-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .guide-intro {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .step-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .step-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-2px);
+    }
+    .step-number {
+      position: absolute;
+      top: -12px;
+      left: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: #000;
+      font-weight: 700;
+      font-size: 0.875rem;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 245, 160, 0.3);
+    }
+    .step-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .step-content {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 0.9375rem;
+    }
+    .step-content p {
+      margin-bottom: 0.75rem;
+    }
+    .step-content p:last-child {
+      margin-bottom: 0;
+    }
+    .step-tip {
+      background: #00f5a015;
+      border: 1px solid #00f5a040;
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+    }
+    .step-tip strong {
+      color: #00f5a0;
+    }
+    .screenshot-placeholder {
+      background: var(--bg-primary);
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 1rem;
+      color: var(--text-muted);
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .feature-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent-primary)20, var(--accent-secondary)20);
+      border-radius: var(--radius-md);
+      margin-bottom: 1rem;
+      color: var(--accent-primary);
+    }
+    .feature-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .feature-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .guide-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .guide-section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .guide-section-title svg {
+      color: var(--accent-primary);
+    }
+    .command-block {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0.75rem 0;
+      overflow-x: auto;
+    }
+    .guide-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .cta-section {
+      background: linear-gradient(135deg, var(--accent-primary)15, var(--accent-secondary)15);
+      border: 1px solid var(--accent-primary)40;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .cta-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+    .cta-text {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: var(--accent-primary);
+      color: #000;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px var(--accent-primary)40;
+    }
+    @media (max-width: 640px) {
+      .guide-page {
+        padding: 1rem;
+      }
+      .guide-header {
+        flex-wrap: wrap;
+      }
+      .guide-title {
+        font-size: 1.25rem;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-page">
+    <header class="guide-header">
+      <a href="/" class="guide-back-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12,19 5,12 12,5"/>
+        </svg>
+        戻る
+      </a>
+      <h1 class="guide-title">使い方ガイド</h1>
+    </header>
+
+    <p class="guide-intro">
+      Sutemeadoは、登録不要・パスワードでいつでもアクセスできるシンプルな一時メールサービスです。このガイドでは、初めての方でも簡単に使えるよう、ステップバイステップで使い方を説明します。
+    </p>
+
+    <!-- ステップバイステップ -->
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-title">サイトにアクセスする</div>
+        <div class="step-content">
+          <p>ブラウザ（Chrome、Safari、Edgeなど）で <strong>sutemeado.com</strong> にアクセスしてください。アクセスすると、自動的に新しい一時メールアドレスが生成されます。</p>
+          <div class="step-tip">
+            <strong>ヒント：</strong> スマートフォン・タブレット・PCのどれからでも利用可能です。お好きな端末でご利用ください。
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-title">メールアドレスをコピーする</div>
+        <div class="step-content">
+          <p>画面上部に表示されている「あなたのアドレス」（例：<code>xxxxxx@sutemeado.com</code>）をコピーします。コピーボタン（📋アイコン）をクリックすると簡単にコピーできます。</p>
+          <div class="step-tip">
+            <strong>重要：</strong> パスワードも必ず保存してください！同じアドレスに再度アクセスするには、メールアドレスとパスワードの両方が必要です。
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-title">メールアドレスを入力する</div>
+        <div class="step-content">
+          <p>試したいサービスやフォームの「メールアドレス入力欄」に、先ほどコピーしたアドレスを貼り付けます。確認メールや認証コードを受信したいサービスで、このアドレスを使ってください。</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <div class="step-title">メールを待つ</div>
+        <div class="step-content">
+          <p>メールの送信元からメールが届くまで、数秒〜数分かかる場合があります。Sutemeadoでは受信ボックスが<strong>約5秒ごとに自動更新</strong>されるため、画面を開いたまま待っていれば、自動的にメールが表示されます。</p>
+          <div class="step-tip">
+            <strong>急ぐ場合：</strong> 「更新」ボタンをクリックすると、即座に最新の状態を確認できます。
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">5</div>
+        <div class="step-title">メールを開く</div>
+        <div class="step-content">
+          <p>受信ボックスに届いたメールをクリックすると、本文が表示されます。認証コードやリンクを確認し、必要な操作を行ってください。</p>
+          <div class="step-tip">
+            <strong>注意：</strong> 一時メールは長期保存向けではありません。重要な情報は必ずコピーまたはスクリーンショットで保存してください。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 便利な機能 -->
+    <div class="guide-section">
+      <h2 class="guide-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+        便利な機能
+      </h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="feature-title">パスワード保護</div>
+          <div class="feature-desc">
+            各メールアドレスには固有のパスワードが設定されます。ブラウザを変えても、メールアドレスとパスワードがあればどこからでもアクセスできます。
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"/>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+          </div>
+          <div class="feature-title">自動更新</div>
+          <div class="feature-desc">
+            受信ボックスは約5秒ごとに自動更新されます。手動でリロードする必要なく、新着メールをリアルタイムに確認できます。
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </div>
+          <div class="feature-title">ワンクリックコピー</div>
+          <div class="feature-desc">
+            メールアドレスとパスワードは、コピーボタンをワンクリックで簡単にコピーできます。手入力の間違いを防げます。
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </div>
+          <div class="feature-title">パスワード変更</div>
+          <div class="feature-desc">
+            いつでもパスワードを変更できます。より強固なパスワードに変更して、セキュリティを向上させることも可能です。
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </div>
+          <div class="feature-title">メール削除</div>
+          <div class="feature-desc">
+            不要なメールは個別に削除可能です。また、「全メール削除」機能で受信ボックスを一度に空にすることもできます。
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </div>
+          <div class="feature-title">新規アドレス作成</div>
+          <div class="feature-desc">
+            いつでも新しいメールアドレスを作成できます。古いアドレスを削除せずに、新しいアドレスを追加することも可能です。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- よく使う機能の説明 -->
+    <div class="guide-section">
+      <h2 class="guide-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+        </svg>
+        APIの活用方法
+      </h2>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;line-height:1.7;">
+        Sutemeadoは開発者・テスター向けにAPIを提供しています。プログラムから一時メールアドレスを操作することで、自動化テストや開発作業を効率化できます。
+      </p>
+      <div class="command-block">
+// 新規アドレスを作成
+curl https://sutemeado.com/api/new-address
+
+// ログインしてメール一覧を取得
+curl -X POST https://sutemeado.com/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"address":"xxx@sutemeado.com","password":"xxx"}'
+      </div>
+      <p style="color:var(--text-secondary);font-size:0.875rem;margin-top:0.75rem;">
+        詳細はトップページの「API」メニューからご確認ください。
+      </p>
+    </div>
+
+    <!-- メニュー操作方法 -->
+    <div class="guide-section">
+      <h2 class="guide-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="18" x2="20" y2="18"/>
+        </svg>
+        メニューの使い方
+      </h2>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;line-height:1.7;">
+        画面右上のハンバーガーメニュー（三本線のアイコン）をクリックすると、各種機能にアクセスできます：
+      </p>
+      <ul style="color:var(--text-secondary);line-height:1.8;padding-left:1.5rem;">
+        <li><strong>ログイン：</strong> 既存のアドレスにパスワードでアクセス</li>
+        <li><strong>新しいメールアドレスを作成：</strong> 新規アドレスを発行</li>
+        <li><strong>全メール削除：</strong> 受信ボックスを空にする</li>
+        <li><strong>アドレスを削除：</strong> このアドレス自体を削除</li>
+        <li><strong>APIドキュメント：</strong> APIの詳細仕様を確認</li>
+        <li><strong>設定：</strong> テーマ（ライト/ダーク）の切り替え</li>
+        <li><strong>稼働状況：</strong> サービスの稼働状況を確認</li>
+        <li><strong>お知らせ：</strong> 最新のニュースとお知らせ</li>
+        <li><strong>よくある質問：</strong> 詳細なFAQを確認</li>
+      </ul>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <div class="cta-title">さっそく使ってみましょう</div>
+      <div class="cta-text">
+        Sutemeadoは登録不要ですぐに使えます。<br>
+        迷惑メールを避けて、プライバシーを守りましょう。
+      </div>
+      <a href="/" class="cta-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+        トップページへ
+      </a>
+    </div>
+
+    <div class="guide-footer">
+      <p>&copy; 2026 Sutemeado - ステメアド</p>
+    </div>
+  </div>
+</body>
+</html>

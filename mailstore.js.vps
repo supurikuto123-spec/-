@@ -1,0 +1,100 @@
+const Database = require('better-sqlite3');
+const path = require('path');
+const fs = require('fs');
+
+/**
+ * メールストアクラス（SQLite実装）
+ * ログイン機能付き、自動削除なし
+ * リアルタイムバックアップ機能付き
+ */
+class MailStore {
+  constructor(dbPath = null) {
+    // 絶対パスでDBファイルを指定（VPS永続化対策）
+    const finalDbPath = dbPath || process.env.DB_PATH || path.join(__dirname, '../data.db');
+    this.dbPath = finalDbPath;
+    this.db = new Database(finalDbPath);
+    
+    // WALモード最適化設定（同時接続・ロック対策）
+    this.db.pragma('journal_mode = WAL');
+    this.db.pragma('synchronous = NORMAL');
+    this.db.pragma('busy_timeout = 5000');  // 5秒待機してからエラー
+    this.db.pragma('wal_autocheckpoint = 100'); // WALファイルの自動チェックポイント
+    
+    // バックアップディレクトリ設定
+    this.backupDir = process.env.BACKUP_DIR || path.join(path.dirname(finalDbPath), 'backups');
+    if (!fs.existsSync(this.backupDir)) {
+      fs.mkdirSync(this.backupDir, { recursive: true });
+    }
+    
+    // 最大バックアップ数（古いものから削除）
+    this.maxBackups = 20; // 減らしてディスクI/O負荷を軽減
+    
+    // バックアップロック（同時実行防止）
+    this.backupLock = false;
+    this.cleanupScheduled = false;
+
+    // DB initialized right away
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS users (
+        address TEXT PRIMARY KEY,
+        password TEXT NOT NULL,
+        password_version INTEGER NOT NULL DEFAULT 1,
+        created_at INTEGER NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS mails (
+        id TEXT PRIMARY KEY,
+        address TEXT NOT NULL,
+        subject TEXT,
+        sender TEXT,
+        body TEXT,
+        html TEXT,
+        received_at INTEGER NOT NULL,
+        FOREIGN KEY(address) REFERENCES users(address) ON DELETE CASCADE
+      );
+
+      -- 削除済みも含む累計メール記録テーブル
+      CREATE TABLE IF NOT EXISTS mail_logs (
+        id TEXT PRIMARY KEY,
+        address TEXT NOT NULL,
+        subject TEXT,
+        sender TEXT,
+        received_at INTEGER NOT NULL
+      );
+
+      -- 削除されても減らない累計統計テーブル
+      CREATE TABLE IF NOT EXISTS cumulative_stats (
+        key TEXT PRIMARY KEY,
+        value INTEGER NOT NULL DEFAULT 0
+      );
+
+      -- インデックス作成
+      CREATE INDEX IF NOT EXISTS idx_mail_logs_address ON mail_logs(address);
+      CREATE INDEX IF NOT EXISTS idx_mail_logs_received ON mail_logs(received_at);
+    `);
+
+    // 初期値を設定（なければ作成）
+    this.db.prepare(`INSERT OR IGNORE INTO cumulative_stats (key, value) VALUES ('total_addresses', 0)`).run();
+    this.db.prepare(`INSERT OR IGNORE INTO cumulative_stats (key, value) VALUES ('total_mails', 0)`).run();
+  }
+
+  async init() {
+    // Keep for compatibility with server.js
+    // Ensure mail_logs table exists (for databases created before this table was added)
+    try {
+      this.db.exec(`
+        CREATE TABLE IF NOT EXISTS mail_logs (
+          id TEXT PRIMARY KEY,
+          address TEXT NOT NULL,
+          subject TEXT,
+          sender TEXT,
+          received_at INTEGER NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS idx_mail_logs_address ON mail_logs(address);
+        CREATE INDEX IF NOT EXISTS idx_mail_logs_received ON mail_logs(received_at);
+      `);
+    } catch (err) {
+      console.warn('Failed to create mail_logs table:', err.message);
+    }
+    return Promise.resolve();
+  }
