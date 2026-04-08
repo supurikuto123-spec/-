@@ -33,6 +33,7 @@ const mailStore = new MailStore(DB_PATH);
 
 // SQLiteデータベース初期化（ブログ用）
 const db = new Database(DB_PATH);
+db.pragma('busy_timeout = 5000');
 
 // ブログテーブル作成
 db.exec(`
