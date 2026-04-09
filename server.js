@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
 const { SMTPServer } = require('smtp-server');
@@ -82,10 +83,53 @@ defaultSettings.forEach(([key, value]) => {
 
 console.log('✅ Blog database initialized');
 
-// ミドルウェア
-app.use(cors());
+// レート制限設定
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15分
+  max: 100, // 15分間に100リクエストまで
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({ success: false, error: 'リクエスト制限を超えました。しばらく経ってからお試しください。' });
+  }
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15分
+  max: 10, // ログイン・削除などの重要操作は10回まで
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({ success: false, error: 'アクセス制限を超えました。15分後にお試しください。' });
+  }
+});
+
+// CORS制限（本番環境用）
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ['https://sutemeado.com', 'https://www.sutemeado.com', 'http://localhost:3000', 'http://localhost:8080'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // originがnull（Postmanなど）または許可リストに含まれる場合
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked: ${origin}`);
+      callback(new Error('CORS policy violation'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static('public', { maxAge: '1h' }));
+
+// APIエンドポイントにレート制限を適用
+app.use('/api/', apiLimiter);
+app.use('/api/login', strictLimiter);
+app.use('/api/mailbox/', strictLimiter);
+app.use('/api/address/', strictLimiter);
 
 // リクエストタイムアウトミドルウェア（30秒）
 app.use((req, res, next) => {
