@@ -1641,17 +1641,17 @@ async function init() {
         startPasswordVersionCheck();
       } else {
         clearSession();
-        // Auto-create new address instead of showing auth view
-        await autoCreateAddress();
+        // ログイン失敗時はログイン画面を表示（自動作成しない）
+        showLoggedOutView();
       }
     } catch (err) {
       clearSession();
-      // Auto-create new address instead of showing auth view
-      await autoCreateAddress();
+      // エラー時もログイン画面を表示（自動作成しない）
+      showLoggedOutView();
     }
   } else {
-    // No session - auto create new address
-    await autoCreateAddress();
+    // No session - show login/create options (don't auto-create)
+    showLoggedOutView();
   }
 
   console.log('🚀 Sutemeado initialized');

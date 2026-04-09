@@ -433,36 +433,18 @@
       <div class="status-card">
         <div class="status-card-header">
           <div class="status-indicator online"></div>
-          <span class="status-card-title">作成アドレス（累計）</span>
+          <span class="status-card-title">メール受信サービス</span>
         </div>
-        <div class="status-card-value" id="stat-addresses-total">-</div>
-        <div class="status-card-label">これまでに作成されたアドレス総数</div>
+        <div class="status-card-value" id="stat-addresses">-</div>
+        <div class="status-card-label">作成アドレス</div>
       </div>
       <div class="status-card">
         <div class="status-card-header">
           <div class="status-indicator online"></div>
-          <span class="status-card-title">受信メール（累計）</span>
+          <span class="status-card-title">SMTPサーバー</span>
         </div>
-        <div class="status-card-value" id="stat-mails-total">-</div>
-        <div class="status-card-label">これまでに受信したメール総数</div>
-      </div>
-    </div>
-    <div class="status-grid" style="margin-top: 1rem;">
-      <div class="status-card">
-        <div class="status-card-header">
-          <div class="status-indicator online"></div>
-          <span class="status-card-title">現在のメールボックス</span>
-        </div>
-        <div class="status-card-value" id="stat-addresses-current">-</div>
-        <div class="status-card-label">現在使用中のアドレス数</div>
-      </div>
-      <div class="status-card">
-        <div class="status-card-header">
-          <div class="status-indicator online"></div>
-          <span class="status-card-title">現在のメール</span>
-        </div>
-        <div class="status-card-value" id="stat-mails-current">-</div>
-        <div class="status-card-label">メールボックス内のメール数</div>
+        <div class="status-card-value" id="stat-mails">-</div>
+        <div class="status-card-label">受信メール</div>
       </div>
     </div>
 
@@ -567,18 +549,12 @@
         const stats = data.stats || {};
         console.log('Stats object:', stats);
         
-        // 累計値（減らない）
-        const totalAddresses = stats.totalAddressesAllTime || stats.total_addresses || 0;
-        const totalMails = stats.totalMailsAllTime || stats.total_mails || 0;
+        // Try different field names for compatibility
+        const addresses = stats.totalAddressesAllTime || stats.total_addresses || 0;
+        const mails = stats.totalMailsAllTime || stats.total_mails || 0;
         
-        // 現在値（変動する）
-        const currentAddresses = stats.currentMailboxes || stats.mailboxes || 0;
-        const currentMails = stats.currentMails || stats.totalMails || 0;
-        
-        document.getElementById('stat-addresses-total').textContent = totalAddresses.toLocaleString();
-        document.getElementById('stat-mails-total').textContent = totalMails.toLocaleString();
-        document.getElementById('stat-addresses-current').textContent = currentAddresses.toLocaleString();
-        document.getElementById('stat-mails-current').textContent = currentMails.toLocaleString();
+        document.getElementById('stat-addresses').textContent = addresses.toLocaleString();
+        document.getElementById('stat-mails').textContent = mails.toLocaleString();
         
         const uptimeSeconds = data.uptime || 0;
         const hours = Math.floor(uptimeSeconds / 3600);
@@ -587,10 +563,8 @@
         document.getElementById('response-time').textContent = Math.round(endTime - startTime) + 'ms';
       } catch (error) {
         console.error('Status fetch failed:', error);
-        document.getElementById('stat-addresses-total').textContent = 'エラー';
-        document.getElementById('stat-mails-total').textContent = 'エラー';
-        document.getElementById('stat-addresses-current').textContent = 'エラー';
-        document.getElementById('stat-mails-current').textContent = 'エラー';
+        document.getElementById('stat-addresses').textContent = 'エラー';
+        document.getElementById('stat-mails').textContent = 'エラー';
         document.getElementById('uptime').textContent = '取得失敗';
       }
       

@@ -242,12 +242,16 @@ app.post('/api/mailbox/:address', async (req, res) => {
 
     // 累計受信数（削除されても減らない）を取得
     const totalReceived = await mailStore.getCumulativeMailCount(address.toLowerCase().trim());
+    
+    // パスワードバージョンを取得（セッション管理用）
+    const passwordVersion = await mailStore.getPasswordVersion(address.toLowerCase().trim());
 
     res.json({
       success: true,
       address: address,
       count: mails.length,
       totalReceived: totalReceived,
+      passwordVersion: passwordVersion,
       mails: mails
     });
   } catch (err) {
@@ -285,8 +289,12 @@ app.post('/api/mailbox/:address/:mailId', async (req, res) => {
       });
     }
     
+    // パスワードバージョンを取得（セッション管理用）
+    const passwordVersion = await mailStore.getPasswordVersion(address.toLowerCase().trim());
+    
     res.json({
       success: true,
+      passwordVersion: passwordVersion,
       mail: mail
     });
   } catch (err) {
