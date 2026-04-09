@@ -320,13 +320,13 @@
       const drawerClose = document.getElementById('drawer-close');
 
       function openDrawer() {
-        drawer.classList.add('open');
+        drawer.classList.add('active');
         drawerOverlay.classList.add('visible');
         document.body.style.overflow = 'hidden';
       }
 
       function closeDrawer() {
-        drawer.classList.remove('open');
+        drawer.classList.remove('active');
         drawerOverlay.classList.remove('visible');
         document.body.style.overflow = '';
       }
