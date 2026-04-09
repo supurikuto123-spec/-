@@ -1101,8 +1101,8 @@ let passwordVersionTimer = null;
 
 function startPasswordVersionCheck() {
   stopPasswordVersionCheck();
-  // 30秒ごとにパスワードバージョンをチェック
-  passwordVersionTimer = setInterval(checkPasswordVersion, 30000);
+  // 5分ごとにパスワードバージョンをチェック（負荷軽減）
+  passwordVersionTimer = setInterval(checkPasswordVersion, 5 * 60 * 1000);
 }
 
 function stopPasswordVersionCheck() {
@@ -1121,10 +1121,17 @@ async function checkPasswordVersion() {
       const serverVersion = res.passwordVersion || 1;
       const localVersion = state.passwordVersion || 1;
       
-      // サーバーのバージョンがローカルより新しい = 他でパスワードが変更された
+      // サーバーのバージョンがローカルより新しい = 他でパスワードが変更された可能性
       if (serverVersion > localVersion) {
-        // 強制ログアウト
-        handleForcedLogout();
+        // 強制ログアウトせず、警告トーストのみ表示（ユーザーが選択できるように）
+        showToast(
+          'セキュリティ警告: このアカウントのパスワードが他の端末で変更された可能性があります。',
+          'warning',
+          5000
+        );
+        // ローカルのバージョンをサーバーと同期（次回チェックで再警告を防ぐ）
+        state.passwordVersion = serverVersion;
+        saveSession(state.currentAddress, state.currentPassword, serverVersion);
       }
     }
   } catch (err) {
@@ -1628,16 +1635,15 @@ async function init() {
           // ローカルの方が新しい（異常状態）→サーバーに同期
           state.passwordVersion = localVersion;
         } else if (serverVersion > localVersion) {
-          // サーバーの方が新しい（他で変更された）→強制ログアウト
-          clearSession();
-          showLoggedOutView();
-          showConfirm(
-            'パスワードが変更されました',
-            'このアカウントのパスワードが他の端末・ブラウザで変更されました。\n\nセキュリティのため、自動的にログアウトしました。\n新しいパスワードで再度ログインしてください。',
-            () => { openLoginModal(); },
-            'info'
+          // サーバーの方が新しい（他で変更された可能性）→警告を表示するがログアウトはしない
+          // （ユーザーが明示的にパスワードを変更していない場合に強制ログアウトされる問題を防ぐ）
+          showToast(
+            'セキュリティ警告: このアカウントのパスワードが他の端末で変更された可能性があります。問題があればパスワードを変更してください。',
+            'warning',
+            8000
           );
-          return;
+          // ローカルのバージョンをサーバーと同期
+          state.passwordVersion = serverVersion;
         } else {
           state.passwordVersion = serverVersion;
         }

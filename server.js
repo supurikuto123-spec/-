@@ -123,7 +123,7 @@ app.use(cors({
 }));
 
 app.use(express.json({ limit: '10mb' }));
-app.use(express.static('public', { maxAge: '1h' }));
+app.use(express.static('public', { maxAge: 0, etag: false, lastModified: false }));
 
 // APIエンドポイントにレート制限を適用
 app.use('/api/', apiLimiter);
