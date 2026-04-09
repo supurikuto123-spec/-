@@ -458,28 +458,41 @@ function linkify(text) {
 // ===== Session Management =====
 function saveSession(address, password) {
   const data = JSON.stringify({ address, password });
+  // Always save to localStorage as primary storage
   localStorage.setItem(CONFIG.STORAGE_KEY, data);
-  // Set cookie valid for 30 days
+  
+  // Also set cookie for cross-tab/window sync (secondary)
   const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString();
-  document.cookie = `sutemeado_session=${encodeURIComponent(data)}; expires=${expires}; path=/; SameSite=Lax`;
+  // Use Lax for better compatibility; cookie is just for sync, auth is still done via localStorage
+  const isSecure = window.location.protocol === 'https:';
+  const secureFlag = isSecure ? '; Secure' : '';
+  document.cookie = `sutemeado_session=${encodeURIComponent(data)}; expires=${expires}; path=/; SameSite=Lax${secureFlag}`;
 }
 
 function loadSession() {
   try {
-    // Try cookie first
+    // localStorage is primary - always check it first
+    const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    
+    // Fallback to cookie only if localStorage is empty (migration/compatibility)
     const cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
       if (cookie.startsWith('sutemeado_session=')) {
         const value = decodeURIComponent(cookie.substring('sutemeado_session='.length));
-        return JSON.parse(value);
+        const session = JSON.parse(value);
+        // Restore to localStorage
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(session));
+        return session;
       }
     }
     
-    // Fallback to localStorage
-    const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
-    return saved ? JSON.parse(saved) : null;
+    return null;
   } catch (e) {
+    console.warn('Session load error:', e);
     return null;
   }
 }

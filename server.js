@@ -128,7 +128,8 @@ app.use(express.static('public', { maxAge: '1h' }));
 // APIエンドポイントにレート制限を適用
 app.use('/api/', apiLimiter);
 app.use('/api/login', strictLimiter);
-app.use('/api/mailbox/', strictLimiter);
+// mailbox取得は閲覧のみなので緩い制限に。削除・変更のみstrict
+app.use('/api/mailbox/*/password', strictLimiter);  // パスワード変更のみstrict
 app.use('/api/address/', strictLimiter);
 
 // リクエストタイムアウトミドルウェア（30秒）
