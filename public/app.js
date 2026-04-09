@@ -1660,17 +1660,21 @@ async function init() {
         startPasswordVersionCheck();
       } else {
         clearSession();
-        // ログイン失敗時はログイン画面を表示（自動作成しない）
-        showLoggedOutView();
+        // ログイン失敗時は自動的に新しいアドレスを作成
+        console.log('Login failed, auto-creating new address...');
+        showToast(t('loginFailed') + ' - ' + t('creating'), 'warning');
+        await autoCreateAddress(true);
       }
     } catch (err) {
       clearSession();
-      // エラー時もログイン画面を表示（自動作成しない）
-      showLoggedOutView();
+      // エラー時も自動的に新しいアドレスを作成
+      console.log('Login error, auto-creating new address...', err);
+      await autoCreateAddress(true);
     }
   } else {
-    // No session - show login/create options (don't auto-create)
-    showLoggedOutView();
+    // No session - automatically create new address for better UX
+    console.log('No session found, auto-creating new address...');
+    await autoCreateAddress(true);
   }
 
   console.log('🚀 Sutemeado initialized');

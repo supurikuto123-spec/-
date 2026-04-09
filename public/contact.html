@@ -379,13 +379,13 @@
       function openDrawer() {
         drawer.classList.add('active');
         drawerOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        document.body.classList.add('drawer-open');
       }
 
       function closeDrawer() {
         drawer.classList.remove('active');
         drawerOverlay.classList.remove('active');
-        document.body.style.overflow = '';
+        document.body.classList.remove('drawer-open');
       }
 
       menuToggle.addEventListener('click', openDrawer);
