@@ -550,10 +550,12 @@ function showMailboxView() {
 }
 
 function updateAddressDisplay(address, password) {
-  document.getElementById('display-address').textContent = address;
+  const addressEl = document.getElementById('display-address');
+  if (addressEl) addressEl.textContent = address;
   // パスワードの長さに合わせて•を表示
   const maskedPassword = password ? '•'.repeat(password.length) : '••••••••';
-  document.getElementById('display-password').textContent = maskedPassword;
+  const passwordEl = document.getElementById('display-password');
+  if (passwordEl) passwordEl.textContent = maskedPassword;
   state.currentAddress = address;
   state.currentPassword = password;
   state.passwordVisible = false;
@@ -599,14 +601,19 @@ function renderMailList(mails) {
   const navMailCounter = document.getElementById('nav-mail-counter');
   const navCounterValue = document.getElementById('nav-counter-value');
   
+  // メールリスト要素が存在しないページ（サブページ）では処理をスキップ
+  if (!mailList) return;
+  
   // 未読数と累計受信数を表示（削除しても減らない）
   const unreadCount = (mails || []).filter(m => !m.read).length;
   const totalCount = mails ? mails.length : 0;
   const cumulativeCount = state.totalReceived ?? totalCount;
   // バッジは累計受信数を表示（削除しても減らない）
-  mailCount.textContent = cumulativeCount;
-  mailCount.title = unreadCount > 0 ? `${unreadCount}件未読 / 累計${cumulativeCount}件` : `累計${cumulativeCount}件受信`;
-  mailCount.classList.toggle('has-unread', unreadCount > 0);
+  if (mailCount) {
+    mailCount.textContent = cumulativeCount;
+    mailCount.title = unreadCount > 0 ? `${unreadCount}件未読 / 累計${cumulativeCount}件` : `累計${cumulativeCount}件受信`;
+    mailCount.classList.toggle('has-unread', unreadCount > 0);
+  }
 
   // ナビゲーションバーのメールカウンターも更新（累計数を表示）
   if (navMailCounter && navCounterValue) {
@@ -829,31 +836,41 @@ function updateDrawerLoginState() {
 
 // ===== Modal Management =====
 function openApiModal() {
-  document.getElementById('api-modal').classList.add('active');
+  const modal = document.getElementById('api-modal');
+  if (modal) modal.classList.add('active');
 }
 
 function closeApiModal() {
-  document.getElementById('api-modal').classList.remove('active');
+  const modal = document.getElementById('api-modal');
+  if (modal) modal.classList.remove('active');
 }
 
 function openSettingsModal() {
-  document.getElementById('settings-modal').classList.add('active');
+  const modal = document.getElementById('settings-modal');
+  if (modal) modal.classList.add('active');
 }
 
 function closeSettingsModal() {
-  document.getElementById('settings-modal').classList.remove('active');
+  const modal = document.getElementById('settings-modal');
+  if (modal) modal.classList.remove('active');
 }
 
 // ===== Change Password Modal =====
 function openChangePasswordModal() {
-  document.getElementById('change-password-form').reset();
-  document.getElementById('pw-strength-wrap').style.display = 'none';
-  document.getElementById('pw-match-msg').textContent = '';
-  document.getElementById('change-password-modal').classList.add('active');
+  const form = document.getElementById('change-password-form');
+  const wrap = document.getElementById('pw-strength-wrap');
+  const msg = document.getElementById('pw-match-msg');
+  const modal = document.getElementById('change-password-modal');
+  if (form) form.reset();
+  if (wrap) wrap.style.display = 'none';
+  if (msg) msg.textContent = '';
+  if (modal) modal.classList.add('active');
+  else location.href = '/';  // サブページではホームへ遷移
 }
 
 function closeChangePasswordModal() {
-  document.getElementById('change-password-modal').classList.remove('active');
+  const modal = document.getElementById('change-password-modal');
+  if (modal) modal.classList.remove('active');
 }
 
 function calcPasswordStrength(pw) {
@@ -918,11 +935,14 @@ async function handleChangePassword(e) {
 }
 
 function openLoginModal() {
-  document.getElementById('login-modal').classList.add('active');
+  const modal = document.getElementById('login-modal');
+  if (modal) modal.classList.add('active');
+  else location.href = '/';  // サブページではホームへ遷移
 }
 
 function closeLoginModal() {
-  document.getElementById('login-modal').classList.remove('active');
+  const modal = document.getElementById('login-modal');
+  if (modal) modal.classList.remove('active');
 }
 
 // ===== Password Warning Modal =====
@@ -935,10 +955,16 @@ function maybeShowPasswordWarning() { /* no-op */ }
 
 // ===== New Address Confirm Modal =====
 function openNewAddressConfirmModal() {
-  document.getElementById('new-address-confirm-modal').classList.add('active');
+  const modal = document.getElementById('new-address-confirm-modal');
+  if (modal) modal.classList.add('active');
+  else if (confirm(t('createNewAddressConfirm') || '新しいアドレスを作成しますか？')) {
+    clearSession();
+    location.href = '/';
+  }
 }
 function closeNewAddressConfirmModal() {
-  document.getElementById('new-address-confirm-modal').classList.remove('active');
+  const modal = document.getElementById('new-address-confirm-modal');
+  if (modal) modal.classList.remove('active');
 }
 
 // ===== New Address =====
@@ -1131,8 +1157,10 @@ async function refreshMailbox() {
   const refreshBtn = document.getElementById('refresh-btn');
   
   try {
-    refreshBtn.disabled = true;
-    refreshBtn.classList.add('spinning');
+    if (refreshBtn) {
+      refreshBtn.disabled = true;
+      refreshBtn.classList.add('spinning');
+    }
     
     const res = await api.getMailbox(state.currentAddress, state.currentPassword);
     
@@ -1148,8 +1176,10 @@ async function refreshMailbox() {
   } catch (err) {
     console.error('Failed to refresh mailbox:', err);
   } finally {
-    refreshBtn.disabled = false;
-    refreshBtn.classList.remove('spinning');
+    if (refreshBtn) {
+      refreshBtn.disabled = false;
+      refreshBtn.classList.remove('spinning');
+    }
   }
 }
 
