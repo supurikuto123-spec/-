@@ -1374,11 +1374,15 @@ function stopGlobalStats() {
 
 // ===== Event Listeners =====
 function initEventListeners() {
-  // 安全にイベントリスナーを追加するヘルパー
+  // 安全にイベントリスナーを追加するヘルパー（重複登録防止付き）
   function addListener(id, event, handler) {
     const el = document.getElementById(id);
     if (el) {
-      el.addEventListener(event, handler);
+      // 既にリスナー登録済みかチェック
+      if (!el.dataset.listenerAttached) {
+        el.addEventListener(event, handler);
+        el.dataset.listenerAttached = 'true';
+      }
     } else {
       console.warn(`Element not found: #${id}`);
     }
