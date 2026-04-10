@@ -907,8 +907,6 @@ async function handleChangePassword(e) {
       updateAddressDisplay(state.currentAddress, newPw);
       closeChangePasswordModal();
       showToast(t('passwordChanged'), 'success');
-      // パスワード変更成功後、他セッション無効化の説明を表示
-      showPasswordChangedNotice();
     } else {
       showToast(res.error || t('passwordChangeFailed'), 'error');
     }
@@ -917,18 +915,6 @@ async function handleChangePassword(e) {
   } finally {
     submitBtn.disabled = false;
   }
-}
-
-// パスワード変更後の通知
-function showPasswordChangedNotice() {
-  showConfirm(
-    'パスワードを変更しました',
-    'パスワードが変更されたため、他の端末・ブラウザでは自動的にログアウトされました。\n\n新しいパスワードで再度ログインする必要があります。',
-    () => {
-      // OKクリックで何もしない（閉じるだけ）
-    },
-    'info'
-  );
 }
 
 function openLoginModal() {
@@ -1137,31 +1123,6 @@ async function checkPasswordVersion() {
   } catch (err) {
     console.warn('Password version check failed:', err);
   }
-}
-
-// 強制ログアウト処理
-function handleForcedLogout() {
-  stopPasswordVersionCheck();
-  stopAutoRefresh();
-  clearSession();
-  
-  state.currentAddress = null;
-  state.currentPassword = null;
-  state.passwordVersion = 1;
-  state.mails = [];
-  
-  showLoggedOutView();
-  
-  // ポップアップ表示
-  showConfirm(
-    'パスワードが変更されました',
-    'このアカウントのパスワードが他の端末・ブラウザで変更されました。\n\nセキュリティのため、自動的にログアウトしました。\n新しいパスワードで再度ログインしてください。',
-    () => {
-      // OKクリックでログインモーダルを表示
-      openLoginModal();
-    },
-    'info'
-  );
 }
 
 async function refreshMailbox() {
