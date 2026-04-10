@@ -131,7 +131,7 @@
 <body>
   <!-- Navigation: ブランド + ハンバーガーボタン -->
   <nav class="navbar">
-    <div class="nav-brand" onclick="location.href='/'">
+    <div class="nav-brand">
       <div class="nav-logo-wrap">
         <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -141,8 +141,17 @@
       <span class="nav-title">Sutemeado</span>
     </div>
 
-    <!-- 右側: 言語 + ハンバーガー -->
+    <!-- 右側: メールカウンター + 言語 + ハンバーガー -->
     <div class="nav-right">
+      <!-- メールカウンター（ログイン中のみ表示） -->
+      <div class="nav-mail-counter" id="nav-mail-counter" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span class="nav-counter-value" id="nav-counter-value">0</span>
+      </div>
+
       <div class="lang-switch">
         <button class="lang-btn active" data-lang="ja">JA</button>
         <button class="lang-btn" data-lang="en">EN</button>
@@ -155,8 +164,7 @@
     </div>
   </nav>
 
-    <!-- ドロワーオーバーレイ -->
-  <div class="drawer-overlay" id="drawer-overlay"></div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
 
   <!-- ドロワーメニュー -->
   <div class="drawer" id="drawer">
@@ -310,34 +318,10 @@
 
 
   </div>
-<!-- Drawer Menu Toggle Script -->
-  <script>
-    (function() {
-      const menuToggle = document.getElementById('menu-toggle');
-      const drawer = document.getElementById('drawer');
-      const drawerOverlay = document.getElementById('drawer-overlay');
-      const drawerClose = document.getElementById('drawer-close');
-
-      function openDrawer() {
-        drawer.classList.add('active');
-        drawerOverlay.classList.add('active');
-        document.body.classList.add('drawer-open');
-      }
-
-      function closeDrawer() {
-        drawer.classList.remove('active');
-        drawerOverlay.classList.remove('active');
-        document.body.classList.remove('drawer-open');
-      }
-
-      menuToggle.addEventListener('click', openDrawer);
-      drawerOverlay.addEventListener('click', closeDrawer);
-      drawerClose.addEventListener('click', closeDrawer);
-    })();
-  </script>
 
   <!-- Main Content -->
-  <main class="main" style="padding-top: 100px; min-height: calc(100vh - 200px);">
+
+<main class="main" style="padding-top: 100px; min-height: calc(100vh - 200px);">
     <div class="news-container">
       <h1 class="page-title" style="text-align: center; margin-bottom: 40px; font-size: 2rem; font-weight: 700;">
         <span style="color: var(--neon-cyan);">お知らせ</span>
