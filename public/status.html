@@ -526,16 +526,22 @@
       const total = uptimeData.total || 0;
       
       if (total === 0) {
-        return '計測中...（データ収集に時間がかかります）';
+        return '計測中...';
       }
       
-      if (pct >= 99) {
-        return `${pct}% (24時間中${uptimeData.up}回/計${total}回)`;
-      } else if (pct >= 95) {
-        return `${pct}% ⚠️ (24時間中${uptimeData.up}回/計${total}回)`;
-      } else {
-        return `${pct}% ⚠️ 注意 (24時間中${uptimeData.up}回/計${total}回)`;
-      }
+      // シンプルなパーセント + メーター表示
+      const meterWidth = Math.round(pct);
+      let meterColor = '#10b981'; // green
+      if (pct < 95) meterColor = '#ef4444'; // red
+      else if (pct < 99) meterColor = '#f59e0b'; // yellow
+      
+      return `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-weight:600;min-width:45px;">${pct}%</span>
+        <div style="width:80px;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;flex-shrink:0;">
+          <div style="width:${meterWidth}%;height:100%;background:${meterColor};transition:width 0.3s;"></div>
+        </div>
+        ${pct < 95 ? '<span style="color:#ef4444;">⚠️</span>' : ''}
+      </div>`;
     }
     
     async function loadStatus() {
@@ -579,10 +585,10 @@
         const dbUptime = uptimePct.database || {};
         const apiUptime = uptimePct.api || {};
         
-        document.getElementById('uptime-web').textContent = formatUptimeText(webUptime);
-        document.getElementById('uptime-smtp').textContent = formatUptimeText(smtpUptime);
-        document.getElementById('uptime-database').textContent = formatUptimeText(dbUptime);
-        document.getElementById('uptime-api').textContent = formatUptimeText(apiUptime);
+        document.getElementById('uptime-web').innerHTML = formatUptimeText(webUptime);
+        document.getElementById('uptime-smtp').innerHTML = formatUptimeText(smtpUptime);
+        document.getElementById('uptime-database').innerHTML = formatUptimeText(dbUptime);
+        document.getElementById('uptime-api').innerHTML = formatUptimeText(apiUptime);
         
         // クラスを適用して色を変える
         ['web', 'smtp', 'database', 'api'].forEach(component => {
@@ -599,10 +605,10 @@
         document.getElementById('stat-addresses').textContent = 'エラー';
         document.getElementById('stat-mails').textContent = 'エラー';
         document.getElementById('uptime').textContent = '取得失敗';
-        document.getElementById('uptime-web').textContent = '取得失敗';
-        document.getElementById('uptime-smtp').textContent = '取得失敗';
-        document.getElementById('uptime-database').textContent = '取得失敗';
-        document.getElementById('uptime-api').textContent = '取得失敗';
+        document.getElementById('uptime-web').innerHTML = '取得失敗';
+        document.getElementById('uptime-smtp').innerHTML = '取得失敗';
+        document.getElementById('uptime-database').innerHTML = '取得失敗';
+        document.getElementById('uptime-api').innerHTML = '取得失敗';
       }
       
       document.getElementById('last-updated').textContent = '最終更新: ' + new Date().toLocaleString('ja-JP');
