@@ -618,9 +618,29 @@
     // 30秒ごとに自動更新
     setInterval(loadStatus, 30000);
   </script>
-</body>
-</html>
-0);
+
+  <!-- Drawer Toggle Script -->
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const drawer = document.getElementById('drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+    const drawerClose = document.getElementById('drawer-close');
+
+    function openDrawer() {
+      drawer.classList.add('active');
+      drawerOverlay.classList.add('active');
+      document.body.classList.add('drawer-open');
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      document.body.classList.remove('drawer-open');
+    }
+
+    menuToggle.addEventListener('click', openDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    drawerClose.addEventListener('click', closeDrawer);
   </script>
 </body>
 </html>
