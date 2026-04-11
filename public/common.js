@@ -62,8 +62,7 @@ if (typeof window.i18nCommon === 'undefined') {
 };
 }
 
-// i18n参照（統合用）
-const i18n = window.i18nCommon;
+
 
 // State
 const state = {
@@ -73,7 +72,7 @@ const state = {
 
 // Get translation
 function t(key) {
-  return i18n[state.currentLang][key] || key;
+  return window.i18nCommon[state.currentLang][key] || key;
 }
 
 // Update all i18n elements
@@ -84,19 +83,19 @@ function updateI18n(lang) {
 
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
-    if (i18n[lang][key]) {
+    if (window.i18nCommon[lang][key]) {
       if (el.tagName === 'TITLE') {
-        document.title = i18n[lang][key];
+        document.title = window.i18nCommon[lang][key];
       } else {
-        el.textContent = i18n[lang][key];
+        el.textContent = window.i18nCommon[lang][key];
       }
     }
   });
 
   // Update meta description
   const metaDesc = document.querySelector('meta[name="description"]');
-  if (metaDesc && i18n[lang].description) {
-    metaDesc.content = i18n[lang].description;
+  if (metaDesc && window.i18nCommon[lang].description) {
+    metaDesc.content = window.i18nCommon[lang].description;
   }
 
   // Update lang buttons
