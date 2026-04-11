@@ -171,7 +171,7 @@ var i18n = {
 };
 
 // ===== Configuration =====
-const CONFIG = {
+var CONFIG = {
   API_BASE: '',
   REFRESH_INTERVAL: 5000,
   STORAGE_KEY: 'sutemeado_session',
@@ -182,7 +182,8 @@ const CONFIG = {
 };
 
 // ===== State =====
-const state = {
+// common.js と重複を避けるため var を使用
+var state = {
   currentAddress: null,
   currentPassword: null,
   passwordVersion: 1,
