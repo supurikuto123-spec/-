@@ -203,6 +203,46 @@ app.use(cors({
 }));
 
 app.use(express.json({ limit: '10mb' }));
+
+// ===== URL正規化リダイレクトミドルウェア =====
+// Cloudflareを使わない場合のサーバーサイド301リダイレクト
+app.use((req, res, next) => {
+  const host = req.headers.host || '';
+  const protocol = req.headers['x-forwarded-proto'] || (req.socket.encrypted ? 'https' : 'http');
+  const originalUrl = req.originalUrl;
+  let shouldRedirect = false;
+  let redirectUrl = originalUrl;
+
+  // 1. www → non-www リダイレクト
+  if (host.startsWith('www.')) {
+    shouldRedirect = true;
+    const newHost = host.substring(4); // 'www.'を除去
+    redirectUrl = `${protocol}://${newHost}${originalUrl}`;
+  }
+
+  // 2. /index.html → / リダイレクト
+  if (originalUrl === '/index.html' || originalUrl.startsWith('/index.html?')) {
+    shouldRedirect = true;
+    const queryIndex = originalUrl.indexOf('?');
+    const queryString = queryIndex !== -1 ? originalUrl.substring(queryIndex) : '';
+    redirectUrl = `/${queryString}`;
+    // www除去済みの場合はホストも更新
+    if (host.startsWith('www.')) {
+      const newHost = host.substring(4);
+      redirectUrl = `${protocol}://${newHost}${redirectUrl}`;
+    } else {
+      redirectUrl = `${protocol}://${host}${redirectUrl}`;
+    }
+  }
+
+  if (shouldRedirect) {
+    console.log(`[301 Redirect] ${protocol}://${host}${originalUrl} → ${redirectUrl}`);
+    return res.redirect(301, redirectUrl);
+  }
+
+  next();
+});
+
 app.use(express.static('public', { maxAge: 0, etag: false, lastModified: false }));
 
 // レート制限は削除されました（ユーザー要求によりアクセス制限を撤廃）
