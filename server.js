@@ -182,11 +182,6 @@ setInterval(recordUptimeStatus, 5 * 60 * 1000);
 // 初回実行
 recordUptimeStatus();
 
-// レート制限は削除されました（ユーザー要求によりアクセス制限を撤廃）
-// 元の設定：
-// const apiLimiter = rateLimit({ windowMs: 15*60*1000, max: 100, ... });
-// const strictLimiter = rateLimit({ windowMs: 15*60*1000, max: 10, ... });
-
 // CORS制限（本番環境用）
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
