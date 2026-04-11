@@ -11,6 +11,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const SMTP_PORT = process.env.SMTP_PORT || 2525;
 
+// Trust proxy for X-Forwarded-For headers (nginx/cloudflare等を経由する場合に必要)
+app.set('trust proxy', 1);
+
 // DBパス設定（VPS永続化対策：絶対パスを使用）
 // 環境変数 DB_PATH を最優先で使用（ecosystem.config.js で設定される）
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.db');
