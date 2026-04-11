@@ -4,7 +4,8 @@
  */
 
 // ===== i18n Translations =====
-const i18n = {
+// common.js と重複を避けるため var を使用
+var i18n = {
   ja: {
     title: 'Sutemeado - シンプルな一時メール',
     description: '登録不要、パスワードでいつでもアクセスできる一時メールサービス',

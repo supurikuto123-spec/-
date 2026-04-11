@@ -4,7 +4,9 @@
  */
 
 // ===== i18n Translations =====
-const i18n = {
+// app.js と重複を避けるため、既に定義されていればスキップ
+if (typeof window.i18nCommon === 'undefined') {
+  window.i18nCommon = {
   ja: {
     title: 'Sutemeado - シンプルな一時メール',
     description: '登録不要、パスワードでいつでもアクセスできる一時メールサービス',
@@ -58,6 +60,10 @@ const i18n = {
     loginWithAnother: 'Login with Another Account'
   }
 };
+}
+
+// i18n参照（統合用）
+const i18n = window.i18nCommon;
 
 // State
 const state = {
