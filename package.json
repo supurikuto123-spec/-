@@ -12,7 +12,6 @@
     "better-sqlite3": "^9.4.3",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "express-rate-limit": "^7.2.0",
     "mailparser": "^3.6.5",
     "smtp-server": "^3.13.0",
     "sqlite3": "^5.1.7"
