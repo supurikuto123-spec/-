@@ -85,7 +85,14 @@ var i18n = {
     createNewAddressConfirm: 'ログイン情報を保存していない場合、現在のアドレスにはアクセスできなくなります。今後利用しない場合はアドレスを削除してください。\n\n新しいメールアドレスを作成しますか？',
     passwordWarningTitle: 'パスワードを保存してください',
     passwordWarningMessage: '再度アクセスするために、必ずパスワードを保存してください。',
-    understood: '了解しました'
+    understood: '了解しました',
+    saveMail: 'メールを保存',
+    savedMail: '保存済み',
+    unsaveMail: '保存解除',
+    savedFor30Days: '30日間保持',
+    authCode: '認証コード',
+    expiresOn: '期限',
+    notSavedWarning: '未保存：30日後に自動削除されます'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
@@ -166,7 +173,14 @@ var i18n = {
     createNewAddressConfirm: 'If you have not saved your login info, you will lose access to the current address. Delete the address first if you no longer need it.\n\nCreate a new email address?',
     passwordWarningTitle: 'Please Save Your Password',
     passwordWarningMessage: 'To access this address later, please save your password.',
-    understood: 'I Understand'
+    understood: 'I Understand',
+    saveMail: 'Save Email',
+    savedMail: 'Saved',
+    unsaveMail: 'Unsave',
+    savedFor30Days: 'Saved for 30 days',
+    authCode: 'Auth Code',
+    expiresOn: 'Expires',
+    notSavedWarning: 'Not saved: Auto-deleted after 30 days'
   }
 };
 
@@ -305,6 +319,24 @@ const api = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ currentPassword, newPassword })
+    });
+    return res.json();
+  },
+
+  async saveMail(address, password, mailId) {
+    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}/${mailId}/save`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    return res.json();
+  },
+
+  async unsaveMail(address, password, mailId) {
+    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}/${mailId}/unsave`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
     });
     return res.json();
   }
@@ -643,16 +675,39 @@ function renderMailList(mails) {
   
   // Sort by date, newest first
   const sortedMails = [...mails].sort((a, b) => b.receivedAt - a.receivedAt);
-  const newHTML = sortedMails.map(mail => `
-    <div class="mail-item ${!mail.read ? 'unread' : ''}" data-id="${mail.id}">
+  const newHTML = sortedMails.map(mail => {
+    // 認証コードを表示（あれば）
+    const authCodeHtml = mail.authCode ? `
+      <div class="mail-auth-code">
+        <span class="auth-code-label">${t('authCode')}</span>
+        <code class="auth-code-value">${escapeHtml(mail.authCode)}</code>
+      </div>
+    ` : '';
+    
+    // 保存状態を表示
+    const savedHtml = mail.saved ? `
+      <span class="mail-saved-badge" title="${t('savedFor30Days')}">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+      </span>
+    ` : '';
+    
+    return `
+    <div class="mail-item ${!mail.read ? 'unread' : ''} ${mail.saved ? 'saved' : ''}" data-id="${mail.id}">
       <div class="mail-header">
-        <span class="mail-subject">${escapeHtml(mail.subject || '(no subject)')}</span>
+        <span class="mail-subject">${savedHtml}${escapeHtml(mail.subject || '(no subject)')}</span>
         <span class="mail-time">${formatDate(mail.receivedAt)}</span>
       </div>
       <div class="mail-from">${escapeHtml(mail.from)}</div>
+      ${authCodeHtml}
       <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}${mail.body.length > 100 ? '...' : ''}</div>
+      ${!mail.saved ? `<div class="mail-not-saved-warning">${t('notSavedWarning')}</div>` : ''}
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   // 差分更新：内容が変わった時だけ DOM を更新してちらつき防止
   if (mailList.innerHTML !== newHTML) {
@@ -793,12 +848,47 @@ function openMailModal(mailId) {
   const bodyContainer = document.getElementById('modal-body-content');
   bodyContainer.innerHTML = '';
   
+  // 認証コードがあれば表示
+  if (mail.authCode) {
+    const authCodeEl = document.createElement('div');
+    authCodeEl.className = 'mail-auth-code-banner';
+    authCodeEl.innerHTML = `
+      <div class="auth-code-header">
+        <span class="auth-code-icon">🔐</span>
+        <span class="auth-code-label">${t('authCode')}</span>
+      </div>
+      <code class="auth-code-value-large">${escapeHtml(mail.authCode)}</code>
+      <button class="btn btn-secondary btn-sm" onclick="copyToClipboard('${escapeHtml(mail.authCode)}')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        ${t('copy')}
+      </button>
+    `;
+    bodyContainer.appendChild(authCodeEl);
+  }
+  
+  // 保存状態の警告表示
+  if (!mail.saved) {
+    const warningEl = document.createElement('div');
+    warningEl.className = 'mail-not-saved-banner';
+    warningEl.innerHTML = `
+      <span class="warning-icon">⚠️</span>
+      <span>${t('notSavedWarning')}</span>
+    `;
+    bodyContainer.appendChild(warningEl);
+  }
+  
   if (mail.html && mail.html.trim().length > 0) {
     const frame = createSandboxFrame(mail.html);
     bodyContainer.appendChild(frame);
   } else {
-    bodyContainer.innerHTML = `<div class="mail-body-text">${linkify(escapeHtml(mail.body))}</div>`;
+    bodyContainer.innerHTML += `<div class="mail-body-text">${linkify(escapeHtml(mail.body))}</div>`;
   }
+  
+  // Save buttonを更新
+  updateMailModalSaveButton();
   
   document.getElementById('mail-modal').classList.add('active');
   
@@ -1205,6 +1295,95 @@ async function handleDeleteMail() {
   }
 }
 
+async function handleSaveMail() {
+  if (!state.selectedMail || !state.currentAddress || !state.currentPassword) return;
+  
+  try {
+    const res = await api.saveMail(state.currentAddress, state.currentPassword, state.selectedMail.id);
+    
+    if (res.success) {
+      state.selectedMail.saved = true;
+      state.selectedMail.savedAt = res.savedAt;
+      state.selectedMail.expiresAt = res.expiresAt;
+      // Update in state.mails array
+      const mailIndex = state.mails.findIndex(m => m.id === state.selectedMail.id);
+      if (mailIndex >= 0) {
+        state.mails[mailIndex].saved = true;
+        state.mails[mailIndex].savedAt = res.savedAt;
+        state.mails[mailIndex].expiresAt = res.expiresAt;
+      }
+      renderMailList(state.mails);
+      updateMailModalSaveButton();
+      showToast('メールを保存しました（30日間保持）', 'success');
+    } else {
+      showToast('保存に失敗しました', 'error');
+    }
+  } catch (err) {
+    console.error('Failed to save mail:', err);
+    showToast('保存に失敗しました', 'error');
+  }
+}
+
+async function handleUnsaveMail() {
+  if (!state.selectedMail || !state.currentAddress || !state.currentPassword) return;
+  
+  try {
+    const res = await api.unsaveMail(state.currentAddress, state.currentPassword, state.selectedMail.id);
+    
+    if (res.success) {
+      state.selectedMail.saved = false;
+      state.selectedMail.savedAt = null;
+      // Update in state.mails array
+      const mailIndex = state.mails.findIndex(m => m.id === state.selectedMail.id);
+      if (mailIndex >= 0) {
+        state.mails[mailIndex].saved = false;
+        state.mails[mailIndex].savedAt = null;
+      }
+      renderMailList(state.mails);
+      updateMailModalSaveButton();
+      showToast('メールの保存を解除しました', 'info');
+    } else {
+      showToast('解除に失敗しました', 'error');
+    }
+  } catch (err) {
+    console.error('Failed to unsave mail:', err);
+    showToast('解除に失敗しました', 'error');
+  }
+}
+
+function updateMailModalSaveButton() {
+  const saveBtn = document.getElementById('modal-save-btn');
+  if (!saveBtn) return;
+  
+  if (state.selectedMail && state.selectedMail.saved) {
+    saveBtn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+        <polyline points="17 21 17 13 7 13 7 21"/>
+        <polyline points="7 3 7 8 15 8"/>
+      </svg>
+      <span>保存済み</span>
+    `;
+    saveBtn.classList.add('saved');
+    saveBtn.onclick = handleUnsaveMail;
+    // Show expiry info
+    const expiresAt = state.selectedMail.expiresAt ? new Date(state.selectedMail.expiresAt).toLocaleDateString('ja-JP') : '30日後';
+    saveBtn.title = `保存済み（${expiresAt}まで保持）`;
+  } else {
+    saveBtn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+        <polyline points="17 21 17 13 7 13 7 21"/>
+        <polyline points="7 3 7 8 15 8"/>
+      </svg>
+      <span>保存</span>
+    `;
+    saveBtn.classList.remove('saved');
+    saveBtn.onclick = handleSaveMail;
+    saveBtn.title = 'クリックして30日間保存';
+  }
+}
+
 function handleDeleteAllMail() {
   if (!state.currentAddress || !state.currentPassword) return;
   
@@ -1491,6 +1670,7 @@ function initEventListeners() {
   addListener('mail-modal-close', 'click', closeMailModal);
   addListener('modal-close-btn', 'click', closeMailModal);
   addListener('modal-delete-btn', 'click', handleDeleteMail);
+  addListener('modal-save-btn', 'click', handleSaveMail);
   addListener('login-modal-close', 'click', closeLoginModal);
   addListener('change-password-modal-close', 'click', closeChangePasswordModal);
 

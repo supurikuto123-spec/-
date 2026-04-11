@@ -449,6 +449,101 @@ app.delete('/api/mailbox/:address/:mailId', async (req, res) => {
   }
 });
 
+// メールを保存（パスワード必須）- 30日間保持
+app.post('/api/mailbox/:address/:mailId/save', async (req, res) => {
+  try {
+    const { address, mailId } = req.params;
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        error: 'パスワードが必要です'
+      });
+    }
+    
+    const result = await mailStore.saveMail(address, password, mailId);
+    
+    if (result === null) {
+      return res.status(401).json({
+        success: false,
+        error: '認証に失敗しました'
+      });
+    }
+    
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        error: 'メールが見つかりません'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'メールを保存しました（30日間保持）',
+      savedAt: result.savedAt,
+      expiresAt: result.expiresAt
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// メールの保存を解除（パスワード必須）
+app.post('/api/mailbox/:address/:mailId/unsave', async (req, res) => {
+  try {
+    const { address, mailId } = req.params;
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        error: 'パスワードが必要です'
+      });
+    }
+    
+    const result = await mailStore.unsaveMail(address, password, mailId);
+    
+    if (result === null) {
+      return res.status(401).json({
+        success: false,
+        error: '認証に失敗しました'
+      });
+    }
+    
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        error: 'メールが見つかりません'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'メールの保存を解除しました'
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// 期限切れメールの自動クリーンアップ（内部API）
+app.post('/api/admin/cleanup', async (req, res) => {
+  try {
+    const result = await mailStore.cleanupExpiredMails();
+    res.json({
+      success: true,
+      deleted: result.deleted,
+      message: `${result.deleted}件の期限切れメールを削除しました`
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
 // 全メールを削除（パスワード必須）
 app.delete('/api/mailbox/:address', async (req, res) => {
   try {
@@ -911,6 +1006,28 @@ app.use((err, req, res, next) => {
 async function startServer() {
   await mailStore.init();
   console.log('📦 Database initialized');
+
+  // 期限切れメールの自動クリーンアップをスケジュール（1日1回）
+  setInterval(async () => {
+    console.log('[SCHEDULE] Running daily cleanup of expired mails...');
+    try {
+      const result = await mailStore.cleanupExpiredMails();
+      console.log(`[SCHEDULE] Cleanup completed: ${result.deleted} mails deleted`);
+    } catch (err) {
+      console.error('[SCHEDULE] Cleanup failed:', err.message);
+    }
+  }, 24 * 60 * 60 * 1000); // 24時間ごと
+  
+  // 初回クリーンアップ（起動時に実行）
+  setTimeout(async () => {
+    console.log('[SCHEDULE] Initial cleanup on startup...');
+    try {
+      const result = await mailStore.cleanupExpiredMails();
+      console.log(`[SCHEDULE] Initial cleanup completed: ${result.deleted} mails deleted`);
+    } catch (err) {
+      console.error('[SCHEDULE] Initial cleanup failed:', err.message);
+    }
+  }, 5000); // 起動5秒後に実行
 
   // Expressサーバー起動
   app.listen(PORT, '0.0.0.0', () => {

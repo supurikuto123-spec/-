@@ -386,8 +386,26 @@
     </header>
 
     <div class="last-updated" id="last-updated">
-      最終更新: 読み込み中...
+      最終更新: <span id="last-updated-time">読み込み中...</span>
     </div>
+    <script>
+      // localStorageから前回のキャッシュを取得して即時表示
+      (function() {
+        try {
+          const cached = localStorage.getItem('statusCache');
+          if (cached) {
+            const data = JSON.parse(cached);
+            if (data.addresses) document.getElementById('stat-addresses').textContent = data.addresses;
+            if (data.mails) document.getElementById('stat-mails').textContent = data.mails;
+            if (data.timestamp) document.getElementById('last-updated-time').textContent = data.timestamp;
+          } else {
+            document.getElementById('last-updated-time').textContent = '読み込み中...';
+          }
+        } catch (e) {
+          // localStorageアクセスできない環境でのエラーを無視
+        }
+      })();
+    </script>
 
     <button class="refresh-btn" onclick="loadStatus()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -588,6 +606,17 @@
           }
         });
         
+        // localStorageにキャッシュ（次回読み込み時の即時表示用）
+        try {
+          localStorage.setItem('statusCache', JSON.stringify({
+            addresses: addresses.toLocaleString(),
+            mails: mails.toLocaleString(),
+            timestamp: new Date().toLocaleString('ja-JP')
+          }));
+        } catch (e) {
+          // localStorageが使えない環境では無視
+        }
+        
       } catch (error) {
         console.error('Status fetch failed:', error);
         document.getElementById('stat-addresses').textContent = 'エラー';
@@ -599,7 +628,9 @@
         document.getElementById('uptime-api').innerHTML = '取得失敗';
       }
       
-      document.getElementById('last-updated').textContent = '最終更新: ' + new Date().toLocaleString('ja-JP');
+      const updateTime = new Date().toLocaleString('ja-JP');
+      document.getElementById('last-updated').textContent = '最終更新: ' + updateTime;
+      document.getElementById('last-updated-time').textContent = updateTime;
     }
 
     // 初回読み込み
