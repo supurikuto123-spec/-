@@ -1,6 +1,6 @@
 # URL正規化リダイレクト
-# www → non-www
-https://www.sutemeado.com/* https://sutemeado.com/:splat 301
-
 # /index.html → /
 /index.html / 301
+
+# www → non-www（Cloudflare Pagesはサポートしていない可能性あり）
+# この設定はCloudflare DashboardのRulesで設定する必要があるかもしれません
