@@ -65,7 +65,7 @@ if (typeof window.i18nCommon === 'undefined') {
 
 
 // State
-const state = {
+var state = {
   currentLang: localStorage.getItem('sutemeado-lang') || 'ja',
   isLoggedIn: false
 };
