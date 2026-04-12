@@ -999,17 +999,30 @@ function checkLanguageRedirect() {
     }
   }
 
-  // Clear the redirect flag once we're on the correct page
-  sessionStorage.removeItem('lang_redirect_attempted');
+  // On correct page - clear the done flag so future visits can redirect if needed
+  sessionStorage.removeItem('lang_redirect_done');
   return false;
 }
 
 // ===== IMMEDIATE LANGUAGE CHECK =====
 // Run this RIGHT NOW before any content renders to prevent flash of wrong language
 (function immediateLanguageCheck() {
+  // Skip on homepage - app.js handles language there
+  const path = window.location.pathname;
+  if (path === '/' || path === '/index.html') return;
+  
+  // Prevent redirect loops - check if we already redirected this session
+  if (sessionStorage.getItem('lang_redirect_done')) {
+    // Already redirected once this session, don't redirect again
+    return;
+  }
+  
+  // Check if redirect needed
   if (checkLanguageRedirect()) {
-    // Redirecting - throw to stop script execution
-    throw new Error('Language redirect in progress - stopping script execution');
+    // Mark that we've done a redirect this session
+    sessionStorage.setItem('lang_redirect_done', 'true');
+    console.log('[i18n] Redirecting to correct language version...');
+    // Script execution stops naturally due to page unload
   }
 })();
 
