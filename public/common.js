@@ -1125,65 +1125,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Fix non-functional buttons on subpages - redirect to homepage
   if (!isHomePage) {
-    // Login/Account buttons - redirect to home with login action
-    const menuLoginOther = document.getElementById('menu-login-other');
-    if (menuLoginOther) {
-      menuLoginOther.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        redirectToHome('login');
-      });
+    // Helper to safely add event listener
+    function safeAddListener(id, handler) {
+      const el = document.getElementById(id);
+      if (el) {
+        // Remove existing listeners by cloning
+        const newEl = el.cloneNode(true);
+        el.parentNode.replaceChild(newEl, el);
+        // Add new listener
+        newEl.addEventListener('click', handler);
+        console.log(`[Menu] Attached listener to ${id}`);
+      } else {
+        console.warn(`[Menu] Element ${id} not found`);
+      }
     }
+
+    // Login/Account buttons - redirect to home with login action
+    safeAddListener('menu-login-other', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      redirectToHome('login');
+    });
 
     // Create New Address button
-    const menuNewAddress = document.getElementById('menu-new-address');
-    if (menuNewAddress) {
-      menuNewAddress.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        redirectToHome('new-address');
-      });
-    }
+    safeAddListener('menu-new-address', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      redirectToHome('new-address');
+    });
 
     // Delete All Emails button
-    const menuDeleteAllMail = document.getElementById('menu-delete-all-mail');
-    if (menuDeleteAllMail) {
-      menuDeleteAllMail.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        redirectToHome('delete-all-mail');
-      });
-    }
+    safeAddListener('menu-delete-all-mail', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      redirectToHome('delete-all-mail');
+    });
 
     // Delete Address button
-    const menuDeleteAddress = document.getElementById('menu-delete-address');
-    if (menuDeleteAddress) {
-      menuDeleteAddress.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        redirectToHome('delete-address');
-      });
-    }
+    safeAddListener('menu-delete-address', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      redirectToHome('delete-address');
+    });
 
-    // API Docs button - will be handled separately to go to api.html
-    const menuApi = document.getElementById('menu-api');
-    if (menuApi) {
-      menuApi.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        window.location.href = '/api.html';
-      });
-    }
+    // API Docs button
+    safeAddListener('menu-api', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const lang = state.currentLang || 'ja';
+      window.location.href = lang === 'en' ? '/api-en.html' : '/api.html';
+    });
 
     // Settings button - redirect to home
-    const menuSettings = document.getElementById('menu-settings');
-    if (menuSettings) {
-      menuSettings.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        redirectToHome('settings');
-      });
-    }
+    safeAddListener('menu-settings', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      redirectToHome('settings');
+    });
   }
 
   // Fix menu navigation links to respect current language on subpages
@@ -1191,14 +1189,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentLang = state.currentLang || 'ja';
     const suffix = currentLang === 'en' ? '-en.html' : '.html';
     
-    // Update site guide links (home is always '/')
+    // Fix home link to use ?lang parameter instead of just '/'
+    const menuHome = document.getElementById('menu-home');
+    if (menuHome) {
+      menuHome.removeAttribute('onclick');
+      menuHome.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = `/?lang=${currentLang}`;
+      });
+    }
+    
+    // Update site guide links (skip api as it's handled above)
     const menuLinks = [
       { id: 'menu-howto', base: '/how-to-use' },
       { id: 'menu-status', base: '/status' },
       { id: 'menu-news', base: '/news' },
       { id: 'menu-faq', base: '/faq' },
-      { id: 'menu-contact', base: '/contact' },
-      { id: 'menu-api', base: '/api' }
+      { id: 'menu-contact', base: '/contact' }
     ];
     
     menuLinks.forEach(link => {
