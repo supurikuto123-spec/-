@@ -1738,8 +1738,6 @@ function initEventListeners() {
   addListener('settings-modal-close', 'click', closeSettingsModal);
   addListener('mail-modal-close', 'click', closeMailModal);
   addListener('modal-close-btn', 'click', closeMailModal);
-  addListener('modal-delete-btn', 'click', handleDeleteMail);
-  addListener('modal-save-btn', 'click', handleSaveMail);
   addListener('login-modal-close', 'click', closeLoginModal);
   addListener('change-password-modal-close', 'click', closeChangePasswordModal);
 
