@@ -113,10 +113,15 @@ if (typeof window.i18nCommon === 'undefined') {
     contactCtaBtn: '@not_rare.tar にDMする',
     // Common
     backBtn: '戻る',
-    // Terms page
-    termsDate: '制定日：2026年3月25日　|　最終更新日：2026年3月25日',
-    // Privacy page
-    privacyDate: '制定日：2026年3月25日　|　最終更新日：2026年3月25日　|　適用範囲：日本およびEU/EEA地域',
+    // Terms page - date display labels
+    termsDateLabel: '制定日：',
+    termsLastUpdatedLabel: '最終更新日：',
+    termsDate: '<strong>制定日：</strong>2026年3月25日　|　<strong>最終更新日：</strong>2026年3月25日',
+    // Privacy page - date display labels
+    privacyDateLabel: '制定日：',
+    privacyLastUpdatedLabel: '最終更新日：',
+    privacyAppliesToLabel: '適用範囲：',
+    privacyDate: '<strong>制定日：</strong>2026年3月25日　|　<strong>最終更新日：</strong>2026年3月25日　|　<strong>適用範囲：</strong>日本およびEU/EEA地域',
     // news.html
     newsItem1Date: '2026年4月8日',
     newsItem1Badge: 'お知らせ',
@@ -343,10 +348,15 @@ if (typeof window.i18nCommon === 'undefined') {
     contactCtaBtn: 'DM @not_rare.tar',
     // Common
     backBtn: 'Back',
-    // Terms page
-    termsDate: 'Effective: March 25, 2026 | Last Updated: March 25, 2026',
-    // Privacy page
-    privacyDate: 'Effective: March 25, 2026 | Last Updated: March 25, 2026 | Applies to: Japan and EU/EEA Regions',
+    // Terms page - date display labels
+    termsDateLabel: 'Effective: ',
+    termsLastUpdatedLabel: 'Last Updated: ',
+    termsDate: '<strong>Effective:</strong> March 25, 2026 | <strong>Last Updated:</strong> March 25, 2026',
+    // Privacy page - date display labels
+    privacyDateLabel: 'Effective: ',
+    privacyLastUpdatedLabel: 'Last Updated: ',
+    privacyAppliesToLabel: 'Applies to: ',
+    privacyDate: '<strong>Effective:</strong> March 25, 2026 | <strong>Last Updated:</strong> March 25, 2026 | <strong>Applies to:</strong> Japan and EU/EEA Regions',
     // news.html
     newsItem1Date: 'April 8, 2026',
     newsItem2Date: 'March 27, 2026',
@@ -763,8 +773,11 @@ function updateI18n(lang) {
     if (window.i18nCommon[lang][key]) {
       if (el.tagName === 'TITLE') {
         document.title = window.i18nCommon[lang][key];
+      } else if (el.tagName === 'META') {
+        el.content = window.i18nCommon[lang][key];
       } else {
-        el.textContent = window.i18nCommon[lang][key];
+        // Use innerHTML to preserve HTML tags in translations (links, styling, etc.)
+        el.innerHTML = window.i18nCommon[lang][key];
       }
     }
   });
@@ -1010,4 +1023,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check login status
   checkLoginStatus();
+});
+ginStatus();
 });
