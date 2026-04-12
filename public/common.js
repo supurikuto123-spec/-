@@ -154,7 +154,17 @@ if (typeof window.i18nCommon === 'undefined') {
     // blog.html translations
     blogLoading: '記事を読み込み中...',
     blogNoArticles: '記事がありません',
-    blogError: '記事の読み込みに失敗しました。時間をおいて再度お試しください。'
+    blogError: '記事の読み込みに失敗しました。時間をおいて再度お試しください。',
+    // SEO Hero Title (index.html)
+    heroKeyword: '捨てメアド',
+    heroSubtitle: 'で匿名受信 - 登録不要の使い捨てメールサービス',
+    // Subpage titles
+    termsTitle: '利用規約',
+    privacyTitle: 'プライバシーポリシー・クッキーポリシー',
+    newsTitle: 'お知らせ',
+    termsMetaDesc: 'Sutemeado（ステメアド）の利用規約です。登録不要で使える一時メールサービスのご利用条件、免責事項、利用制限について定めています。',
+    privacyMetaDesc: 'Sutemeado（ステメアド）のプライバシーポリシーとクッキーポリシーです。一時メールサービスにおける個人情報の取り扱い、データ保護、クッキーの使用方法について説明しています。',
+    newsMetaDesc: 'Sutemeadoからのお知らせ'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
@@ -570,7 +580,17 @@ if (typeof window.i18nCommon === 'undefined') {
     privacyArticle14_2: 'Operator Email: support@sutemeado.com (planned)',
     privacyArticle15Title: 'Article 15 (Governing Law)',
     privacyArticle15_1: 'This policy shall be interpreted in accordance with Japanese law. For users in EU/EEA regions, within the scope where the General Data Protection Regulation (GDPR) applies, this policy shall also satisfy the requirements of said regulation.',
-    privacyCompliantNotice: 'This page complies with Google AdSense and GDPR/CCPA'
+    privacyCompliantNotice: 'This page complies with Google AdSense and GDPR/CCPA',
+    // SEO Hero Title (index.html) - English SEO optimized with temp mail keywords
+    heroKeyword: 'Temp Mail',
+    heroSubtitle: ' for Anonymous Receipt - Free Disposable Email Service Without Registration',
+    // Subpage titles
+    termsTitle: 'Terms of Service',
+    privacyTitle: 'Privacy & Cookie Policy',
+    newsTitle: 'News',
+    termsMetaDesc: 'Terms of Service for Sutemeado temporary email service. Usage conditions, disclaimers, and usage restrictions for the free disposable email service without registration.',
+    privacyMetaDesc: 'Privacy Policy and Cookie Policy for Sutemeado. Explains handling of personal information, data protection, and cookie usage in the temporary email service.',
+    newsMetaDesc: 'Latest news and updates from Sutemeado'
   }
 };
 }
@@ -614,10 +634,15 @@ function updateI18n(lang) {
     }
   });
 
-  // Update meta description
+  // Update meta description (support both data-i18n attribute and default key)
   const metaDesc = document.querySelector('meta[name="description"]');
-  if (metaDesc && window.i18nCommon[lang].description) {
-    metaDesc.content = window.i18nCommon[lang].description;
+  if (metaDesc) {
+    const metaDescKey = metaDesc.dataset.i18n;
+    if (metaDescKey && window.i18nCommon[lang][metaDescKey]) {
+      metaDesc.content = window.i18nCommon[lang][metaDescKey];
+    } else if (window.i18nCommon[lang].description) {
+      metaDesc.content = window.i18nCommon[lang].description;
+    }
   }
 
   // Update lang buttons
