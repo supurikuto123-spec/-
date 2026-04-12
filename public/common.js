@@ -743,12 +743,22 @@ if (typeof window.i18nCommon === 'undefined') {
 
 
 // State
-// Detect current language from URL path (-en.html suffix)
+// Detect current language from URL query param, path suffix, or localStorage
 function detectPageLanguage() {
+  // First check URL query parameter (?lang=en or ?lang=ja)
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlLang = urlParams.get('lang');
+  if (urlLang === 'en' || urlLang === 'ja') {
+    return urlLang;
+  }
+  
+  // Then check path suffix (-en.html)
   const path = window.location.pathname;
   if (path.endsWith('-en.html') || path === '/api-en.html' || path === '/api-en') {
     return 'en';
   }
+  
+  // Fall back to localStorage
   return localStorage.getItem('sutemeado_lang') || 'ja';
 }
 
@@ -904,14 +914,18 @@ function showToast(message, type = 'info') {
 
 // Drawer functions
 function openDrawer() {
-  document.getElementById('drawer').classList.add('active');
-  document.getElementById('drawer-overlay').classList.add('active');
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  if (drawer) drawer.classList.add('active');
+  if (overlay) overlay.classList.add('active');
   document.body.classList.add('drawer-open');
 }
 
 function closeDrawer() {
-  document.getElementById('drawer').classList.remove('active');
-  document.getElementById('drawer-overlay').classList.remove('active');
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  if (drawer) drawer.classList.remove('active');
+  if (overlay) overlay.classList.remove('active');
   document.body.classList.remove('drawer-open');
 }
 
@@ -1033,17 +1047,58 @@ document.addEventListener('DOMContentLoaded', () => {
   // ホームページ判定（複数箇所で使用）
   const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
 
-  // Language buttons (ホームページのみで有効)
-  if (isHomePage) {
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const lang = btn.dataset.lang;
-        if (lang && lang !== state.currentLang) {
+  // Language buttons (すべてのページで有効)
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.dataset.lang;
+      if (lang && lang !== state.currentLang) {
+        // 言語を保存
+        localStorage.setItem('sutemeado_lang', lang);
+        
+        // 現在のページのパスを取得
+        const currentPath = window.location.pathname;
+        let newPath;
+        
+        // ホームページの場合はクエリパラメータを使用
+        if (isHomePage) {
+          newPath = `/?lang=${lang}`;
+        } else {
+          // サブページの場合は適切な言語版に遷移
+          if (lang === 'en') {
+            // 英語版へ
+            if (currentPath === '/api.html' || currentPath === '/api') {
+              newPath = '/api-en.html';
+            } else if (currentPath.endsWith('-en.html')) {
+              newPath = currentPath; // 既に英語版
+            } else if (currentPath.endsWith('.html')) {
+              newPath = currentPath.replace('.html', '-en.html');
+            } else {
+              newPath = currentPath + '-en.html';
+            }
+          } else {
+            // 日本語版へ
+            if (currentPath === '/api-en.html' || currentPath === '/api-en') {
+              newPath = '/api.html';
+            } else if (currentPath.endsWith('-en.html')) {
+              newPath = currentPath.replace('-en.html', '.html');
+            } else if (currentPath.endsWith('.html')) {
+              newPath = currentPath; // 既に日本語版
+            } else {
+              newPath = currentPath + '.html';
+            }
+          }
+        }
+        
+        // 遷移先が現在と異なる場合のみ遷移
+        if (newPath && newPath !== currentPath + window.location.search) {
+          window.location.href = newPath;
+        } else {
+          // 同じページならi18nのみ更新
           updateI18n(lang);
         }
-      });
+      }
     });
-  }
+  });
 
   // Theme toggle button
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
@@ -1125,6 +1180,34 @@ document.addEventListener('DOMContentLoaded', () => {
         redirectToHome('settings');
       });
     }
+  }
+
+  // Fix menu navigation links to respect current language on subpages
+  if (!isHomePage) {
+    const currentLang = state.currentLang || 'ja';
+    const suffix = currentLang === 'en' ? '-en.html' : '.html';
+    
+    // Update site guide links (home is always '/')
+    const menuLinks = [
+      { id: 'menu-howto', base: '/how-to-use' },
+      { id: 'menu-status', base: '/status' },
+      { id: 'menu-news', base: '/news' },
+      { id: 'menu-faq', base: '/faq' },
+      { id: 'menu-contact', base: '/contact' },
+      { id: 'menu-api', base: '/api' }
+    ];
+    
+    menuLinks.forEach(link => {
+      const el = document.getElementById(link.id);
+      if (el) {
+        // Remove hardcoded onclick and add proper language-aware handler
+        el.removeAttribute('onclick');
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = link.base + suffix;
+        });
+      }
+    });
   }
 
   // Check login status

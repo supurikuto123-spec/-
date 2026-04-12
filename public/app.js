@@ -311,8 +311,10 @@ function setLanguage(lang) {
   const currentLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';
   if (currentLang !== lang) {
     localStorage.setItem(CONFIG.LANG_KEY, lang);
-    // ページをリロードして翻訳を適用
-    location.reload();
+    // Update URL with lang query parameter and reload
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', lang);
+    window.location.href = url.toString();
     return;
   }
   
@@ -1977,8 +1979,19 @@ function initEventListeners() {
 
 // ===== Initialization =====
 async function init() {
-  // Load language
-  const savedLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';
+  // Check URL query parameters for language override
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlLang = urlParams.get('lang');
+  
+  // Load language (URL param takes precedence over localStorage)
+  let savedLang;
+  if (urlLang === 'en' || urlLang === 'ja') {
+    savedLang = urlLang;
+    // Sync to localStorage for consistency
+    localStorage.setItem(CONFIG.LANG_KEY, savedLang);
+  } else {
+    savedLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';
+  }
   setLanguage(savedLang);
 
   // Load theme
