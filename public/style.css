@@ -3601,6 +3601,13 @@ body.drawer-open {
   color: var(--neon-green);
 }
 
+.auth-code-hint {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
 /* ===== Save Button Styles ===== */
 #modal-save-btn {
   display: inline-flex;
