@@ -382,11 +382,11 @@
 
   <div class="status-page" style="padding-top: 80px;">
     <header class="status-header" style="justify-content: center;">
-      <h1 class="status-title">稼働状況</h1>
+      <h1 class="status-title" data-i18n="statusPageTitle">稼働状況</h1>
     </header>
 
     <div class="last-updated" id="last-updated">
-      最終更新: <span id="last-updated-time">読み込み中...</span>
+      <span data-i18n="lastUpdatedPrefix">最終更新:</span> <span id="last-updated-time"><span data-i18n="loadingText">読み込み中...</span></span>
     </div>
     <script>
       // localStorageから前回のキャッシュを取得して即時表示
@@ -399,7 +399,8 @@
             if (data.mails) document.getElementById('stat-mails').textContent = data.mails;
             if (data.timestamp) document.getElementById('last-updated-time').textContent = data.timestamp;
           } else {
-            document.getElementById('last-updated-time').textContent = '読み込み中...';
+            var loadingText = (window.i18nCommon && window.i18nCommon[state.currentLang] && window.i18nCommon[state.currentLang].loadingText) || '読み込み中...';
+            document.getElementById('last-updated-time').textContent = loadingText;
           }
         } catch (e) {
           // localStorageアクセスできない環境でのエラーを無視
@@ -407,7 +408,7 @@
       })();
     </script>
 
-    <button class="refresh-btn" onclick="loadStatus()">
+    <button class="refresh-btn" onclick="loadStatus()" data-i18n="refreshBtn">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="23 4 23 10 17 10"/>
         <polyline points="1 20 1 14 7 14"/>
@@ -420,23 +421,23 @@
       <div class="status-card">
         <div class="status-card-header">
           <div class="status-indicator online"></div>
-          <span class="status-card-title">メール受信サービス</span>
+          <span class="status-card-title" data-i18n="statusCardMailTitle">メール受信サービス</span>
         </div>
         <div class="status-card-value" id="stat-addresses">-</div>
-        <div class="status-card-label">作成アドレス</div>
+        <div class="status-card-label" data-i18n="statusCardAddressLabel">作成アドレス</div>
       </div>
       <div class="status-card">
         <div class="status-card-header">
           <div class="status-indicator online"></div>
-          <span class="status-card-title">SMTPサーバー</span>
+          <span class="status-card-title" data-i18n="statusCardSmtpTitle">SMTPサーバー</span>
         </div>
         <div class="status-card-value" id="stat-mails">-</div>
-        <div class="status-card-label">受信メール</div>
+        <div class="status-card-label" data-i18n="statusCardMailLabel">受信メール</div>
       </div>
     </div>
 
     <div class="status-section">
-      <h2 class="status-section-title">
+      <h2 class="status-section-title" data-i18n="statusUptimeSectionTitle">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
         </svg>
@@ -444,7 +445,7 @@
       </h2>
       <ul class="status-list">
         <li class="status-list-item">
-          <span class="status-list-label">
+          <span class="status-list-label" data-i18n="statusWebServerLabel">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
               <line x1="8" y1="21" x2="16" y2="21"/>
@@ -452,20 +453,20 @@
             </svg>
             Webサーバー
           </span>
-          <span class="status-list-value" id="uptime-web">計測中...</span>
+          <span class="status-list-value" id="uptime-web" data-i18n="statusMeasuring">計測中...</span>
         </li>
         <li class="status-list-item">
-          <span class="status-list-label">
+          <span class="status-list-label" data-i18n="statusSmtpLabel">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
               <polyline points="22 6 12 13 2 6"/>
             </svg>
             SMTPサーバー (ポート2525)
           </span>
-          <span class="status-list-value" id="uptime-smtp">計測中...</span>
+          <span class="status-list-value" id="uptime-smtp" data-i18n="statusMeasuring">計測中...</span>
         </li>
         <li class="status-list-item">
-          <span class="status-list-label">
+          <span class="status-list-label" data-i18n="statusDbLabel">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <ellipse cx="12" cy="5" rx="9" ry="3"/>
               <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
@@ -473,26 +474,26 @@
             </svg>
             データベース
           </span>
-          <span class="status-list-value" id="uptime-database">計測中...</span>
+          <span class="status-list-value" id="uptime-database" data-i18n="statusMeasuring">計測中...</span>
         </li>
         <li class="status-list-item">
-          <span class="status-list-label">
+          <span class="status-list-label" data-i18n="statusApiLabel">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="16 18 22 12 16 6"/>
               <polyline points="8 6 2 12 8 18"/>
             </svg>
             APIエンドポイント
           </span>
-          <span class="status-list-value" id="uptime-api">計測中...</span>
+          <span class="status-list-value" id="uptime-api" data-i18n="statusMeasuring">計測中...</span>
         </li>
       </ul>
-      <p style="margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted);">
+      <p style="margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted);" data-i18n="statusUptimeNote">
         ※ 稼働率は過去24時間の測定値に基づく実測値です。5分間隔で状態をチェックし記録しています。
       </p>
     </div>
 
     <div class="status-section">
-      <h2 class="status-section-title">
+      <h2 class="status-section-title" data-i18n="statusInfoSectionTitle">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="16" x2="12" y2="12"/>
@@ -502,19 +503,19 @@
       </h2>
       <ul class="status-list">
         <li class="status-list-item">
-          <span class="status-list-label">サービス稼働時間</span>
+          <span class="status-list-label" data-i18n="statusUptimeLabel">サービス稼働時間</span>
           <span class="status-list-value" id="uptime">-</span>
         </li>
         <li class="status-list-item">
-          <span class="status-list-label">APIレスポンス時間</span>
+          <span class="status-list-label" data-i18n="statusResponseTimeLabel">APIレスポンス時間</span>
           <span class="status-list-value" id="response-time">-</span>
         </li>
       </ul>
     </div>
 
     <div class="status-footer">
-      <p>&copy; 2026 Sutemeado - ステメアド</p>
-      <p style="margin-top: 0.5rem; font-size: 0.75rem;">システム状態は2分間隔で自動更新されます</p>
+      <p data-i18n="statusFooter1">&copy; 2026 Sutemeado - ステメアド</p>
+      <p style="margin-top: 0.5rem; font-size: 0.75rem;" data-i18n="statusFooter2">システム状態は2分間隔で自動更新されます</p>
     </div>
   </div>
 

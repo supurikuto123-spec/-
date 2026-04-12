@@ -392,12 +392,12 @@
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                     <polyline points="22,6 12,13 2,6"></polyline>
                 </svg>
-                Sutemeado Blog
+                <span data-i18n="blogTitle">Sutemeado Blog</span>
             </a>
             <nav class="nav-links">
-                <a href="/">ホーム</a>
-                <a href="/blog">ブログ</a>
-                <a href="/status">サービス状況</a>
+                <a href="/" data-i18n="home">ホーム</a>
+                <a href="/blog" data-i18n="news">ブログ</a>
+                <a href="/status" data-i18n="status">サービス状況</a>
             </nav>
         </div>
     </header>
@@ -405,25 +405,25 @@
     <main class="container">
         <!-- Breadcrumb -->
         <nav class="breadcrumb">
-            <a href="/">ホーム</a> &gt; 
-            <a href="/blog">ブログ</a> &gt; 
-            <span id="current-title">記事を読み込み中...</span>
+            <a href="/" data-i18n="home">ホーム</a> &gt; 
+            <a href="/blog" data-i18n="news">ブログ</a> &gt; 
+            <span id="current-title" data-i18n="blogLoading">記事を読み込み中...</span>
         </nav>
 
         <!-- Article -->
         <article class="article" id="article">
-            <div class="loading">記事を読み込み中...</div>
+            <div class="loading" data-i18n="blogLoading">記事を読み込み中...</div>
         </article>
 
         <!-- Related Posts -->
         <div class="related-posts" id="related-posts" style="display: none;">
-            <h3 class="related-title">関連記事</h3>
+            <h3 class="related-title" data-i18n="blogPopularPosts">関連記事</h3>
             <div class="related-grid" id="related-grid"></div>
         </div>
 
         <!-- Footer -->
         <footer class="footer">
-            <p>&copy; 2024-2025 Sutemeado. <a href="/">一時メールサービスはこちら</a></p>
+            <p>&copy; 2024-2025 Sutemeado. <a href="/" data-i18n="blogUseService">一時メールサービスはこちら</a></p>
         </footer>
     </main>
 
@@ -628,5 +628,6 @@
         // Load on page load
         document.addEventListener('DOMContentLoaded', loadPost);
     </script>
+    <script src="/common.js"></script>
 </body>
 </html>
