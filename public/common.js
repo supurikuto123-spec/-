@@ -768,16 +768,28 @@ function updateI18n(lang) {
     return;
   }
 
+  // Get translations from i18nCommon
+  const translations = window.i18nCommon && window.i18nCommon[lang];
+  if (!translations) {
+    console.warn('No translations found for language:', lang);
+    return;
+  }
+
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
-    if (window.i18nCommon[lang][key]) {
+    if (translations[key]) {
       if (el.tagName === 'TITLE') {
-        document.title = window.i18nCommon[lang][key];
+        document.title = translations[key];
       } else if (el.tagName === 'META') {
-        el.content = window.i18nCommon[lang][key];
+        el.content = translations[key];
       } else {
         // Use innerHTML to preserve HTML tags in translations (links, styling, etc.)
-        el.innerHTML = window.i18nCommon[lang][key];
+        el.innerHTML = translations[key];
+      }
+    } else {
+      // Debug: log missing translation keys
+      if (lang === 'en') {
+        console.debug('Missing translation for key:', key);
       }
     }
   });
@@ -786,10 +798,10 @@ function updateI18n(lang) {
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) {
     const metaDescKey = metaDesc.dataset.i18n;
-    if (metaDescKey && window.i18nCommon[lang][metaDescKey]) {
-      metaDesc.content = window.i18nCommon[lang][metaDescKey];
-    } else if (window.i18nCommon[lang].description) {
-      metaDesc.content = window.i18nCommon[lang].description;
+    if (metaDescKey && translations[metaDescKey]) {
+      metaDesc.content = translations[metaDescKey];
+    } else if (translations.description) {
+      metaDesc.content = translations.description;
     }
   }
 
@@ -809,31 +821,36 @@ function commonToggleTheme() {
     return;
   }
   
-  // Fallback implementation for standalone common.js pages
-  const savedTheme = localStorage.getItem('sutemeado-theme') || 'neon';
+  // Use app.js compatible key
+  const THEME_KEY = 'sutemeado_theme';
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'neon';
   const newTheme = savedTheme === 'neon' ? 'light' : 'neon';
   
   document.documentElement.setAttribute('data-theme', newTheme);
-  localStorage.setItem('sutemeado-theme', newTheme);
+  localStorage.setItem(THEME_KEY, newTheme);
   
-  // Also sync with app.js key if available for consistency
-  try {
-    localStorage.setItem('sutemeado-theme-key', newTheme);
-  } catch(e) {}
+  // Update state if available
+  if (typeof state !== 'undefined' && state.theme !== undefined) {
+    state.theme = newTheme;
+  }
 
-  const message = newTheme === 'light' ? 'ライトモードに変更しました' : 'ネオンモードに変更しました';
+  // Get current language for message
+  const lang = state.currentLang || 'ja';
+  const message = newTheme === 'light' 
+    ? (lang === 'ja' ? 'ライトモードに変更しました' : 'Changed to Light Mode')
+    : (lang === 'ja' ? 'ネオンモードに変更しました' : 'Changed to Neon Mode');
   showToast(message, 'success');
 }
 
 function loadTheme() {
-  // Try app.js style key first, fallback to common.js key
-  let savedTheme = 'neon';
-  if (typeof CONFIG !== 'undefined' && localStorage.getItem(CONFIG.THEME_KEY)) {
-    savedTheme = localStorage.getItem(CONFIG.THEME_KEY);
-  } else if (localStorage.getItem('sutemeado-theme')) {
-    savedTheme = localStorage.getItem('sutemeado-theme');
-  }
+  // Use app.js compatible key
+  const THEME_KEY = 'sutemeado_theme';
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'neon';
   document.documentElement.setAttribute('data-theme', savedTheme);
+  // Update state if available
+  if (typeof state !== 'undefined' && state.theme !== undefined) {
+    state.theme = savedTheme;
+  }
 }
 
 // Toast notification function
@@ -909,8 +926,46 @@ function redirectToHome(action) {
   window.location.href = `/?action=${action}&lang=${lang}`;
 }
 
+// Redirect to appropriate language version if needed
+function checkLanguageRedirect() {
+  // Only run on subpages (not index.html or /)
+  const path = window.location.pathname;
+  const isHomePage = path === '/' || path === '/index.html';
+  if (isHomePage) return;
+  
+  // Check if we're already on a language-specific page
+  const isEnglishPage = path.endsWith('-en.html');
+  const isJapanesePage = path.endsWith('.html') && !path.endsWith('-en.html');
+  
+  // Get saved language preference
+  const savedLang = localStorage.getItem('sutemeado-lang') || 'ja';
+  
+  // If language is English but we're on Japanese page, redirect to English page
+  if (savedLang === 'en' && isJapanesePage) {
+    const englishPage = path.replace('.html', '-en.html');
+    // Check if English version exists (we'll create these pages)
+    // For now, redirect to the English version
+    window.location.href = englishPage;
+    return true;
+  }
+  
+  // If language is Japanese but we're on English page, redirect to Japanese page
+  if (savedLang === 'ja' && isEnglishPage) {
+    const japanesePage = path.replace('-en.html', '.html');
+    window.location.href = japanesePage;
+    return true;
+  }
+  
+  return false;
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+  // Check for language redirect first
+  if (checkLanguageRedirect()) {
+    return; // Redirecting, stop further initialization
+  }
+  
   // Load saved theme
   loadTheme();
 

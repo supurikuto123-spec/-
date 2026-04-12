@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ - Sutemeado</title>
+  <meta name="description" content="Frequently asked questions about Sutemeado temporary email service.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .faq-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+    .faq-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .faq-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .faq-intro {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .faq-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .faq-section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--accent-primary);
+    }
+    .faq-item {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.5rem;
+    }
+    .faq-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .faq-question {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .faq-answer {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding-left: 1.75rem;
+    }
+    .faq-answer p {
+      margin-bottom: 0.75rem;
+    }
+    .faq-note {
+      background: rgba(255, 184, 0, 0.1);
+      border: 1px solid rgba(255, 184, 0, 0.3);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+    }
+    .faq-note.warning {
+      background: rgba(255, 71, 87, 0.1);
+      border-color: rgba(255, 71, 87, 0.3);
+    }
+    .faq-note-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .faq-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .cta-section {
+      background: linear-gradient(135deg, var(--accent-primary)15, var(--accent-secondary)15);
+      border: 1px solid var(--accent-primary)40;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .cta-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+    .cta-text {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: var(--accent-primary);
+      color: #000;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px var(--accent-primary)40;
+    }
+    @media (max-width: 640px) {
+      .faq-page {
+        padding: 1rem;
+      }
+      .faq-header {
+        flex-wrap: wrap;
+      }
+      .faq-title {
+        font-size: 1.25rem;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+  <link rel="canonical" href="https://sutemeado.com/faq-en.html">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="nav-logo-wrap">
+        <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <span class="nav-title">Sutemeado</span>
+    </div>
+
+    <div class="nav-right">
+      <div class="nav-mail-counter" id="nav-mail-counter" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span class="nav-counter-value" id="nav-counter-value">0</span>
+      </div>
+
+      <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+      </button>
+
+      <button class="hamburger-btn" id="menu-toggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+
+  <!-- Drawer Menu -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">Menu</span>
+      <button class="drawer-close" id="drawer-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-section" id="drawer-loggedin-section">
+        <div class="drawer-section-label drawer-section-main">Account</div>
+        <button class="drawer-item" id="menu-login-other">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span>Login with another account</span>
+        </button>
+        <button class="drawer-item" id="menu-new-address">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span>Create new email address</span>
+        </button>
+        <div class="drawer-divider"></div>
+        <div class="drawer-section-label drawer-section-danger">Dangerous Operations</div>
+        <button class="drawer-item drawer-item-danger" id="menu-delete-all-mail">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          <span>Delete all emails</span>
+        </button>
+        <button class="drawer-item drawer-item-danger" id="menu-delete-address">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/>
+            <path d="M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+          <span>Delete address</span>
+        </button>
+      </div>
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label drawer-section-guide">Site Guide</div>
+      <button class="drawer-item" id="menu-home" onclick="location.href='/?lang=en'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Home</span>
+      </button>
+      <button class="drawer-item" id="menu-howto" onclick="location.href='/how-to-use-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <line x1="10" y1="9" x2="8" y2="9"/>
+        </svg>
+        <span>How to Use</span>
+      </button>
+      <button class="drawer-item" id="menu-status" onclick="location.href='/status-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        <span>Status</span>
+      </button>
+      <button class="drawer-item" id="menu-news" onclick="location.href='/news-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <path d="M22 6l-10 7L2 6"/>
+        </svg>
+        <span>News</span>
+      </button>
+      <button class="drawer-item" id="menu-faq" onclick="location.href='/faq-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="8"/>
+        </svg>
+        <span>FAQ</span>
+      </button>
+      <button class="drawer-item" id="menu-contact" onclick="location.href='/contact-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span>Contact</span>
+      </button>
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label drawer-section-other">Other Links</div>
+      <button class="drawer-item" id="menu-api">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+        </svg>
+        <span>API Documentation</span>
+      </button>
+    </div>
+    <div class="drawer-footer">
+      <div class="drawer-footer-links">
+        <a href="/terms-en.html" class="drawer-footer-link">Terms of Service</a>
+        <span class="drawer-footer-separator">|</span>
+        <a href="/privacy-en.html" class="drawer-footer-link">Privacy & Cookies</a>
+      </div>
+      <p class="drawer-footer-copy">&copy; 2026 Sutemeado</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="faq-page" style="padding-top: 80px;">
+    <header class="faq-header" style="justify-content: center;">
+      <h1 class="faq-title">Frequently Asked Questions</h1>
+    </header>
+
+    <p class="faq-intro">
+      This page covers questions about how Sutemeado temporary email service works, how to use it, security, storage periods, and more.
+    </p>
+
+    <!-- About Service -->
+    <div class="faq-section">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="8"/>
+        </svg>
+        About the Service
+      </h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">What is a temporary/disposable email address?</div>
+        <div class="faq-answer">
+          <p>A temporary or disposable email address is an email address that can be used for a certain period and then discarded. With Sutemeado, simply visiting the site in your browser generates a random mailbox ID, and a temporary email address in the format xxxxxx@sutemeado.com is automatically assigned. It is specialized for receiving emails and requires no personal information such as registration, real name, or phone number.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Why do many people use temporary email?</div>
+        <div class="faq-answer">
+          <p>Temporary email is often used in situations where you don't want to expose your real email address too much. For example: overseas services you just want to try, sites with unclear trustworthiness, or forms where entering an email might result in a flood of advertising emails.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Is it free? Will it become paid in the future?</div>
+        <div class="faq-answer">
+          <p>Currently, Sutemeado is completely free to use, with no registration fees or monthly charges. While operational costs may be covered by advertising revenue, there are no plans to make basic functionality paid.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to Use -->
+    <div class="faq-section">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <line x1="10" y1="9" x2="8" y2="9"/>
+        </svg>
+        How to Use
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">What is the basic flow of usage?</div>
+        <div class="faq-answer">
+          <p>1) Visit sutemeado.com in your browser<br>
+          2) Copy the displayed temporary email address<br>
+          3) Paste it into the email field of the service you want to try<br>
+          4) Wait a few seconds to minutes for the email to arrive<br>
+          5) Click on the received email to view its contents</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Does the email address change every time?</div>
+        <div class="faq-answer">
+          <p>No, you can continue using the same address. Sutemeado uses a password-based access system, so you can access your mailbox from anywhere, regardless of browser cookies or device.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">How often are emails automatically updated?</div>
+        <div class="faq-answer">
+          <p>The inbox automatically refreshes approximately every 5 seconds. If you keep the screen open, new emails will appear in near real-time.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Can I use it from mobile/smartphone?</div>
+        <div class="faq-answer">
+          <p>Yes, it is available from smartphones, tablets, and PCs. Simply open sutemeado.com in your browser to use the service.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div class="faq-section">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Security & Privacy
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">Is Sutemeado safe? Does it support HTTPS?</div>
+        <div class="faq-answer">
+          <p>Sutemeado supports HTTPS (TLS) encrypted communication, protecting data transmitted between your browser and our servers.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">How much anonymity is guaranteed?</div>
+        <div class="faq-answer">
+          <p>Temporary email prioritizes email address anonymity. No real name, phone number, or address is required—simply accessing the browser is enough. However, minimal technical information such as IP addresses may be temporarily recorded.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Can others see my emails?</div>
+        <div class="faq-answer">
+          <p>If someone knows both your email address and password, they could potentially access your inbox. Sutemeado mitigates this by requiring both a random string address and a set password.</p>
+          <div class="faq-note warning">
+            <div class="faq-note-title">⚠️ Important</div>
+            Do not share your password with others.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Can I use it for important accounts (banks, main SNS)?</div>
+        <div class="faq-answer">
+          <p>We do not recommend using temporary email for important accounts that require password resets. If you cannot access the mailbox later, account recovery may become difficult.</p>
+          <div class="faq-note warning">
+            <div class="faq-note-title">⚠️ Warning</div>
+            Using temporary email for banks or main SNS accounts may lead to trouble such as "cannot view emails" or "cannot reset password."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Storage -->
+    <div class="faq-section">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <ellipse cx="12" cy="5" rx="9" ry="3"/>
+          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+        </svg>
+        Storage Period & Data Deletion
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">How long are emails stored?</div>
+        <div class="faq-answer">
+          <p>Emails are stored for 30 days. Saved emails are kept for 30 days, while unsaved emails are automatically deleted 30 days after receipt.</p>
+          <div class="faq-note">
+            <div class="faq-note-title">💡 Tip</div>
+            Press the "Save" button for important emails to ensure 30-day retention.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Can deleted emails be restored?</div>
+        <div class="faq-answer">
+          <p>Once deleted, emails cannot be restored. We do not provide individual email recovery from backups due to the nature of temporary email services.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Does the address itself have an expiration?</div>
+        <div class="faq-answer">
+          <p>The email address itself can be accessed anytime as long as you know the password. However, addresses that have not received emails for over 30 days may be deleted for system load reduction.</p>
+          <div class="faq-note">
+            <div class="faq-note-title">💡 Tip</div>
+            To maintain your address, receive at least one email within 30 days.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div class="faq-section">
+      <h2 class="faq-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12" y2="17"/>
+        </svg>
+        Troubleshooting
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">What to check when emails don't arrive</div>
+        <div class="faq-answer">
+          <p>Check: whether there are extra spaces when copying the address, if the destination address is correct, if the sender blocks temporary emails, and if enough time has passed (try the refresh button).</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">The email body is blank. Is it broken?</div>
+        <div class="faq-answer">
+          <p>For HTML emails, external images or stylesheets may be blocked, or layouts dependent on JavaScript may cause display issues. Some emails may appear blank or broken.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <div class="cta-title">Have More Questions?</div>
+      <div class="cta-text">
+        Feel free to contact us via Instagram DM
+      </div>
+      <a href="https://instagram.com/not_rare.tar" target="_blank" rel="noopener" class="cta-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+        <span>DM @not_rare.tar</span>
+      </a>
+    </div>
+
+    <div class="faq-footer">
+      <p>&copy; 2026 Sutemeado</p>
+    </div>
+  </div>
+
+  <!-- Drawer Toggle Script -->
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const drawer = document.getElementById('drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+    const drawerClose = document.getElementById('drawer-close');
+
+    function openDrawer() {
+      drawer.classList.add('active');
+      drawerOverlay.classList.add('active');
+      document.body.classList.add('drawer-open');
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      document.body.classList.remove('drawer-open');
+    }
+
+    menuToggle.addEventListener('click', openDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    drawerClose.addEventListener('click', closeDrawer);
+  </script>
+
+  <script src="/common.js?v=20260410a"></script>
+</body>
+</html>
