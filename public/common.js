@@ -627,20 +627,39 @@ function updateI18n(lang) {
 }
 
 // ===== Theme Toggle Functions =====
-function toggleTheme() {
-  const currentTheme = document.documentElement.getAttribute('data-theme') || 'neon';
-  const newTheme = currentTheme === 'neon' ? 'light' : 'neon';
-
+// Note: These are fallback functions for pages that don't load app.js
+// When app.js is loaded, its toggleTheme() function (using CONFIG.THEME_KEY) takes precedence
+function commonToggleTheme() {
+  // Use app.js toggleTheme if available
+  if (typeof window.toggleTheme === 'function' && typeof CONFIG !== 'undefined') {
+    window.toggleTheme();
+    return;
+  }
+  
+  // Fallback implementation for standalone common.js pages
+  const savedTheme = localStorage.getItem('sutemeado-theme') || 'neon';
+  const newTheme = savedTheme === 'neon' ? 'light' : 'neon';
+  
   document.documentElement.setAttribute('data-theme', newTheme);
   localStorage.setItem('sutemeado-theme', newTheme);
+  
+  // Also sync with app.js key if available for consistency
+  try {
+    localStorage.setItem('sutemeado-theme-key', newTheme);
+  } catch(e) {}
 
-  // Show toast notification
   const message = newTheme === 'light' ? 'ライトモードに変更しました' : 'ネオンモードに変更しました';
   showToast(message, 'success');
 }
 
 function loadTheme() {
-  const savedTheme = localStorage.getItem('sutemeado-theme') || 'neon';
+  // Try app.js style key first, fallback to common.js key
+  let savedTheme = 'neon';
+  if (typeof CONFIG !== 'undefined' && localStorage.getItem(CONFIG.THEME_KEY)) {
+    savedTheme = localStorage.getItem(CONFIG.THEME_KEY);
+  } else if (localStorage.getItem('sutemeado-theme')) {
+    savedTheme = localStorage.getItem('sutemeado-theme');
+  }
   document.documentElement.setAttribute('data-theme', savedTheme);
 }
 
@@ -752,10 +771,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Theme toggle button
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
-  if (themeToggleBtn) {
+  if (themeToggleBtn && !themeToggleBtn.dataset.listenerAttached) {
     themeToggleBtn.addEventListener('click', () => {
-      toggleTheme();
+      // Use app.js toggleTheme if available, otherwise use common.js fallback
+      if (typeof toggleTheme === 'function' && typeof CONFIG !== 'undefined') {
+        toggleTheme();
+        showToast(document.documentElement.getAttribute('data-theme') === 'light' ? 'ライトモードに変更しました' : 'ネオンモードに変更しました', 'success');
+      } else {
+        commonToggleTheme();
+      }
     });
+    themeToggleBtn.dataset.listenerAttached = 'true';
   }
 
   // Fix non-functional buttons on subpages - redirect to homepage

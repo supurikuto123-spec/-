@@ -595,15 +595,19 @@ function clearReadState(address) {
 
 // ===== Theme =====
 function applyTheme(theme) {
-  state.theme = theme;
+  if (typeof state !== 'undefined') state.theme = theme;
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem(CONFIG.THEME_KEY, theme);
-  // theme toggle button label
+  // theme toggle button label (settings modal only)
   const lbl = document.getElementById('theme-toggle-label');
-  if (lbl) lbl.textContent = theme === 'light' ? (state.currentLang === 'ja' ? 'ネオンモード' : 'Neon Mode') : (state.currentLang === 'ja' ? 'ライトモード' : 'Light Mode');
+  if (lbl) {
+    const lang = (typeof state !== 'undefined' && state.currentLang) ? state.currentLang : 'ja';
+    lbl.textContent = theme === 'light' ? (lang === 'ja' ? 'ネオンモード' : 'Neon Mode') : (lang === 'ja' ? 'ライトモード' : 'Light Mode');
+  }
 }
 function toggleTheme() {
-  applyTheme(state.theme === 'neon' ? 'light' : 'neon');
+  const currentTheme = localStorage.getItem(CONFIG.THEME_KEY) || 'neon';
+  applyTheme(currentTheme === 'neon' ? 'light' : 'neon');
 }
 
 // ===== UI Update Functions =====
@@ -1788,6 +1792,16 @@ function initEventListeners() {
     toggleTheme();
     closeSettingsModal();
   });
+
+  // Navbar theme toggle button (for all pages)
+  const navThemeToggleBtn = document.getElementById('theme-toggle-btn');
+  if (navThemeToggleBtn && !navThemeToggleBtn.dataset.listenerAttached) {
+    navThemeToggleBtn.addEventListener('click', () => {
+      toggleTheme();
+      showToast(state.theme === 'light' ? 'ライトモードに変更しました' : 'ネオンモードに変更しました', 'success');
+    });
+    navThemeToggleBtn.dataset.listenerAttached = 'true';
+  }
   // info-card のパスワード欄横の鉛筆ボタン
   addListener('change-password-inline-btn', 'click', openChangePasswordModal);
 
