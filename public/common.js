@@ -626,6 +626,61 @@ function updateI18n(lang) {
   });
 }
 
+// ===== Theme Toggle Functions =====
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'neon';
+  const newTheme = currentTheme === 'neon' ? 'light' : 'neon';
+
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('sutemeado-theme', newTheme);
+
+  // Show toast notification
+  const message = newTheme === 'light' ? 'ライトモードに変更しました' : 'ネオンモードに変更しました';
+  showToast(message, 'success');
+}
+
+function loadTheme() {
+  const savedTheme = localStorage.getItem('sutemeado-theme') || 'neon';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+// Toast notification function
+function showToast(message, type = 'info') {
+  // Remove existing toast
+  const existingToast = document.querySelector('.toast-notification');
+  if (existingToast) {
+    existingToast.remove();
+  }
+
+  // Create toast
+  const toast = document.createElement('div');
+  toast.className = `toast-notification toast-${type}`;
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    z-index: 10000;
+    font-size: 0.875rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: fadeInUp 0.3s ease;
+  `;
+
+  document.body.appendChild(toast);
+
+  // Remove after 2 seconds
+  setTimeout(() => {
+    toast.style.animation = 'fadeOutDown 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 2000);
+}
+
 // Drawer functions
 function openDrawer() {
   document.getElementById('drawer').classList.add('active');
@@ -664,6 +719,9 @@ function redirectToHome(action) {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+  // Load saved theme
+  loadTheme();
+
   // Initialize language
   updateI18n(state.currentLang);
 
@@ -691,6 +749,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Theme toggle button
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      toggleTheme();
+    });
+  }
 
   // Fix non-functional buttons on subpages - redirect to homepage
   const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';

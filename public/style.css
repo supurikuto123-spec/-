@@ -231,6 +231,43 @@ body::before {
   margin-right: var(--spacing-sm);
 }
 
+/* Theme toggle button */
+.theme-toggle-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: var(--spacing-sm);
+  transition: all var(--transition-fast);
+}
+
+.theme-toggle-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 8px var(--neon-cyan);
+}
+
+/* Light mode theme toggle styles */
+[data-theme="light"] .theme-toggle-btn {
+  background: #e0e0e0;
+  border-color: #ccc;
+  color: #666;
+}
+
+[data-theme="light"] .theme-toggle-btn:hover {
+  background: #d0d0d0;
+  color: #333;
+  border-color: #999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 /* Container */
 .container {
   max-width: 900px;
