@@ -1409,8 +1409,7 @@ async function handleUnsaveMail() {
   }
 }
 
-// メール一覧の星アイコンクリック処理
-async // ===== OTP Auto Extraction =====
+// ===== OTP Auto Extraction =====
 async function handleAutoExtractOTP() {
   if (!state.currentAddress || !state.currentPassword) {
     showToast(t('login') || 'ログインが必要です', 'error');
@@ -1462,12 +1461,13 @@ async function handleAutoExtractOTP() {
   }
 }
 
-function handleStarClick(mailId, isSaved) {
+// メール一覧の星アイコンクリック処理
+async function handleStarClick(mailId, isSaved) {
   if (!state.currentAddress || !state.currentPassword) {
     showToast('ログインが必要です', 'error');
     return;
   }
-  
+
   try {
     if (isSaved) {
       // 保存解除
