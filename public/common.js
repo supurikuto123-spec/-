@@ -743,10 +743,25 @@ if (typeof window.i18nCommon === 'undefined') {
 
 
 // State
+// Detect current language from URL path (-en.html suffix)
+function detectPageLanguage() {
+  const path = window.location.pathname;
+  if (path.endsWith('-en.html') || path === '/api-en.html' || path === '/api-en') {
+    return 'en';
+  }
+  return localStorage.getItem('sutemeado-lang') || 'ja';
+}
+
 var state = {
-  currentLang: localStorage.getItem('sutemeado-lang') || 'ja',
+  currentLang: detectPageLanguage(),
   isLoggedIn: false
 };
+
+// Sync localStorage with detected page language
+// This ensures subsequent navigation uses the correct language
+if (state.currentLang === 'en') {
+  localStorage.setItem('sutemeado-lang', 'en');
+}
 
 // Get translation
 function t(key) {
@@ -934,6 +949,9 @@ function checkLanguageRedirect() {
   const path = window.location.pathname;
   const isHomePage = path === '/' || path === '/index.html';
   if (isHomePage) return false;
+
+  // Get the saved language preference from localStorage
+  const savedLang = localStorage.getItem('sutemeado-lang') || 'ja';
 
   // Check if we're already on a language-specific page
   const isEnglishPage = path.endsWith('-en.html');
