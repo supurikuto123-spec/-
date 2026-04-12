@@ -227,9 +227,15 @@ if (typeof window.i18nCommon === 'undefined') {
     termsTitle: '利用規約',
     privacyTitle: 'プライバシーポリシー・クッキーポリシー',
     newsTitle: 'お知らせ',
+    faqTitle: 'よくある質問',
     termsMetaDesc: 'Sutemeado（ステメアド）の利用規約です。登録不要で使える一時メールサービスのご利用条件、免責事項、利用制限について定めています。',
     privacyMetaDesc: 'Sutemeado（ステメアド）のプライバシーポリシーとクッキーポリシーです。一時メールサービスにおける個人情報の取り扱い、データ保護、クッキーの使用方法について説明しています。',
-    newsMetaDesc: 'Sutemeadoからのお知らせ'
+    newsMetaDesc: 'Sutemeadoからのお知らせ',
+    faqMetaDesc: 'Sutemeado一時メールサービスのよくある質問と回答です。サービスの仕組み・使い方・安全性・保存期間などを掲載しています。',
+    contactMetaDesc: 'Sutemeado一時メールサービスへのお問い合わせはこちらから。',
+    statusMetaDesc: 'Sutemeado一時メールサービスのシステム稼働状況を確認できます。',
+    howToUseMetaDesc: 'Sutemeado一時メールサービスの使い方ガイド。初めての方でも簡単に使えるステップバイステップの説明です。',
+    howToUsePageTitle: '使い方ガイド'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
@@ -711,9 +717,15 @@ if (typeof window.i18nCommon === 'undefined') {
     termsTitle: 'Terms of Service',
     privacyTitle: 'Privacy & Cookie Policy',
     newsTitle: 'News',
+    faqTitle: 'FAQ',
     termsMetaDesc: 'Terms of Service for Sutemeado temporary email service. Usage conditions, disclaimers, and usage restrictions for the free disposable email service without registration.',
     privacyMetaDesc: 'Privacy Policy and Cookie Policy for Sutemeado. Explains handling of personal information, data protection, and cookie usage in the temporary email service.',
-    newsMetaDesc: 'Latest news and updates from Sutemeado'
+    newsMetaDesc: 'Latest news and updates from Sutemeado',
+    faqMetaDesc: 'Frequently asked questions and answers about Sutemeado temporary email service. Covers how the service works, how to use it, security, storage periods, and more.',
+    contactMetaDesc: 'Contact Sutemeado temporary email service here.',
+    statusMetaDesc: 'Check the system status of Sutemeado temporary email service.',
+    howToUseMetaDesc: 'How to use Sutemeado temporary email service. Step-by-step instructions for first-time users.',
+    howToUsePageTitle: 'How to Use Guide'
   }
 };
 }
