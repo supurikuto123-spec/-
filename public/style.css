@@ -215,6 +215,22 @@ body::before {
   color: var(--bg-primary);
 }
 
+/* Language switch for subpages (side-by-side one-tap) */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-right: var(--spacing-sm);
+  padding: 3px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.lang-switch-inline {
+  margin-right: var(--spacing-sm);
+}
+
 /* Container */
 .container {
   max-width: 900px;

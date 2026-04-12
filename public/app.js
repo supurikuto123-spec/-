@@ -240,10 +240,19 @@ function t(key) {
 }
 
 function setLanguage(lang) {
-  state.currentLang = lang;
-  localStorage.setItem(CONFIG.LANG_KEY, lang);
-  document.documentElement.lang = lang;
+  // 言語が変更された場合のみリロード
+  const currentLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';
+  if (currentLang !== lang) {
+    localStorage.setItem(CONFIG.LANG_KEY, lang);
+    // ページをリロードして翻訳を適用
+    location.reload();
+    return;
+  }
   
+  // 初回表示時はリロード不要
+  state.currentLang = lang;
+  document.documentElement.lang = lang;
+
   // Update all elements with data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
@@ -255,12 +264,12 @@ function setLanguage(lang) {
       }
     }
   });
-  
+
   // Update language buttons
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
-  
+
   // Update meta description
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && i18n[lang].description) {
@@ -1409,58 +1418,6 @@ async function handleUnsaveMail() {
   }
 }
 
-// ===== OTP Auto Extraction =====
-async function handleAutoExtractOTP() {
-  if (!state.currentAddress || !state.currentPassword) {
-    showToast(t('login') || 'ログインが必要です', 'error');
-    return;
-  }
-  
-  const otpBtn = document.getElementById('extract-otp-btn');
-  
-  try {
-    // UIフィードバック（検索中）
-    if (otpBtn) {
-      otpBtn.disabled = true;
-      otpBtn.classList.add('searching');
-    }
-    showToast(t('extractingOTP') || '認証コードを検索中...', 'info');
-    
-    // API呼び出し
-    const res = await api.extractOTP(state.currentAddress, state.currentPassword, 5);
-    
-    if (res.success && res.found && res.otp) {
-      // 見つかった！クリップボードにコピー
-      copyToClipboard(res.otp);
-      showToast(
-        `${t('otpFound') || '認証コードを見つけました'}: ${res.otp}`,
-        'success',
-        5000
-      );
-      
-      // 該当メールを強調表示（オプション）
-      if (res.mailId) {
-        const mailEl = document.querySelector(`.mail-item[data-id="${res.mailId}"]`);
-        if (mailEl) {
-          mailEl.classList.add('otp-highlight');
-          setTimeout(() => mailEl.classList.remove('otp-highlight'), 3000);
-        }
-      }
-    } else {
-      // 見つからなかった
-      showToast(t('otpNotFound') || '認証コードが見つかりませんでした', 'warning');
-    }
-  } catch (err) {
-    console.error('OTP extraction failed:', err);
-    showToast(t('otpNotFound') || '認証コードが見つかりませんでした', 'error');
-  } finally {
-    if (otpBtn) {
-      otpBtn.disabled = false;
-      otpBtn.classList.remove('searching');
-    }
-  }
-}
-
 // メール一覧の星アイコンクリック処理
 async function handleStarClick(mailId, isSaved) {
   if (!state.currentAddress || !state.currentPassword) {
@@ -1812,8 +1769,7 @@ function initEventListeners() {
   // Refresh
   addListener('refresh-btn', 'click', refreshMailbox);
   
-  // OTP Auto Extract
-  addListener('extract-otp-btn', 'click', handleAutoExtractOTP);
+
   
   // Auto refresh toggle
   addListener('auto-refresh', 'change', toggleAutoRefresh);
@@ -2010,12 +1966,64 @@ async function init() {
   console.log('🚀 Sutemeado initialized');
 }
 
+// Handle action parameters from subpages
+function handleActionParam() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const action = urlParams.get('action');
+  const lang = urlParams.get('lang');
+  
+  // Handle language first
+  if (lang && (lang === 'ja' || lang === 'en')) {
+    setLanguage(lang);
+  }
+  
+  // Handle action after a short delay to ensure DOM is ready
+  if (action) {
+    setTimeout(() => {
+      switch (action) {
+        case 'login':
+          openLoginModal();
+          break;
+        case 'new-address':
+          handleNewAddress();
+          break;
+        case 'delete-all-mail':
+          // Ensure user is logged in first
+          if (state.currentAddress && state.currentPassword) {
+            handleDeleteAllMail();
+          } else {
+            showToast(t('loginRequired') || 'ログインが必要です', 'error');
+            openLoginModal();
+          }
+          break;
+        case 'delete-address':
+          // Ensure user is logged in first
+          if (state.currentAddress && state.currentPassword) {
+            handleDeleteAddress();
+          } else {
+            showToast(t('loginRequired') || 'ログインが必要です', 'error');
+            openLoginModal();
+          }
+          break;
+        case 'settings':
+          openSettingsModal();
+          break;
+      }
+      
+      // Clean up URL
+      if (window.history.replaceState) {
+        window.history.replaceState({}, document.title, '/');
+      }
+    }, 500);
+  }
+}
+
 // Start when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', async () => {
+    await init();
+    handleActionParam();
+  });
 } else {
-  init();
-}
- {
-  init();
+  init().then(() => handleActionParam());
 }

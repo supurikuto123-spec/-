@@ -656,6 +656,12 @@ function checkLoginStatus() {
   }
 }
 
+// Button handlers for subpages - redirect to homepage with action params
+function redirectToHome(action) {
+  const lang = state.currentLang || 'ja';
+  window.location.href = `/?action=${action}&lang=${lang}`;
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize language
@@ -685,6 +691,70 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Fix non-functional buttons on subpages - redirect to homepage
+  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+  if (!isHomePage) {
+    // Login/Account buttons - redirect to home with login action
+    const menuLoginOther = document.getElementById('menu-login-other');
+    if (menuLoginOther) {
+      menuLoginOther.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        redirectToHome('login');
+      });
+    }
+
+    // Create New Address button
+    const menuNewAddress = document.getElementById('menu-new-address');
+    if (menuNewAddress) {
+      menuNewAddress.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        redirectToHome('new-address');
+      });
+    }
+
+    // Delete All Emails button
+    const menuDeleteAllMail = document.getElementById('menu-delete-all-mail');
+    if (menuDeleteAllMail) {
+      menuDeleteAllMail.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        redirectToHome('delete-all-mail');
+      });
+    }
+
+    // Delete Address button
+    const menuDeleteAddress = document.getElementById('menu-delete-address');
+    if (menuDeleteAddress) {
+      menuDeleteAddress.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        redirectToHome('delete-address');
+      });
+    }
+
+    // API Docs button - will be handled separately to go to api.html
+    const menuApi = document.getElementById('menu-api');
+    if (menuApi) {
+      menuApi.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = '/api.html';
+      });
+    }
+
+    // Settings button - redirect to home
+    const menuSettings = document.getElementById('menu-settings');
+    if (menuSettings) {
+      menuSettings.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        redirectToHome('settings');
+      });
+    }
+  }
 
   // Check login status
   checkLoginStatus();
