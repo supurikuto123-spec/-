@@ -1,6 +1,6 @@
-  <title>捨てメアド｜無料で使える使い捨てメール【即時発行・登録不要】</title>
-  <meta name="description" content="捨てメアドなら登録不要で無料。メールアドレスを即時発行、迷惑メール対策・個人情報保護に最適。スマホ・PC対応の使い捨てメールサービス。パスワード保存でいつでも再アクセス可能です。">
-  <meta name="keywords" content="捨てメアド,使い捨てメール,一時メール,捨てアド,仮メールアドレス,登録不要,無料,temp mail,匿名メール,迷惑メール防止,プライバシー保護,Twitter,Amazon,認証コード">
+  <title data-i18n="mainTitle">捨てメアド｜無料で使える使い捨てメール【即時発行・登録不要】</title>
+  <meta name="description" data-i18n="mainDescription" content="捨てメアドなら登録不要で無料。メールアドレスを即時発行、迷惑メール対策・個人情報保護に最適。スマホ・PC対応の使い捨てメールサービス。パスワード保存でいつでも再アクセス可能です。">
+  <meta name="keywords" data-i18n="metaKeywords" content="捨てメアド,使い捨てメール,一時メール,捨てアド,仮メールアドレス,登録不要,無料,temp mail,匿名メール,迷惑メール防止,プライバシー保護,Twitter,Amazon,認証コード">
   <meta name="theme-color" content="#0a0a0f">
   <meta name="author" content="Sutemeado">
   <meta name="robots" content="index, follow">
@@ -13,16 +13,16 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sutemeado.com/">
-  <meta property="og:title" content="捨てメアド｜無料・登録不要の使い捨てメール">
-  <meta property="og:description" content="「捨てメアド」で個人情報なしで即時発行。Twitter認証、ショッピング登録の迷惑メール対策に。完全無料・スマホ対応">
+  <meta property="og:title" data-i18n="ogTitle" content="捨てメアド｜無料・登録不要の使い捨てメール">
+  <meta property="og:description" data-i18n="ogDescription" content="「捨てメアド」で個人情報なしで即時発行。Twitter認証、ショッピング登録の迷惑メール対策に。完全無料・スマホ対応">
   <meta property="og:image" content="https://sutemeado.com/og-image.png">
   <meta property="og:locale" content="ja_JP">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://sutemeado.com/">
-  <meta property="twitter:title" content="捨てメアド｜無料・登録不要の使い捨てメール">
-  <meta property="twitter:description" content="「捨てメアド」で個人情報なしで即時発行。Twitter認証、ショッピング登録の迷惑メール対策に。完全無料・スマホ対応">
+  <meta property="twitter:title" data-i18n="ogTitle" content="捨てメアド｜無料・登録不要の使い捨てメール">
+  <meta property="twitter:description" data-i18n="ogDescription" content="「捨てメアド」で個人情報なしで即時発行。Twitter認証、ショッピング登録の迷惑メール対策に。完全無料・スマホ対応">
   <meta property="twitter:image" content="https://sutemeado.com/og-image.png">
 
   <!-- Favicons -->
@@ -216,13 +216,13 @@
         <button class="lang-btn active" data-lang="ja">JA</button>
         <button class="lang-btn" data-lang="en">EN</button>
       </div>
-      <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="テーマ切替">
+      <button class="theme-toggle-btn" id="theme-toggle-btn" data-i18n="themeToggle" aria-label="テーマ切替">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"/>
           <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
         </svg>
       </button>
-      <button class="hamburger-btn" id="menu-toggle" aria-label="メニュー">
+      <button class="hamburger-btn" id="menu-toggle" data-i18n="menu" aria-label="メニュー">
         <span></span>
         <span></span>
         <span></span>
@@ -378,7 +378,7 @@
       <!-- Address Info Card -->
       <div class="info-card">
         <div class="info-section">
-          <label class="info-label" data-i18n="yourAddress">あなたのアドレス</label>
+          <label class="info-label" data-i18n="yourAddress">Your Address</label>
           <div class="info-value-box">
             <code id="display-address" class="info-value">-</code>
             <button class="icon-btn" id="copy-address-btn" title="Copy">
@@ -393,7 +393,7 @@
         <div class="info-divider"></div>
         
         <div class="info-section">
-          <label class="info-label" data-i18n="yourPassword">パスワード</label>
+          <label class="info-label" data-i18n="yourPassword">Password</label>
           <div class="info-value-box">
             <code id="display-password" class="info-value info-value-password">••••••••••</code>
             <button class="icon-btn" id="toggle-password-btn" title="Show/Hide">
@@ -505,15 +505,15 @@
       <div class="modal-body">
         <div class="api-intro" style="margin-bottom:1rem;padding:0.75rem;background:var(--bg-secondary);border-radius:var(--radius-md);">
           <p style="margin:0;font-size:0.875rem;color:var(--text-secondary);">
-            <strong>Base URL:</strong> <code>https://sutemeado.com</code><br>
-            <strong>Rate Limit:</strong> 100 requests/minute<br>
-            <strong>Auth:</strong> Password required for mailbox operations (POST body)
+            <strong data-i18n="apiBaseUrl">Base URL:</strong> <code>https://sutemeado.com</code><br>
+            <strong data-i18n="apiRateLimit">Rate Limit:</strong> <span data-i18n="apiRateLimitValue">100 requests/minute</span><br>
+            <strong data-i18n="apiAuth">Auth:</strong> <span data-i18n="apiAuthDesc">Password required for mailbox operations (POST body)</span>
           </p>
         </div>
         <div class="api-list">
           <div class="api-entry">
             <div class="api-meta"><span class="api-method get">GET</span><code>/api/new-address</code></div>
-            <p>新規アドレスを作成</p>
+            <p data-i18n="apiNewAddressDesc">Create a new temporary email address</p>
             <div class="api-example"><pre><code>curl https://sutemeado.com/api/new-address
 
 // Response
@@ -526,7 +526,7 @@
           </div>
           <div class="api-entry">
             <div class="api-meta"><span class="api-method post">POST</span><code>/api/login</code></div>
-            <p>ログイン（アドレスとパスワードで認証）</p>
+            <p data-i18n="apiLoginDesc">Access existing address with password</p>
             <div class="api-example"><pre><code>curl -X POST https://sutemeado.com/api/login \
   -H "Content-Type: application/json" \
   -d '{"address":"abc123@sutemeado.com","password":"xyz789pass"}'
@@ -540,7 +540,7 @@
           </div>
           <div class="api-entry">
             <div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address</code></div>
-            <p>メール一覧を取得</p>
+            <p data-i18n="apiGetMailsDesc">Retrieve inbox mail list</p>
             <div class="api-example"><pre><code>curl -X POST "https://sutemeado.com/api/mailbox/abc123@sutemeado.com" \
   -H "Content-Type: application/json" \
   -d '{"password":"xyz789pass"}'
@@ -563,35 +563,35 @@
           </div>
           <div class="api-entry">
             <div class="api-meta"><span class="api-method post">POST</span><code>/api/mailbox/:address/:mailId</code></div>
-            <p>特定のメールを取得</p>
+            <p data-i18n="apiGetMailDesc">Get mail details by ID</p>
             <div class="api-example"><pre><code>curl -X POST "https://sutemeado.com/api/mailbox/abc123@sutemeado.com/mail_xxx" \
   -H "Content-Type: application/json" \
   -d '{"password":"xyz789pass"}'</code></pre></div>
           </div>
           <div class="api-entry">
             <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address/:mailId</code></div>
-            <p>メールを削除</p>
+            <p data-i18n="apiDeleteMailDesc">Delete a specific email</p>
             <div class="api-example"><pre><code>curl -X DELETE "https://sutemeado.com/api/mailbox/abc123@sutemeado.com/mail_xxx" \
   -H "Content-Type: application/json" \
   -d '{"password":"xyz789pass"}'</code></pre></div>
           </div>
           <div class="api-entry">
             <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/mailbox/:address</code></div>
-            <p>全メールを削除</p>
+            <p data-i18n="apiDeleteAllDesc">Empty the inbox</p>
             <div class="api-example"><pre><code>curl -X DELETE "https://sutemeado.com/api/mailbox/abc123@sutemeado.com" \
   -H "Content-Type: application/json" \
   -d '{"password":"xyz789pass"}'</code></pre></div>
           </div>
           <div class="api-entry">
             <div class="api-meta"><span class="api-method delete">DELETE</span><code>/api/address/:address</code></div>
-            <p>アドレスを削除（全メールも削除されます）</p>
+            <p data-i18n="apiDeleteAddressDesc">Delete address and all emails</p>
             <div class="api-example"><pre><code>curl -X DELETE "https://sutemeado.com/api/address/abc123@sutemeado.com" \
   -H "Content-Type: application/json" \
   -d '{"password":"xyz789pass"}'</code></pre></div>
           </div>
           <div class="api-entry">
             <div class="api-meta"><span class="api-method put">PUT</span><code>/api/address/:address/password</code></div>
-            <p>パスワードを変更</p>
+            <p data-i18n="apiChangePasswordDesc">Change address password</p>
             <div class="api-example"><pre><code>curl -X PUT "https://sutemeado.com/api/address/abc123@sutemeado.com/password" \
   -H "Content-Type: application/json" \
   -d '{"currentPassword":"xyz789pass","newPassword":"newpass123"}'</code></pre></div>
@@ -628,7 +628,7 @@
               <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
             </svg>
-            <span id="theme-toggle-label">ライトモード</span>
+            <span id="theme-toggle-label" data-i18n="themeToggleLabel">Light Mode</span>
           </button>
         </div>
       </div>
@@ -733,21 +733,23 @@
     <div class="modal-overlay"></div>
     <div class="modal-content modal-content-sm">
       <div class="modal-body modal-body-center">
-        <h4 id="new-addr-modal-title" style="margin-top:0;">新しいメールアドレスを作成</h4>
-        <p id="new-addr-modal-msg" style="white-space:pre-line;text-align:left;margin:0.75rem 0;font-size:0.9rem;color:var(--text-secondary);">
-          ログイン情報を保存していない場合、現在のアドレスにはアクセスできなくなります。<br><br>今後このアドレスを利用しない場合は、削除してから新規作成することを推奨します。
+        <h4 id="new-addr-modal-title" style="margin-top:0;" data-i18n="newAddrModalTitle">Create New Email Address</h4>
+        <p id="new-addr-modal-msg" style="white-space:pre-line;text-align:left;margin:0.75rem 0;font-size:0.9rem;color:var(--text-secondary);" data-i18n="newAddrModalMsg">
+          If you have not saved your login information, you will no longer be able to access your current address.
+
+If you do not plan to use this address in the future, we recommend deleting it before creating a new one.
         </p>
       </div>
       <div class="modal-footer new-addr-footer">
-        <button class="btn btn-secondary" id="new-addr-cancel">戻る</button>
-        <button class="btn btn-primary" id="new-addr-ok">作成する</button>
+        <button class="btn btn-secondary" id="new-addr-cancel" data-i18n="newAddrCancel">Go Back</button>
+        <button class="btn btn-primary" id="new-addr-ok" data-i18n="newAddrCreate">Create</button>
         <button class="btn btn-danger" id="new-addr-delete">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"/>
             <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
             <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
           </svg>
-          <span>削除する</span>
+          <span data-i18n="newAddrDelete">Delete</span>
         </button>
       </div>
     </div>
@@ -758,7 +760,7 @@
     <div class="modal-overlay"></div>
     <div class="modal-content modal-content-xs">
       <div class="modal-body modal-body-center">
-        <h4 id="confirm-title" style="margin-top:0;">Confirm</h4>
+        <h4 id="confirm-title" style="margin-top:0;" data-i18n="confirm">Confirm</h4>
         <p id="confirm-message" style="white-space:pre-line;"></p>
       </div>
       <div class="modal-footer modal-footer-center">
