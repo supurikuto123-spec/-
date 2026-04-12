@@ -932,15 +932,20 @@ document.addEventListener('DOMContentLoaded', () => {
     drawerOverlay.addEventListener('click', closeDrawer);
   }
 
-  // Language buttons
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const lang = btn.dataset.lang;
-      if (lang && lang !== state.currentLang) {
-        updateI18n(lang);
-      }
+  // ホームページ判定（複数箇所で使用）
+  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+
+  // Language buttons (ホームページのみで有効)
+  if (isHomePage) {
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang;
+        if (lang && lang !== state.currentLang) {
+          updateI18n(lang);
+        }
+      });
     });
-  });
+  }
 
   // Theme toggle button
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
@@ -958,7 +963,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Fix non-functional buttons on subpages - redirect to homepage
-  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
   if (!isHomePage) {
     // Login/Account buttons - redirect to home with login action
     const menuLoginOther = document.getElementById('menu-login-other');
@@ -1023,6 +1027,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check login status
   checkLoginStatus();
-});
-ginStatus();
 });
