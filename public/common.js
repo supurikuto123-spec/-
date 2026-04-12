@@ -30,6 +30,11 @@ if (typeof window.i18nCommon === 'undefined') {
     others: 'その他',
     menu: 'メニュー',
     close: '閉じる',
+    menuTitle: 'メニュー',
+    accountSection: 'アカウント操作',
+    dangerousSection: '危険な操作（注意必須）',
+    guideSection: 'サイト案内',
+    otherSection: 'その他のリンク',
     createAddress: 'アドレスを作成',
     loginWithAnother: '別アカウントでログイン',
     // how-to-use.html content
@@ -189,6 +194,11 @@ if (typeof window.i18nCommon === 'undefined') {
     others: 'Others',
     menu: 'Menu',
     close: 'Close',
+    menuTitle: 'Menu',
+    accountSection: 'Account Actions',
+    dangerousSection: 'Dangerous Actions (Caution Required)',
+    guideSection: 'Site Guide',
+    otherSection: 'Other Links',
     createAddress: 'Create Address',
     loginWithAnother: 'Login with Another Account',
     // how-to-use.html content
