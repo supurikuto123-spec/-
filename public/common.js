@@ -961,18 +961,12 @@ function checkLanguageRedirect() {
 
   // Handle API page redirects
   if (savedLang === 'en' && isApiPage && !isApiEnglishPage) {
-    if (!sessionStorage.getItem('lang_redirect_attempted')) {
-      sessionStorage.setItem('lang_redirect_attempted', 'true');
-      window.location.href = '/api-en.html';
-      return true;
-    }
+    window.location.href = '/api-en.html';
+    return true;
   }
   if (savedLang === 'ja' && isApiEnglishPage) {
-    if (!sessionStorage.getItem('lang_redirect_attempted')) {
-      sessionStorage.setItem('lang_redirect_attempted', 'true');
-      window.location.href = '/api.html';
-      return true;
-    }
+    window.location.href = '/api.html';
+    return true;
   }
 
   // If not a standard .html page (and not API), skip further checks
@@ -981,26 +975,17 @@ function checkLanguageRedirect() {
   // If language is English but we're on Japanese page, redirect to English page
   if (savedLang === 'en' && isJapanesePage) {
     const englishPage = path.replace('.html', '-en.html');
-    // Prevent redirect loops by checking if we're already trying to redirect
-    if (!sessionStorage.getItem('lang_redirect_attempted')) {
-      sessionStorage.setItem('lang_redirect_attempted', 'true');
-      window.location.href = englishPage;
-      return true;
-    }
+    window.location.href = englishPage;
+    return true;
   }
 
   // If language is Japanese but we're on English page, redirect to Japanese page
   if (savedLang === 'ja' && isEnglishPage) {
     const japanesePage = path.replace('-en.html', '.html');
-    if (!sessionStorage.getItem('lang_redirect_attempted')) {
-      sessionStorage.setItem('lang_redirect_attempted', 'true');
-      window.location.href = japanesePage;
-      return true;
-    }
+    window.location.href = japanesePage;
+    return true;
   }
 
-  // On correct page - clear the done flag so future visits can redirect if needed
-  sessionStorage.removeItem('lang_redirect_done');
   return false;
 }
 
@@ -1011,16 +996,9 @@ function checkLanguageRedirect() {
   const path = window.location.pathname;
   if (path === '/' || path === '/index.html') return;
   
-  // Prevent redirect loops - check if we already redirected this session
-  if (sessionStorage.getItem('lang_redirect_done')) {
-    // Already redirected once this session, don't redirect again
-    return;
-  }
-  
-  // Check if redirect needed
+  // Check if redirect needed - no sessionStorage flags needed since we're not preventing
+  // cross-page redirects anymore (we WANT to redirect when language preference changes)
   if (checkLanguageRedirect()) {
-    // Mark that we've done a redirect this session
-    sessionStorage.setItem('lang_redirect_done', 'true');
     console.log('[i18n] Redirecting to correct language version...');
     // Script execution stops naturally due to page unload
   }
