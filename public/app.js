@@ -86,6 +86,10 @@ var i18n = {
     passwordWarningTitle: 'パスワードを保存してください',
     passwordWarningMessage: '再度アクセスするために、必ずパスワードを保存してください。',
     understood: '了解しました',
+    accountSection: 'アカウント',
+    dangerousOperations: '危険な操作',
+    siteGuide: 'サイト案内',
+    other: 'その他',
     favoriteMail: 'お気に入り登録',
     favoritedMail: 'お気に入り済み',
     unfavoriteMail: 'お気に入り解除',
@@ -176,6 +180,10 @@ var i18n = {
     passwordWarningTitle: 'Please Save Your Password',
     passwordWarningMessage: 'To access this address later, please save your password.',
     understood: 'I Understand',
+    accountSection: 'Account',
+    dangerousOperations: 'Dangerous Actions',
+    siteGuide: 'Site Guide',
+    other: 'Other',
     favoriteMail: 'Add to Favorites',
     favoritedMail: 'Favorited',
     unfavoriteMail: 'Remove from Favorites',
@@ -1935,5 +1943,8 @@ async function init() {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
+  init();
+}
+ {
   init();
 }
