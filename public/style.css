@@ -3608,6 +3608,23 @@ body.drawer-open {
   opacity: 0.7;
 }
 
+.mail-auth-code-copyable {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mail-auth-code-copyable:hover {
+  background: rgba(0, 255, 157, 0.15);
+  border-color: rgba(0, 255, 157, 0.3);
+}
+
+.auth-code-copy-hint {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-left: auto;
+}
+
 /* ===== Save Button Styles ===== */
 #modal-save-btn {
   display: inline-flex;

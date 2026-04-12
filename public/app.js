@@ -680,11 +680,12 @@ function renderMailList(mails) {
   // Sort by date, newest first
   const sortedMails = [...mails].sort((a, b) => b.receivedAt - a.receivedAt);
   const newHTML = sortedMails.map(mail => {
-    // 認証コードを表示（あれば）
+    // 認証コードを表示（あれば）- タップでコピー
     const authCodeHtml = mail.authCode ? `
-      <div class="mail-auth-code">
+      <div class="mail-auth-code mail-auth-code-copyable" onclick="event.stopPropagation(); copyToClipboard('${escapeHtml(mail.authCode)}'); showToast('${t('copied')}', 'success');">
         <span class="auth-code-label">${t('authCode') || '認証コード'}</span>
         <code class="auth-code-value">${escapeHtml(mail.authCode)}</code>
+        <span class="auth-code-copy-hint">${t('copyAuthCode')}</span>
       </div>
     ` : '';
     
@@ -713,7 +714,7 @@ function renderMailList(mails) {
         <div class="mail-from">${escapeHtml(mail.from)}</div>
         ${authCodeHtml}
         <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}${mail.body.length > 100 ? '...' : ''}</div>
-        ${!mail.saved ? `<div class="mail-not-saved-warning">${t('notSavedWarning') || '30日後に自動削除'}</div>` : ''}
+        ${!mail.saved ? `<div class="mail-not-saved-warning">${t('notFavoritedWarning') || '未お気に入り：30日後に自動削除'}</div>` : ''}
       </div>
       <div class="mail-actions">
         ${starIcon}
