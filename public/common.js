@@ -749,7 +749,7 @@ function detectPageLanguage() {
   if (path.endsWith('-en.html') || path === '/api-en.html' || path === '/api-en') {
     return 'en';
   }
-  return localStorage.getItem('sutemeado-lang') || 'ja';
+  return localStorage.getItem('sutemeado_lang') || 'ja';
 }
 
 var state = {
@@ -757,11 +757,8 @@ var state = {
   isLoggedIn: false
 };
 
-// Sync localStorage with detected page language
-// This ensures subsequent navigation uses the correct language
-if (state.currentLang === 'en') {
-  localStorage.setItem('sutemeado-lang', 'en');
-}
+// Note: Language is managed by app.js using 'sutemeado_lang' key
+// We read from the same key for consistency
 
 // Get translation
 function t(key) {
@@ -772,7 +769,7 @@ function t(key) {
 function updateI18n(lang) {
   const prevLang = state.currentLang;
   state.currentLang = lang;
-  localStorage.setItem('sutemeado-lang', lang);
+  localStorage.setItem('sutemeado_lang', lang);
   document.documentElement.lang = lang;
 
   // ページが完全に読み込まれている場合のみリロード
@@ -951,7 +948,7 @@ function checkLanguageRedirect() {
   if (isHomePage) return false;
 
   // Get the saved language preference from localStorage
-  const savedLang = localStorage.getItem('sutemeado-lang') || 'ja';
+  const savedLang = localStorage.getItem('sutemeado_lang') || 'ja';
 
   // Check if we're already on a language-specific page
   const isEnglishPage = path.endsWith('-en.html');

@@ -89,7 +89,18 @@ var i18n = {
     accountSection: 'アカウント',
     dangerousOperations: '危険な操作',
     siteGuide: 'サイト案内',
+    guideSection: 'サイト案内',
     other: 'その他',
+    otherSection: 'その他のリンク',
+    dangerousSection: '危険な操作（注意必須）',
+    home: 'ホーム',
+    howToUse: '使い方',
+    status: '稼働状況',
+    news: 'お知らせ',
+    faq: 'よくある質問',
+    contact: 'お問い合わせ',
+    themeToggle: 'テーマ切替',
+    menuTitle: 'メニュー',
     favoriteMail: 'お気に入り登録',
     favoritedMail: 'お気に入り済み',
     unfavoriteMail: 'お気に入り解除',
@@ -187,7 +198,18 @@ var i18n = {
     accountSection: 'Account',
     dangerousOperations: 'Dangerous Actions',
     siteGuide: 'Site Guide',
+    guideSection: 'Site Guide',
     other: 'Other',
+    otherSection: 'Other Links',
+    dangerousSection: 'Dangerous Actions (Caution Required)',
+    home: 'Home',
+    howToUse: 'How to Use',
+    status: 'Status',
+    news: 'News',
+    faq: 'FAQ',
+    contact: 'Contact',
+    themeToggle: 'Toggle Theme',
+    menuTitle: 'Menu',
     favoriteMail: 'Add to Favorites',
     favoritedMail: 'Favorited',
     unfavoriteMail: 'Remove from Favorites',
@@ -258,6 +280,11 @@ function t(key) {
 
 // Helper function to update drawer menu links based on language
 function updateDrawerLinks(lang) {
+  // Only update links on homepage - subpages handle their own redirects
+  const path = window.location.pathname;
+  const isHomePage = path === '/' || path === '/index.html';
+  if (!isHomePage) return;
+  
   const suffix = lang === 'en' ? '-en.html' : '.html';
   
   // Update each menu item's onclick to point to correct language version
