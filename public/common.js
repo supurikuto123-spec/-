@@ -927,45 +927,79 @@ function redirectToHome(action) {
 }
 
 // Redirect to appropriate language version if needed
+// NOTE: This function is called IMMEDIATELY at script load time (not waiting for DOMContentLoaded)
+// to prevent flash of incorrect language content
 function checkLanguageRedirect() {
   // Only run on subpages (not index.html or /)
   const path = window.location.pathname;
   const isHomePage = path === '/' || path === '/index.html';
-  if (isHomePage) return;
-  
+  if (isHomePage) return false;
+
   // Check if we're already on a language-specific page
   const isEnglishPage = path.endsWith('-en.html');
-  const isJapanesePage = path.endsWith('.html') && !path.endsWith('-en.html');
-  
-  // Get saved language preference
-  const savedLang = localStorage.getItem('sutemeado-lang') || 'ja';
-  
+  // Support both .html and extension-less paths (like /api.html)
+  const isJapanesePage = (path.endsWith('.html') && !path.endsWith('-en.html'));
+
+  // Special handling for API page and other extension-less paths
+  const isApiPage = path === '/api.html' || path === '/api';
+  const isApiEnglishPage = path === '/api-en.html' || path === '/api-en';
+
+  // Handle API page redirects
+  if (savedLang === 'en' && isApiPage && !isApiEnglishPage) {
+    if (!sessionStorage.getItem('lang_redirect_attempted')) {
+      sessionStorage.setItem('lang_redirect_attempted', 'true');
+      window.location.href = '/api-en.html';
+      return true;
+    }
+  }
+  if (savedLang === 'ja' && isApiEnglishPage) {
+    if (!sessionStorage.getItem('lang_redirect_attempted')) {
+      sessionStorage.setItem('lang_redirect_attempted', 'true');
+      window.location.href = '/api.html';
+      return true;
+    }
+  }
+
+  // If not a standard .html page (and not API), skip further checks
+  if (!isEnglishPage && !isJapanesePage) return false;
+
   // If language is English but we're on Japanese page, redirect to English page
   if (savedLang === 'en' && isJapanesePage) {
     const englishPage = path.replace('.html', '-en.html');
-    // Check if English version exists (we'll create these pages)
-    // For now, redirect to the English version
-    window.location.href = englishPage;
-    return true;
+    // Prevent redirect loops by checking if we're already trying to redirect
+    if (!sessionStorage.getItem('lang_redirect_attempted')) {
+      sessionStorage.setItem('lang_redirect_attempted', 'true');
+      window.location.href = englishPage;
+      return true;
+    }
   }
-  
+
   // If language is Japanese but we're on English page, redirect to Japanese page
   if (savedLang === 'ja' && isEnglishPage) {
     const japanesePage = path.replace('-en.html', '.html');
-    window.location.href = japanesePage;
-    return true;
+    if (!sessionStorage.getItem('lang_redirect_attempted')) {
+      sessionStorage.setItem('lang_redirect_attempted', 'true');
+      window.location.href = japanesePage;
+      return true;
+    }
   }
-  
+
+  // Clear the redirect flag once we're on the correct page
+  sessionStorage.removeItem('lang_redirect_attempted');
   return false;
 }
 
+// ===== IMMEDIATE LANGUAGE CHECK =====
+// Run this RIGHT NOW before any content renders to prevent flash of wrong language
+(function immediateLanguageCheck() {
+  if (checkLanguageRedirect()) {
+    // Redirecting - throw to stop script execution
+    throw new Error('Language redirect in progress - stopping script execution');
+  }
+})();
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  // Check for language redirect first
-  if (checkLanguageRedirect()) {
-    return; // Redirecting, stop further initialization
-  }
-  
   // Load saved theme
   loadTheme();
 
@@ -1009,7 +1043,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Use app.js toggleTheme if available, otherwise use common.js fallback
       if (typeof toggleTheme === 'function' && typeof CONFIG !== 'undefined') {
         toggleTheme();
-        showToast(document.documentElement.getAttribute('data-theme') === 'light' ? 'ライトモードに変更しました' : 'ネオンモードに変更しました', 'success');
+        const lang = state.currentLang || 'ja';
+        const msg = document.documentElement.getAttribute('data-theme') === 'light'
+          ? (lang === 'ja' ? 'ライトモードに変更しました' : 'Changed to Light Mode')
+          : (lang === 'ja' ? 'ネオンモードに変更しました' : 'Changed to Neon Mode');
+        showToast(msg, 'success');
       } else {
         commonToggleTheme();
       }
