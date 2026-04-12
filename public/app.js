@@ -876,7 +876,11 @@ function openMailModal(mailId) {
     authCodeEl.className = 'mail-auth-code-banner';
     authCodeEl.innerHTML = `
       <div class="auth-code-header">
-        <span class="auth-code-icon">🔐</span>
+        <svg class="auth-code-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <circle cx="12" cy="16" r="1"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
         <span class="auth-code-label">${t('authCode')}</span>
       </div>
       <code class="auth-code-value-large">${escapeHtml(mail.authCode)}</code>
@@ -896,7 +900,11 @@ function openMailModal(mailId) {
     const warningEl = document.createElement('div');
     warningEl.className = 'mail-not-saved-banner';
     warningEl.innerHTML = `
-      <span class="warning-icon">⚠️</span>
+      <svg class="warning-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
       <span>${t('notSavedWarning')}</span>
     `;
     bodyContainer.appendChild(warningEl);
