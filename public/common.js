@@ -416,7 +416,7 @@ if (typeof window.i18nCommon === 'undefined') {
     newsItem1Text2: 'We are currently making <span style="color: var(--neon-cyan);">frequent updates</span> as we adjust the service.',
     newsItem1Text3: 'Therefore, you may experience temporary <span style="color: var(--neon-magenta);">connection issues</span> or <span style="color: var(--neon-magenta);">potential bugs</span>.',
     newsItem1Text4: 'We appreciate your understanding.',
-    newsItem1Text5: 'If you have any questions, please contact us via the <a href="/contact.html">contact page</a>.
+    newsItem1Text5: 'If you have any questions, please contact us via the <a href="/contact.html">contact page</a>.',
     // faq.html - full Q&A translations
     faqQ1: 'What is a temporary/disposable email address?',
     faqA1: 'A temporary or disposable email address is an email address that can be used for a certain period and then discarded. With Sutemeado, simply visiting the site in your browser generates a random mailbox ID, and a temporary email address in the format xxxxxx@sutemeado.com is automatically assigned. It is specialized for receiving emails and requires no personal information such as registration, real name, or phone number.',
