@@ -1031,8 +1031,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load saved theme
   loadTheme();
 
-  // Initialize language
-  updateI18n(state.currentLang);
+  // Initialize language (Skip on homepage - let app.js handle language there to avoid conflicts)
+  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+  if (!isHomePage) {
+    updateI18n(state.currentLang);
+  }
 
   // Drawer toggle
   const menuToggle = document.getElementById('menu-toggle');
