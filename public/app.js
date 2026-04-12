@@ -311,10 +311,16 @@ function setLanguage(lang) {
   const currentLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';
   if (currentLang !== lang) {
     localStorage.setItem(CONFIG.LANG_KEY, lang);
-    // Update URL with lang query parameter and reload
-    const url = new URL(window.location.href);
-    url.searchParams.set('lang', lang);
-    window.location.href = url.toString();
+    // ホームページは /index-en.html または /index.html に遷移
+    const path = window.location.pathname;
+    if (path === '/' || path === '/index.html' || path === '/index-en.html') {
+      window.location.href = lang === 'en' ? '/index-en.html' : '/index.html';
+    } else {
+      // サブページはクエリパラメータを使用（common.jsで処理）
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', lang);
+      window.location.href = url.toString();
+    }
     return;
   }
   
@@ -1979,15 +1985,24 @@ function initEventListeners() {
 
 // ===== Initialization =====
 async function init() {
+  // Check URL path for language (e.g., /index-en.html)
+  const path = window.location.pathname;
+  let pathLang = null;
+  if (path === '/index-en.html' || path.endsWith('-en.html')) {
+    pathLang = 'en';
+  }
+  
   // Check URL query parameters for language override
   const urlParams = new URLSearchParams(window.location.search);
   const urlLang = urlParams.get('lang');
   
-  // Load language (URL param takes precedence over localStorage)
+  // Load language (path or URL param takes precedence over localStorage)
   let savedLang;
-  if (urlLang === 'en' || urlLang === 'ja') {
+  if (pathLang) {
+    savedLang = pathLang;
+    localStorage.setItem(CONFIG.LANG_KEY, savedLang);
+  } else if (urlLang === 'en' || urlLang === 'ja') {
     savedLang = urlLang;
-    // Sync to localStorage for consistency
     localStorage.setItem(CONFIG.LANG_KEY, savedLang);
   } else {
     savedLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';

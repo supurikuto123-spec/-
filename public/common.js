@@ -1008,7 +1008,7 @@ function checkLanguageRedirect() {
 (function immediateLanguageCheck() {
   // Skip on homepage - app.js handles language there
   const path = window.location.pathname;
-  if (path === '/' || path === '/index.html') return;
+  if (path === '/' || path === '/index.html' || path === '/index-en.html') return;
   
   // Check if redirect needed - no sessionStorage flags needed since we're not preventing
   // cross-page redirects anymore (we WANT to redirect when language preference changes)
@@ -1024,7 +1024,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadTheme();
 
   // Initialize language (Skip on homepage - let app.js handle language there to avoid conflicts)
-  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '/index-en.html';
   if (!isHomePage) {
     updateI18n(state.currentLang);
   }
@@ -1045,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ホームページ判定（複数箇所で使用）
-  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '/index-en.html';
 
   // Language buttons (すべてのページで有効)
   document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -1059,9 +1059,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentPath = window.location.pathname;
         let newPath;
         
-        // ホームページの場合はクエリパラメータを使用
+        // ホームページの場合は /index-en.html または /index.html に遷移
         if (isHomePage) {
-          newPath = `/?lang=${lang}`;
+          if (lang === 'en') {
+            newPath = '/index-en.html';
+          } else {
+            newPath = '/index.html';
+          }
         } else {
           // サブページの場合は適切な言語版に遷移
           if (lang === 'en') {
