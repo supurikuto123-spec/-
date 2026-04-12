@@ -98,7 +98,11 @@ var i18n = {
     notFavoritedWarning: '未お気に入り：30日後に自動削除されます',
     favoritedSuccess: 'お気に入り登録しました',
     unfavoritedSuccess: 'お気に入り解除しました',
-    copyAuthCode: 'タップでコピー'
+    copyAuthCode: 'タップでコピー',
+    autoExtractOTP: '認証コード自動抽出',
+    extractingOTP: '認証コードを検索中...',
+    otpNotFound: '認証コードが見つかりませんでした',
+    otpFound: '認証コードを見つけました'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
@@ -192,7 +196,11 @@ var i18n = {
     notFavoritedWarning: 'Not favorited: Auto-deleted after 30 days',
     favoritedSuccess: 'Added to favorites',
     unfavoritedSuccess: 'Removed from favorites',
-    copyAuthCode: 'Tap to copy'
+    copyAuthCode: 'Tap to copy',
+    autoExtractOTP: 'Auto Extract Code',
+    extractingOTP: 'Searching for auth code...',
+    otpNotFound: 'No verification code found',
+    otpFound: 'Verification code found'
   }
 };
 
@@ -349,6 +357,14 @@ const api = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password })
+    });
+    return res.json();
+  },
+
+  async extractOTP(address, password, limit = 5) {
+    const res = await fetch(`/api/mailbox/${encodeURIComponent(address)}/otp?password=${encodeURIComponent(password)}&limit=${limit}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
     });
     return res.json();
   }
@@ -1394,7 +1410,59 @@ async function handleUnsaveMail() {
 }
 
 // メール一覧の星アイコンクリック処理
-async function handleStarClick(mailId, isSaved) {
+async // ===== OTP Auto Extraction =====
+async function handleAutoExtractOTP() {
+  if (!state.currentAddress || !state.currentPassword) {
+    showToast(t('login') || 'ログインが必要です', 'error');
+    return;
+  }
+  
+  const otpBtn = document.getElementById('extract-otp-btn');
+  
+  try {
+    // UIフィードバック（検索中）
+    if (otpBtn) {
+      otpBtn.disabled = true;
+      otpBtn.classList.add('searching');
+    }
+    showToast(t('extractingOTP') || '認証コードを検索中...', 'info');
+    
+    // API呼び出し
+    const res = await api.extractOTP(state.currentAddress, state.currentPassword, 5);
+    
+    if (res.success && res.found && res.otp) {
+      // 見つかった！クリップボードにコピー
+      copyToClipboard(res.otp);
+      showToast(
+        `${t('otpFound') || '認証コードを見つけました'}: ${res.otp}`,
+        'success',
+        5000
+      );
+      
+      // 該当メールを強調表示（オプション）
+      if (res.mailId) {
+        const mailEl = document.querySelector(`.mail-item[data-id="${res.mailId}"]`);
+        if (mailEl) {
+          mailEl.classList.add('otp-highlight');
+          setTimeout(() => mailEl.classList.remove('otp-highlight'), 3000);
+        }
+      }
+    } else {
+      // 見つからなかった
+      showToast(t('otpNotFound') || '認証コードが見つかりませんでした', 'warning');
+    }
+  } catch (err) {
+    console.error('OTP extraction failed:', err);
+    showToast(t('otpNotFound') || '認証コードが見つかりませんでした', 'error');
+  } finally {
+    if (otpBtn) {
+      otpBtn.disabled = false;
+      otpBtn.classList.remove('searching');
+    }
+  }
+}
+
+function handleStarClick(mailId, isSaved) {
   if (!state.currentAddress || !state.currentPassword) {
     showToast('ログインが必要です', 'error');
     return;
@@ -1743,6 +1811,9 @@ function initEventListeners() {
   
   // Refresh
   addListener('refresh-btn', 'click', refreshMailbox);
+  
+  // OTP Auto Extract
+  addListener('extract-otp-btn', 'click', handleAutoExtractOTP);
   
   // Auto refresh toggle
   addListener('auto-refresh', 'change', toggleAutoRefresh);

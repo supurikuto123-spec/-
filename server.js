@@ -608,6 +608,56 @@ app.delete('/api/address/:address', async (req, res) => {
   }
 });
 
+// OTPを自動抽出（パスワード必須）
+app.get('/api/mailbox/:address/otp', async (req, res) => {
+  try {
+    const { address } = req.params;
+    const { password, limit = 5 } = req.query;
+    
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        error: 'パスワードが必要です'
+      });
+    }
+    
+    const mails = await mailStore.getMails(address, password, parseInt(limit));
+    
+    if (mails === null) {
+      return res.status(401).json({
+        success: false,
+        error: '認証に失敗しました'
+      });
+    }
+    
+    // OTP抽出モジュールを使用
+    const { extractLatestOTP } = require('./lib/otpExtractor');
+    const result = extractLatestOTP(mails);
+    
+    if (result) {
+      res.json({
+        success: true,
+        found: true,
+        otp: result.otp,
+        mailId: result.mailId,
+        from: result.from,
+        subject: result.subject,
+        receivedAt: result.receivedAt
+      });
+    } else {
+      res.json({
+        success: true,
+        found: false,
+        otp: null,
+        message: '認証コードが見つかりませんでした'
+      });
+    }
+  } catch (err) {
+    console.error('OTP extraction error:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
 // パスワード変更（パスワード必須）
 app.put('/api/address/:address/password', async (req, res) => {
   try {
