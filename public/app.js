@@ -234,9 +234,49 @@ var state = {
 // ===== DOM Elements Cache =====
 let elements = {};
 
+// ===== Drawer Functions (needed before common.js loads) =====
+function openDrawer() {
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  if (drawer) drawer.classList.add('active');
+  if (overlay) overlay.classList.add('active');
+  document.body.classList.add('drawer-open');
+}
+
+function closeDrawer() {
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  if (drawer) drawer.classList.remove('active');
+  if (overlay) overlay.classList.remove('active');
+  document.body.classList.remove('drawer-open');
+}
+
 // ===== i18n Functions =====
 function t(key) {
   return i18n[state.currentLang][key] || key;
+}
+
+// Helper function to update drawer menu links based on language
+function updateDrawerLinks(lang) {
+  const suffix = lang === 'en' ? '-en.html' : '.html';
+  
+  // Update each menu item's onclick to point to correct language version
+  const menuItems = [
+    { id: 'menu-howto', basePath: '/how-to-use' },
+    { id: 'menu-status', basePath: '/status' },
+    { id: 'menu-news', basePath: '/news' },
+    { id: 'menu-faq', basePath: '/faq' },
+    { id: 'menu-contact', basePath: '/contact' },
+    { id: 'menu-api', basePath: '/api' }
+  ];
+  
+  menuItems.forEach(item => {
+    const el = document.getElementById(item.id);
+    if (el) {
+      const newPath = item.basePath + suffix;
+      el.setAttribute('onclick', `location.href='${newPath}'`);
+    }
+  });
 }
 
 function setLanguage(lang) {
@@ -275,6 +315,9 @@ function setLanguage(lang) {
   if (metaDesc && i18n[lang].description) {
     metaDesc.content = i18n[lang].description;
   }
+  
+  // Update drawer menu links to point to correct language versions
+  updateDrawerLinks(lang);
 }
 
 // ===== API Functions =====
