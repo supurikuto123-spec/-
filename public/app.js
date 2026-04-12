@@ -679,32 +679,41 @@ function renderMailList(mails) {
     // 認証コードを表示（あれば）
     const authCodeHtml = mail.authCode ? `
       <div class="mail-auth-code">
-        <span class="auth-code-label">${t('authCode')}</span>
+        <span class="auth-code-label">${t('authCode') || '認証コード'}</span>
         <code class="auth-code-value">${escapeHtml(mail.authCode)}</code>
       </div>
     ` : '';
     
-    // 保存状態を表示
-    const savedHtml = mail.saved ? `
-      <span class="mail-saved-badge" title="${t('savedFor30Days')}">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
-          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-          <polyline points="17 21 17 13 7 13 7 21"/>
-          <polyline points="7 3 7 8 15 8"/>
+    // 星マークアイコン（保存/未保存）- 右側に設置
+    const starIcon = mail.saved ? `
+      <span class="mail-star saved" data-id="${mail.id}" data-saved="true" title="保存済み（クリックで解除）">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
       </span>
-    ` : '';
+    ` : `
+      <span class="mail-star unsaved" data-id="${mail.id}" data-saved="false" title="クリックで保存">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </span>
+    `;
     
     return `
     <div class="mail-item ${!mail.read ? 'unread' : ''} ${mail.saved ? 'saved' : ''}" data-id="${mail.id}">
-      <div class="mail-header">
-        <span class="mail-subject">${savedHtml}${escapeHtml(mail.subject || '(no subject)')}</span>
-        <span class="mail-time">${formatDate(mail.receivedAt)}</span>
+      <div class="mail-content-wrapper">
+        <div class="mail-header">
+          <span class="mail-subject">${escapeHtml(mail.subject || '(no subject)')}</span>
+          <span class="mail-time">${formatDate(mail.receivedAt)}</span>
+        </div>
+        <div class="mail-from">${escapeHtml(mail.from)}</div>
+        ${authCodeHtml}
+        <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}${mail.body.length > 100 ? '...' : ''}</div>
+        ${!mail.saved ? `<div class="mail-not-saved-warning">${t('notSavedWarning') || '30日後に自動削除'}</div>` : ''}
       </div>
-      <div class="mail-from">${escapeHtml(mail.from)}</div>
-      ${authCodeHtml}
-      <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}${mail.body.length > 100 ? '...' : ''}</div>
-      ${!mail.saved ? `<div class="mail-not-saved-warning">${t('notSavedWarning')}</div>` : ''}
+      <div class="mail-actions">
+        ${starIcon}
+      </div>
     </div>
   `;
   }).join('');
@@ -713,7 +722,20 @@ function renderMailList(mails) {
   if (mailList.innerHTML !== newHTML) {
     mailList.innerHTML = newHTML;
     mailList.querySelectorAll('.mail-item').forEach(item => {
-      item.addEventListener('click', () => openMailModal(item.dataset.id));
+      // メール本体をクリックしたらモーダルを開く（星アイコン以外）
+      item.addEventListener('click', (e) => {
+        // 星アイコンまたは保存ボタンがクリックされたらモーダルを開かない
+        if (e.target.closest('.mail-star')) return;
+        openMailModal(item.dataset.id);
+      });
+    });
+    
+    // 星アイコンのクリックイベントを設定
+    mailList.querySelectorAll('.mail-star').forEach(star => {
+      star.addEventListener('click', (e) => {
+        e.stopPropagation(); // 親要素のクリックイベントに伝播させない
+        handleStarClick(star.dataset.id, star.dataset.saved === 'true');
+      });
     });
   }
   
@@ -1348,6 +1370,53 @@ async function handleUnsaveMail() {
   } catch (err) {
     console.error('Failed to unsave mail:', err);
     showToast('解除に失敗しました', 'error');
+  }
+}
+
+// メール一覧の星アイコンクリック処理
+async function handleStarClick(mailId, isSaved) {
+  if (!state.currentAddress || !state.currentPassword) {
+    showToast('ログインが必要です', 'error');
+    return;
+  }
+  
+  try {
+    if (isSaved) {
+      // 保存解除
+      const res = await api.unsaveMail(state.currentAddress, state.currentPassword, mailId);
+      if (res.success) {
+        // Update in state.mails array
+        const mailIndex = state.mails.findIndex(m => m.id === mailId);
+        if (mailIndex >= 0) {
+          state.mails[mailIndex].saved = false;
+          state.mails[mailIndex].savedAt = null;
+          state.mails[mailIndex].expiresAt = res.expiresAt; // 保存解除時の期限
+        }
+        renderMailList(state.mails);
+        showToast('保存を解除しました（30日後に削除）', 'info');
+      } else {
+        showToast('解除に失敗しました', 'error');
+      }
+    } else {
+      // 保存
+      const res = await api.saveMail(state.currentAddress, state.currentPassword, mailId);
+      if (res.success) {
+        // Update in state.mails array
+        const mailIndex = state.mails.findIndex(m => m.id === mailId);
+        if (mailIndex >= 0) {
+          state.mails[mailIndex].saved = true;
+          state.mails[mailIndex].savedAt = res.savedAt;
+          state.mails[mailIndex].expiresAt = res.expiresAt; // null（永久保存）
+        }
+        renderMailList(state.mails);
+        showToast('保存しました（永久保持）', 'success');
+      } else {
+        showToast('保存に失敗しました', 'error');
+      }
+    }
+  } catch (err) {
+    console.error('Failed to toggle save:', err);
+    showToast('エラーが発生しました', 'error');
   }
 }
 

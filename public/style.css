@@ -714,6 +714,104 @@ section {
   white-space: nowrap;
 }
 
+/* メールアイテムのレイアウト（星マーク対応） */
+.mail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.mail-content-wrapper {
+  flex: 1;
+  min-width: 0;
+  padding-right: var(--spacing-sm);
+}
+
+.mail-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+/* 星マーク（保存/未保存） */
+.mail-star {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.mail-star:hover {
+  background: var(--bg-hover);
+  transform: scale(1.1);
+}
+
+.mail-star.saved {
+  background: rgba(255, 215, 0, 0.1);
+  border-color: #FFD700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.mail-star.saved:hover {
+  background: rgba(255, 215, 0, 0.2);
+}
+
+.mail-star.unsaved:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 8px var(--neon-cyan);
+}
+
+.mail-star svg {
+  transition: all var(--transition-fast);
+}
+
+/* 認証コード表示 */
+.mail-auth-code {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin: var(--spacing-xs) 0;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(0, 255, 157, 0.1);
+  border: 1px solid var(--neon-green);
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.auth-code-label {
+  font-size: 0.75rem;
+  color: var(--neon-green);
+  font-weight: 600;
+}
+
+.auth-code-value {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--neon-green);
+  letter-spacing: 0.1em;
+}
+
+/* 未保存警告 */
+.mail-not-saved-warning {
+  font-size: 0.75rem;
+  color: var(--status-busy);
+  margin-top: var(--spacing-xs);
+  opacity: 0.8;
+}
+
 /* Info Section */
 .info-section {
   background: var(--bg-card);
