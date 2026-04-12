@@ -447,43 +447,43 @@
 
   <div class="faq-page" style="padding-top: 80px;">
     <header class="faq-header" style="justify-content: center;">
-      <h1 class="faq-title">よくある質問</h1>
+      <h1 class="faq-title" data-i18n="faqTitle">よくある質問</h1>
     </header>
 
-    <p class="faq-intro">
+    <p class="faq-intro" data-i18n="faqIntro">
       このページでは、Sutemeado（ステメアド）が提供する「一時メールアドレス（使い捨てメール・捨てメアド）」サービスについて、仕組み・使い方・安全性・保存期間などを掲載しています。一般的なユーザーから、Webエンジニア・アプリ開発者・テスターなど「一時メールを使いこなしたい人」向けの内容までカバーしています。
     </p>
 
     <nav class="faq-toc">
-      <div class="faq-toc-title">
+      <div class="faq-toc-title" data-i18n="faqToc">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="4" y1="6" x2="20" y2="6"/>
           <line x1="4" y1="12" x2="20" y2="12"/>
           <line x1="4" y1="18" x2="20" y2="18"/>
         </svg>
-        目次
+        <span data-i18n="tocTitle">目次</span>
       </div>
       <ul class="faq-toc-list">
-        <li class="faq-toc-item"><a href="#sec-what">サービス全体について</a></li>
-        <li class="faq-toc-item"><a href="#sec-how">使い方・基本仕様・挙動</a></li>
-        <li class="faq-toc-item"><a href="#sec-security">セキュリティ・プライバシー・匿名性</a></li>
-        <li class="faq-toc-item"><a href="#sec-lifetime">保存期間・有効期限・データ削除</a></li>
-        <li class="faq-toc-item"><a href="#sec-usage">おすすめの使い方・NGな使い方</a></li>
-        <li class="faq-toc-item"><a href="#sec-trouble">メールが届かない／表示がおかしい</a></li>
-        <li class="faq-toc-item"><a href="#sec-dev">開発者・テスター向けの利用</a></li>
-        <li class="faq-toc-item"><a href="#sec-legal">法的な観点・禁止事項・免責事項</a></li>
+        <li class="faq-toc-item"><a href="#sec-what" data-i18n="tocAbout">サービス全体について</a></li>
+        <li class="faq-toc-item"><a href="#sec-how" data-i18n="tocHowTo">使い方・基本仕様・挙動</a></li>
+        <li class="faq-toc-item"><a href="#sec-security" data-i18n="tocSecurity">セキュリティ・プライバシー・匿名性</a></li>
+        <li class="faq-toc-item"><a href="#sec-lifetime" data-i18n="tocLifetime">保存期間・有効期限・データ削除</a></li>
+        <li class="faq-toc-item"><a href="#sec-usage" data-i18n="tocUsage">おすすめの使い方・NGな使い方</a></li>
+        <li class="faq-toc-item"><a href="#sec-trouble" data-i18n="tocTrouble">メールが届かない／表示がおかしい</a></li>
+        <li class="faq-toc-item"><a href="#sec-dev" data-i18n="tocDev">開発者・テスター向けの利用</a></li>
+        <li class="faq-toc-item"><a href="#sec-legal" data-i18n="tocLegal">法的な観点・禁止事項・免責事項</a></li>
       </ul>
     </nav>
 
     <!-- 1. サービス全体について -->
     <section class="faq-section" id="sec-what">
-      <h2 class="faq-section-title">
+      <h2 class="faq-section-title" data-i18n="secWhatTitle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="16" x2="12" y2="12"/>
           <line x1="12" y1="8" x2="12" y2="8"/>
         </svg>
-        サービス全体について（概要・特徴・他サービスとの違い）
+        <span data-i18n="secWhatTitle">サービス全体について（概要・特徴・他サービスとの違い）</span>
       </h2>
 
       <div class="faq-item">
@@ -536,7 +536,7 @@
 
     <!-- 2. 使い方・基本仕様・挙動 -->
     <section class="faq-section" id="sec-how">
-      <h2 class="faq-section-title">
+      <h2 class="faq-section-title" data-i18n="secHowTitle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
           <polyline points="14 2 14 8 20 8"/>
@@ -544,7 +544,7 @@
           <line x1="16" y1="17" x2="8" y2="17"/>
           <line x1="10" y1="9" x2="8" y2="9"/>
         </svg>
-        使い方・基本仕様・挙動
+        <span data-i18n="secHowTitle">使い方・基本仕様・挙動</span>
       </h2>
 
       <div class="faq-item">
@@ -606,11 +606,11 @@
 
     <!-- 3. セキュリティ・プライバシー・匿名性 -->
     <section class="faq-section" id="sec-security">
-      <h2 class="faq-section-title">
+      <h2 class="faq-section-title" data-i18n="secSecurityTitle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
-        セキュリティ・プライバシー・匿名性
+        <span data-i18n="secSecurityTitle">セキュリティ・プライバシー・匿名性</span>
       </h2>
 
       <div class="faq-item">
@@ -662,12 +662,12 @@
 
     <!-- 4. 保存期間・有効期限・データ削除 -->
     <section class="faq-section" id="sec-lifetime">
-      <h2 class="faq-section-title">
+      <h2 class="faq-section-title" data-i18n="secLifetimeTitle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
           <polyline points="12 6 12 12 16 14"/>
         </svg>
-        保存期間・有効期限・データ削除について
+        <span data-i18n="secLifetimeTitle">保存期間・有効期限・データ削除について</span>
       </h2>
 
       <div class="faq-item">
@@ -705,12 +705,12 @@
 
     <!-- 5. おすすめの使い方・NGな使い方・ユースケース集 -->
     <section class="faq-section" id="sec-usage">
-      <h2 class="faq-section-title">
+      <h2 class="faq-section-title" data-i18n="secUsageTitle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 20h9"/>
           <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
         </svg>
-        おすすめの使い方・NGな使い方・ユースケース集
+        <span data-i18n="secUsageTitle">おすすめの使い方・NGな使い方・ユースケース集</span>
       </h2>
 
       <div class="faq-item">
@@ -768,13 +768,13 @@
 
     <!-- 6. メールが届かない／表示がおかしい -->
     <section class="faq-section" id="sec-trouble">
-      <h2 class="faq-section-title">
+      <h2 class="faq-section-title" data-i18n="secTroubleTitle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
           <line x1="12" y1="9" x2="12" y2="13"/>
           <line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
-        メールが届かない／表示がおかしいときの対処
+        <span data-i18n="secTroubleTitle">メールが届かない／表示がおかしいときの対処</span>
       </h2>
 
       <div class="faq-item">
@@ -812,12 +812,12 @@
 
     <!-- 7. 開発者・テスター向けの利用 -->
     <section class="faq-section" id="sec-dev">
-      <h2 class="faq-section-title">
+      <h2 class="faq-section-title" data-i18n="secDevTitle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="16 18 22 12 16 6"/>
           <polyline points="8 6 2 12 8 18"/>
         </svg>
-        開発者・テスター向けの利用に関する質問
+        <span data-i18n="secDevTitle">開発者・テスター向けの利用に関する質問</span>
       </h2>
 
       <div class="faq-item">
@@ -845,11 +845,11 @@
 
     <!-- 8. 法的な観点・禁止事項・免責事項 -->
     <section class="faq-section" id="sec-legal">
-      <h2 class="faq-section-title">
+      <h2 class="faq-section-title" data-i18n="secLegalTitle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
-        法的な観点・禁止事項・免責事項
+        <span data-i18n="secLegalTitle">法的な観点・禁止事項・免責事項</span>
       </h2>
 
       <div class="faq-item">
@@ -869,15 +869,15 @@
 
     <!-- Contact CTA -->
     <div class="contact-cta">
-      <div class="contact-cta-title">さらに質問がありますか？</div>
-      <div class="contact-cta-text">お問い合わせはInstagram DMからお気軽にどうぞ</div>
+      <div class="contact-cta-title" data-i18n="contactCtaTitle">さらに質問がありますか？</div>
+      <div class="contact-cta-text" data-i18n="contactCtaText">お問い合わせはInstagram DMからお気軽にどうぞ</div>
       <a href="https://instagram.com/not_rare.tar" target="_blank" rel="noopener noreferrer" class="contact-cta-btn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
           <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
           <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
         </svg>
-        @not_rare.tar にDMする
+        <span data-i18n="contactCtaBtn">@not_rare.tar にDMする</span>
       </a>
     </div>
 
