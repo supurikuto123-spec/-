@@ -1063,12 +1063,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentPath = window.location.pathname;
         let newPath;
         
-        // ホームページの場合は /index-en.html または /index.html に遷移
+        // ホームページの場合は /?lang=en または /?lang=ja に遷移（/index.html禁止）
         if (isHomePage) {
           if (lang === 'en') {
-            newPath = '/index-en.html';
+            newPath = '/?lang=en';
           } else {
-            newPath = '/index.html';
+            newPath = '/?lang=ja';
           }
         } else {
           // サブページの場合は適切な言語版に遷移
