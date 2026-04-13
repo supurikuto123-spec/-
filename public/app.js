@@ -113,7 +113,9 @@ var i18n = {
     autoExtractOTP: '認証コード自動抽出',
     extractingOTP: '認証コードを検索中...',
     otpNotFound: '認証コードが見つかりませんでした',
-    otpFound: '認証コードを見つけました'
+    otpFound: '認証コードを見つけました',
+    heroKeyword: '捨てメアド',
+    heroSubtitle: 'で匿名受信 - 登録不要の使い捨てメールサービス'
   },
   en: {
     title: 'Sutemeado - Simple Temporary Email',
@@ -222,7 +224,9 @@ var i18n = {
     autoExtractOTP: 'Auto Extract Code',
     extractingOTP: 'Searching for auth code...',
     otpNotFound: 'No verification code found',
-    otpFound: 'Verification code found'
+    otpFound: 'Verification code found',
+    heroKeyword: 'TempMail',
+    heroSubtitle: ' - Anonymous Email Service | Free Temporary Disposable Email'
   }
 };
 
