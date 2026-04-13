@@ -1024,6 +1024,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load saved theme
   loadTheme();
 
+  console.log('[i18n] DOMContentLoaded - Initial state.currentLang:', state.currentLang);
+
   // Initialize language (Skip on homepage - let app.js handle language there to avoid conflicts)
   // ホームは / のみ（/?lang=xx クエリパラメータ形式）
   const isHomePage = window.location.pathname === '/';
@@ -1038,6 +1040,8 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('[i18n] Subpage detected, setting language to:', pageLang);
     updateI18n(pageLang);
   }
+  
+  console.log('[i18n] After init - state.currentLang:', state.currentLang, 'isHomePage:', isHomePage);
 
   // Drawer toggle
   const menuToggle = document.getElementById('menu-toggle');
@@ -1059,8 +1063,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // ※ isHomePage は上で定義済み
 
   // Language buttons (すべてのページで有効)
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+  const langBtns = document.querySelectorAll('.lang-btn');
+  console.log(`[LangBtn] Found ${langBtns.length} language buttons`);
+  langBtns.forEach(btn => {
+    console.log(`[LangBtn] Attaching listener to button:`, btn.dataset.lang, btn.className);
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const lang = btn.dataset.lang;
       console.log(`[LangBtn] Clicked: ${lang}, current: ${state.currentLang}`);
       if (lang && lang !== state.currentLang) {
