@@ -1910,36 +1910,43 @@ function initEventListeners() {
   addListener('change-password-form', 'submit', handleChangePassword);
   addListener('change-password-modal-close', 'click', closeChangePasswordModal);
 
-  // 強度メーター
-  document.getElementById('new-password').addEventListener('input', function() {
-    const pw = this.value;
-    const wrap = document.getElementById('pw-strength-wrap');
-    const fill = document.getElementById('pw-strength-fill');
-    const label = document.getElementById('pw-strength-label');
-    if (!pw) { wrap.style.display = 'none'; return; }
-    wrap.style.display = 'flex';
-    const score = calcPasswordStrength(pw);
-    const levels = [
-      { pct: 20, cls: 'weak',   text: t('strengthWeak')   || '弱い'  },
-      { pct: 40, cls: 'weak',   text: t('strengthWeak')   || '弱い'  },
-      { pct: 60, cls: 'medium', text: t('strengthMedium') || '普通'  },
-      { pct: 80, cls: 'strong', text: t('strengthStrong') || '強い'  },
-      { pct: 100,cls: 'strong', text: t('strengthStrong') || '強い'  },
-    ];
-    const lv = levels[Math.min(score, 4)];
-    fill.style.width = lv.pct + '%';
-    fill.className = 'pw-strength-fill ' + lv.cls;
-    label.textContent = lv.text;
-    label.className = 'pw-strength-label ' + lv.cls;
-    // 確認欄チェック
-    const confirmPw = document.getElementById('confirm-new-password').value;
-    if (confirmPw) checkPwMatch(pw, confirmPw);
-  });
+  // 強度メーター（要素が存在する場合のみ）
+  const newPasswordEl = document.getElementById('new-password');
+  if (newPasswordEl) {
+    newPasswordEl.addEventListener('input', function() {
+      const pw = this.value;
+      const wrap = document.getElementById('pw-strength-wrap');
+      const fill = document.getElementById('pw-strength-fill');
+      const label = document.getElementById('pw-strength-label');
+      if (!pw) { if (wrap) wrap.style.display = 'none'; return; }
+      if (wrap) wrap.style.display = 'flex';
+      const score = calcPasswordStrength(pw);
+      const levels = [
+        { pct: 20, cls: 'weak',   text: t('strengthWeak')   || '弱い'  },
+        { pct: 40, cls: 'weak',   text: t('strengthWeak')   || '弱い'  },
+        { pct: 60, cls: 'medium', text: t('strengthMedium') || '普通'  },
+        { pct: 80, cls: 'strong', text: t('strengthStrong') || '強い'  },
+        { pct: 100,cls: 'strong', text: t('strengthStrong') || '強い'  },
+      ];
+      const lv = levels[Math.min(score, 4)];
+      if (fill) fill.style.width = lv.pct + '%';
+      if (fill) fill.className = 'pw-strength-fill ' + lv.cls;
+      if (label) label.textContent = lv.text;
+      if (label) label.className = 'pw-strength-label ' + lv.cls;
+      // 確認欄チェック
+      const confirmPw = document.getElementById('confirm-new-password')?.value;
+      if (confirmPw) checkPwMatch(pw, confirmPw);
+    });
+  }
 
-  // 確認フィールド一致チェック
-  document.getElementById('confirm-new-password').addEventListener('input', function() {
-    checkPwMatch(document.getElementById('new-password').value, this.value);
-  });
+  // 確認フィールド一致チェック（要素が存在する場合のみ）
+  const confirmNewPasswordEl = document.getElementById('confirm-new-password');
+  if (confirmNewPasswordEl) {
+    confirmNewPasswordEl.addEventListener('input', function() {
+      const newPw = document.getElementById('new-password')?.value;
+      if (newPw) checkPwMatch(newPw, this.value);
+    });
+  }
 
   // パスワード表示トグル（変更モーダル）
   ['toggle-new-password', 'toggle-confirm-password'].forEach(id => {
