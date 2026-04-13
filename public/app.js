@@ -1977,9 +1977,15 @@ function initEventListeners() {
     }
   });
   
-  // Confirm modal
-  document.getElementById('confirm-cancel').addEventListener('click', handleConfirmCancel);
-  document.getElementById('confirm-ok').addEventListener('click', handleConfirmOk);
+  // Confirm modal (要素が存在する場合のみ)
+  const confirmCancel = document.getElementById('confirm-cancel');
+  const confirmOk = document.getElementById('confirm-ok');
+  if (confirmCancel) {
+    confirmCancel.addEventListener('click', handleConfirmCancel);
+  }
+  if (confirmOk) {
+    confirmOk.addEventListener('click', handleConfirmOk);
+  }
 
   // Language switch
   document.querySelectorAll('.lang-btn').forEach(btn => {
