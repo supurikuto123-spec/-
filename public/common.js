@@ -962,8 +962,22 @@ function checkLanguageRedirect() {
   const path = window.location.pathname;
   if (path === '/') return false;
 
+  // デバッグ用: リダイレクトチェック開始をログ出力
+  console.log('[i18n] checkLanguageRedirect called for path:', path);
+
+  // URLに明示的な言語パラメータがある場合は、それを優先してリダイレクトをスキップ
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlLang = urlParams.get('lang');
+  if (urlLang === 'en' || urlLang === 'ja') {
+    // URLの言語パラメータがある場合は、localStorageをその言語に更新してリダイレクトは行わない
+    console.log('[i18n] URL lang param found:', urlLang, '- updating localStorage, skipping redirect');
+    localStorage.setItem('sutemeado_lang', urlLang);
+    return false;
+  }
+
   // Get the saved language preference from localStorage
   const savedLang = localStorage.getItem('sutemeado_lang') || 'ja';
+  console.log('[i18n] savedLang:', savedLang);
 
   // Check if we're already on a language-specific page
   const isEnglishPage = path.endsWith('-en.html');
@@ -975,36 +989,27 @@ function checkLanguageRedirect() {
   const isApiPage = path === '/api.html' || path === '/api';
   const isApiEnglishPage = path === '/api-en.html' || path === '/api-en';
 
-  // Handle API page redirects
-  if (savedLang === 'en' && isApiPage && !isApiEnglishPage) {
-    window.location.href = '/api-en.html';
-    return true;
-  }
-  if (savedLang === 'ja' && isApiEnglishPage) {
-    window.location.href = '/api.html';
-    return true;
+  // APIページの言語を検出してlocalStorageを更新（リダイレクトは行わない）
+  if (isApiPage && savedLang !== 'ja') {
+    console.log('[i18n] API page is Japanese, updating localStorage to ja');
+    localStorage.setItem('sutemeado_lang', 'ja');
+  } else if (isApiEnglishPage && savedLang !== 'en') {
+    console.log('[i18n] API page is English, updating localStorage to en');
+    localStorage.setItem('sutemeado_lang', 'en');
   }
 
   // If not a standard .html page (and not API), skip further checks
   if (!isEnglishPage && !isJapanesePage) return false;
 
-  // If language is English but we're on Japanese page, redirect to English page
-  if (savedLang === 'en' && isJapanesePage) {
-    const englishPage = path.replace('.html', '-en.html');
-    if (englishPage !== path) {
-      window.location.href = englishPage;
-      return true;
-    }
+  // ページの言語を検出してlocalStorageを更新（強制リダイレクトは行わない）
+  const pageLang = isEnglishPage ? 'en' : 'ja';
+  if (savedLang !== pageLang) {
+    console.log('[i18n] Page language (' + pageLang + ') differs from saved language (' + savedLang + '). Updating localStorage to match page language.');
+    localStorage.setItem('sutemeado_lang', pageLang);
   }
-
-  // If language is Japanese but we're on English page, redirect to Japanese page
-  if (savedLang === 'ja' && isEnglishPage) {
-    const japanesePage = path.replace('-en.html', '.html');
-    if (japanesePage !== path) {
-      window.location.href = japanesePage;
-      return true;
-    }
-  }
+  
+  // リダイレクトは行わない - ユーザーが明示的にアクセスしたページの言語を尊重
+  return false;
 
   return false;
 }
@@ -1054,7 +1059,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ホームページ判定（複数箇所で使用）
   // ホームは / のみ（/?lang=xx クエリパラメータ形式）
-  const isHomePage = window.location.pathname === '/';
+  // ※ isHomePage は上で定義済み
 
   // Language buttons (すべてのページで有効)
   document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -1227,6 +1232,18 @@ document.addEventListener('DOMContentLoaded', () => {
           window.location.href = link.base + suffix;
         });
       }
+    });
+    
+    // Fix footer legal links (terms/privacy) to respect current language
+    const footerTermsLinks = document.querySelectorAll('.drawer-footer-link[href^="/terms"]');
+    const footerPrivacyLinks = document.querySelectorAll('.drawer-footer-link[href^="/privacy"]');
+    
+    footerTermsLinks.forEach(link => {
+      link.href = currentLang === 'en' ? '/terms-en.html' : '/terms.html';
+    });
+    
+    footerPrivacyLinks.forEach(link => {
+      link.href = currentLang === 'en' ? '/privacy-en.html' : '/privacy.html';
     });
   }
 
