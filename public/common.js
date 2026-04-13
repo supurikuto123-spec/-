@@ -1235,15 +1235,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Fix footer legal links (terms/privacy) to respect current language
-    const footerTermsLinks = document.querySelectorAll('.drawer-footer-link[href^="/terms"]');
-    const footerPrivacyLinks = document.querySelectorAll('.drawer-footer-link[href^="/privacy"]');
+    // href="/terms.html" または href="/terms-en.html" の両方を正しく処理
+    // すべてのフッターリンクを取得してフィルタリング
+    const allFooterLinks = document.querySelectorAll('.drawer-footer-link');
+    console.log('[i18n] Found footer links:', allFooterLinks.length);
     
-    footerTermsLinks.forEach(link => {
-      link.href = currentLang === 'en' ? '/terms-en.html' : '/terms.html';
-    });
-    
-    footerPrivacyLinks.forEach(link => {
-      link.href = currentLang === 'en' ? '/privacy-en.html' : '/privacy.html';
+    allFooterLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      console.log('[i18n] Checking footer link:', href);
+      
+      // 利用規約リンク
+      if (href && (href.includes('/terms') || href.includes('termsOfService') || link.dataset.i18n === 'termsOfService')) {
+        const newHref = currentLang === 'en' ? '/terms-en.html' : '/terms.html';
+        if (link.href !== newHref) {
+          link.href = newHref;
+          console.log('[i18n] Updated terms link to:', newHref);
+        }
+      }
+      
+      // プライバシーリンク
+      if (href && (href.includes('/privacy') || href.includes('privacyPolicy') || link.dataset.i18n === 'privacyPolicy')) {
+        const newHref = currentLang === 'en' ? '/privacy-en.html' : '/privacy.html';
+        if (link.href !== newHref) {
+          link.href = newHref;
+          console.log('[i18n] Updated privacy link to:', newHref);
+        }
+      }
     });
   }
 
