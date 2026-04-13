@@ -1062,6 +1062,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const lang = btn.dataset.lang;
+      console.log(`[LangBtn] Clicked: ${lang}, current: ${state.currentLang}`);
       if (lang && lang !== state.currentLang) {
         // 言語を保存
         localStorage.setItem('sutemeado_lang', lang);
@@ -1104,13 +1105,20 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
         
+        console.log(`[LangBtn] currentPath: ${currentPath}, newPath: ${newPath}, search: ${window.location.search}`);
+        
         // 遷移先が現在と異なる場合のみ遷移
-        if (newPath && newPath !== currentPath + window.location.search) {
+        const currentFullPath = currentPath + window.location.search;
+        if (newPath && newPath !== currentFullPath) {
+          console.log(`[LangBtn] Navigating to: ${newPath}`);
           window.location.href = newPath;
         } else {
           // 同じページならi18nのみ更新
+          console.log(`[LangBtn] Same page, updating i18n only`);
           updateI18n(lang);
         }
+      } else {
+        console.log(`[LangBtn] Language same or invalid, skipping`);
       }
     });
   });
