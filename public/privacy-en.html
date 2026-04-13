@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy & Cookie Policy - Sutemeado</title>
-  <meta name="description" content="Privacy Policy and Cookie Policy for Sutemeado temporary email service. Explains handling of personal information, data protection, and cookie usage.">
+  <title data-i18n="privacyTitle">Privacy & Cookie Policy - Sutemeado</title>
+  <meta name="description" data-i18n="privacyMetaDesc" content="Privacy Policy and Cookie Policy for Sutemeado temporary email service. Explains handling of personal information, data protection, and cookie usage.">
   <meta name="theme-color" content="#0a0a0f">
   <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
@@ -26,6 +26,26 @@
       margin-bottom: 2rem;
       padding-bottom: 1.5rem;
       border-bottom: 1px solid var(--border-color);
+    }
+    .legal-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .legal-back-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      border-color: var(--accent-primary);
     }
     .legal-title {
       font-size: 1.5rem;
@@ -123,7 +143,7 @@
   <link rel="canonical" href="https://sutemeado.com/privacy-en.html">
 </head>
 <body>
-  <!-- Navigation -->
+  <!-- Navigation: Brand + Hamburger Button -->
   <nav class="navbar">
     <div class="nav-brand">
       <div class="nav-logo-wrap">
@@ -135,7 +155,16 @@
       <span class="nav-title">Sutemeado</span>
     </div>
 
+    <!-- Right side: Mail counter + Theme + Language + Hamburger -->
     <div class="nav-right">
+      <!-- Mail counter (shown when logged in) -->
+      <div class="nav-mail-counter" id="nav-mail-counter" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span class="nav-counter-value" id="nav-counter-value">0</span>
+      </div>
 
       <button class="hamburger-btn" id="menu-toggle" aria-label="Menu">
         <span></span>
@@ -145,12 +174,13 @@
     </div>
   </nav>
 
+  <!-- Drawer Overlay -->
   <div class="drawer-overlay" id="drawer-overlay"></div>
 
   <!-- Drawer Menu -->
   <div class="drawer" id="drawer">
     <div class="drawer-header">
-      <span class="drawer-title">Menu</span>
+      <span class="drawer-title" data-i18n="menuTitle">Menu</span>
       <button class="drawer-close" id="drawer-close">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -158,31 +188,38 @@
       </button>
     </div>
     <div class="drawer-body">
+
+      <!-- === Account === -->
       <div class="drawer-section" id="drawer-loggedin-section">
-        <div class="drawer-section-label drawer-section-main">Account</div>
+        <div class="drawer-section-label drawer-section-main" data-i18n="accountSection">Account Actions</div>
+
         <button class="drawer-item" id="menu-login-other" onclick="location.href='/?action=login&lang=en'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
             <polyline points="10,17 15,12 10,7"/>
             <line x1="15" y1="12" x2="3" y2="12"/>
           </svg>
-          <span>Login with another account</span>
+          <span data-i18n="login">Login with Another Account</span>
         </button>
+
         <button class="drawer-item" id="menu-new-address" onclick="location.href='/?action=new-address&lang=en'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 5v14M5 12h14"/>
           </svg>
-          <span>Create new email address</span>
+          <span data-i18n="newAddress">Create New Email Address</span>
         </button>
+
         <div class="drawer-divider"></div>
-        <div class="drawer-section-label drawer-section-danger">Dangerous Operations</div>
+        <div class="drawer-section-label drawer-section-danger" data-i18n="dangerousSection">Dangerous Actions (Caution Required)</div>
+
         <button class="drawer-item drawer-item-danger" id="menu-delete-all-mail" onclick="location.href='/?action=delete-all-mail&lang=en'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="3,6 5,6 21,6"/>
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
           </svg>
-          <span>Delete all emails</span>
+          <span data-i18n="deleteAllMail">Delete All Emails</span>
         </button>
+
         <button class="drawer-item drawer-item-danger" id="menu-delete-address" onclick="location.href='/?action=delete-address&lang=en'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"/>
@@ -191,18 +228,21 @@
             <path d="M14 11v6"/>
             <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
           </svg>
-          <span>Delete address</span>
+          <span data-i18n="deleteAddress">Delete Address</span>
         </button>
       </div>
+
       <div class="drawer-divider"></div>
-      <div class="drawer-section-label drawer-section-guide">Site Guide</div>
+      <div class="drawer-section-label drawer-section-guide" data-i18n="guideSection">Site Guide</div>
+
       <button class="drawer-item" id="menu-home" onclick="location.href='/?lang=en'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
           <polyline points="9 22 9 12 15 12 15 22"/>
         </svg>
-        <span>Home</span>
+        <span data-i18n="home">Home</span>
       </button>
+
       <button class="drawer-item" id="menu-howto" onclick="location.href='/how-to-use-en.html'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -211,49 +251,58 @@
           <line x1="16" y1="17" x2="8" y2="17"/>
           <line x1="10" y1="9" x2="8" y2="9"/>
         </svg>
-        <span>How to Use</span>
+        <span data-i18n="howToUse">How to Use</span>
       </button>
+
       <button class="drawer-item" id="menu-status" onclick="location.href='/status-en.html'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
         </svg>
-        <span>Status</span>
+        <span data-i18n="status">Status</span>
       </button>
+
       <button class="drawer-item" id="menu-news" onclick="location.href='/news-en.html'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
           <path d="M22 6l-10 7L2 6"/>
         </svg>
-        <span>News</span>
+        <span data-i18n="news">News</span>
       </button>
+
       <button class="drawer-item" id="menu-faq" onclick="location.href='/faq-en.html'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="16" x2="12" y2="12"/>
           <line x1="12" y1="8" x2="12" y2="8"/>
         </svg>
-        <span>FAQ</span>
+        <span data-i18n="faq">FAQ</span>
       </button>
+
       <button class="drawer-item" id="menu-contact" onclick="location.href='/contact-en.html'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
         </svg>
-        <span>Contact</span>
+        <span data-i18n="contact">Contact</span>
       </button>
+
       <div class="drawer-divider"></div>
-      <div class="drawer-section-label drawer-section-other">Other Links</div>
+      <div class="drawer-section-label drawer-section-other" data-i18n="otherSection">Other Links</div>
+
       <button class="drawer-item" id="menu-api" onclick="location.href='/api-en.html'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
         </svg>
-        <span>API Documentation</span>
+        <span data-i18n="apiDocs">API Documentation</span>
       </button>
+
     </div>
+
+    <!-- Drawer footer: Legal links -->
     <div class="drawer-footer">
       <div class="drawer-footer-links">
-        <a href="/terms-en.html" class="drawer-footer-link">Terms of Service</a>
+        <a href="/terms-en.html" class="drawer-footer-link" data-i18n="termsOfService">Terms of Service</a>
         <span class="drawer-footer-separator">|</span>
-        <a href="/privacy-en.html" class="drawer-footer-link">Privacy & Cookies</a>
+        <a href="/privacy-en.html" class="drawer-footer-link" data-i18n="privacyPolicy">Privacy & Cookies</a>
       </div>
       <p class="drawer-footer-copy">&copy; 2026 Sutemeado</p>
     </div>
@@ -262,171 +311,168 @@
   <!-- Main Content -->
   <div class="legal-page" style="padding-top: 80px;">
     <header class="legal-header" style="justify-content: center;">
-      <h1 class="legal-title">Privacy & Cookie Policy</h1>
+      <h1 class="legal-title" data-i18n="privacyTitle">Privacy & Cookie Policy</h1>
     </header>
 
-    <div class="effective-date">
-      <strong>Effective:</strong> March 25, 2026 | <strong>Last Updated:</strong> March 25, 2026 | <strong>Applies to:</strong> Japan and EU/EEA Regions
-    </div>
+    <div class="effective-date" data-i18n="privacyDate"></div>
 
     <div class="legal-content">
-      <p>Sutemeado (hereinafter referred to as "this Service") respects user privacy and takes utmost care in protecting personal information. This policy explains handling of personal information and cookies in this Service.</p>
+      <p data-i18n="privacyIntro">Sutemeado (hereinafter referred to as "this Service") respects user privacy and takes utmost care in protecting personal information. This policy explains handling of personal information and cookies in this Service.</p>
 
-      <h2>Article 1 (Definition of Personal Information)</h2>
-      <p>"Personal Information" in this policy refers to "personal information" as defined in the Act on the Protection of Personal Information, and means information about living individuals that can identify specific individuals through names, dates of birth, addresses, phone numbers, contact information, or other descriptions contained in such information.</p>
+      <h2 data-i18n="privacyArticle1Title">Article 1 (Definition of Personal Information)</h2>
+      <p data-i18n="privacyArticle1_1">"Personal Information" in this policy refers to "personal information" as defined in the Act on the Protection of Personal Information, and means information about living individuals that can identify specific individuals through names, dates of birth, addresses, phone numbers, contact information, or other descriptions contained in such information.</p>
 
-      <h2>Article 2 (Collected Information)</h2>
-      <p>This Service may collect the following information:</p>
+      <h2 data-i18n="privacyArticle2Title">Article 2 (Collected Information)</h2>
+      <p data-i18n="privacyArticle2Intro">This Service may collect the following information:</p>
       
-      <h3>2.1 Information Directly Provided by Users</h3>
+      <h3 data-i18n="privacyArticle2_1Title">2.1 Information Directly Provided by Users</h3>
       <ul>
-        <li><strong>Password:</strong> Password set for accessing temporary addresses (stored encrypted)</li>
-        <li><strong>Email Content:</strong> Sender, subject, body, and attachment file information of emails received at temporary addresses</li>
+        <li data-i18n="privacyArticle2_1_1"><strong>Password:</strong> Password set for accessing temporary addresses (stored encrypted)</li>
+        <li data-i18n="privacyArticle2_1_2"><strong>Email Content:</strong> Sender, subject, body, and attachment file information of emails received at temporary addresses</li>
       </ul>
 
-      <h3>2.2 Automatically Collected Information</h3>
+      <h3 data-i18n="privacyArticle2_2Title">2.2 Automatically Collected Information</h3>
       <ul>
-        <li><strong>Access Logs:</strong> IP addresses, browser types, referrers, access dates and times</li>
-        <li><strong>Device Information:</strong> Device types, OS, screen sizes</li>
-        <li><strong>Cookies and Similar Technologies:</strong> See the cookie policy described later</li>
+        <li data-i18n="privacyArticle2_2_1"><strong>Access Logs:</strong> IP addresses, browser types, referrers, access dates and times</li>
+        <li data-i18n="privacyArticle2_2_2"><strong>Device Information:</strong> Device types, OS, screen sizes</li>
+        <li data-i18n="privacyArticle2_2_3"><strong>Cookies and Similar Technologies:</strong> See the cookie policy described later</li>
       </ul>
 
-      <h3>2.3 Information Not Collected</h3>
+      <h3 data-i18n="privacyArticle2_3Title">2.3 Information Not Collected</h3>
       <ul>
-        <li>Names, addresses, phone numbers, or other information that can identify individuals (except passwords)</li>
-        <li>Credit card or other payment information</li>
-        <li>Date of birth, gender, or other attribute information</li>
+        <li data-i18n="privacyArticle2_3_1">Names, addresses, phone numbers, or other information that can identify individuals (except passwords)</li>
+        <li data-i18n="privacyArticle2_3_2">Credit card or other payment information</li>
+        <li data-i18n="privacyArticle2_3_3">Date of birth, gender, or other attribute information</li>
       </ul>
 
-      <h2>Article 3 (Purpose of Information Use)</h2>
-      <p>Collected information is used for the following purposes:</p>
+      <h2 data-i18n="privacyArticle3Title">Article 3 (Purpose of Information Use)</h2>
+      <p data-i18n="privacyArticle3Intro">Collected information is used for the following purposes:</p>
       <ul>
-        <li>Provision and operation of this Service</li>
-        <li>User authentication and account management</li>
-        <li>Improvement of this Service and development of new features</li>
-        <li>Prevention and investigation of unauthorized access or misuse</li>
-        <li>System maintenance and troubleshooting</li>
-        <li>Advertising delivery and effectiveness measurement</li>
-        <li>Creation and analysis of statistical information</li>
-        <li>Compliance with laws and regulations</li>
+        <li data-i18n="privacyArticle3_1">Provision and operation of this Service</li>
+        <li data-i18n="privacyArticle3_2">User authentication and account management</li>
+        <li data-i18n="privacyArticle3_3">Improvement of this Service and development of new features</li>
+        <li data-i18n="privacyArticle3_4">Prevention and investigation of unauthorized access or misuse</li>
+        <li data-i18n="privacyArticle3_5">System maintenance and troubleshooting</li>
+        <li data-i18n="privacyArticle3_6">Advertising delivery and effectiveness measurement</li>
+        <li data-i18n="privacyArticle3_7">Creation and analysis of statistical information</li>
+        <li data-i18n="privacyArticle3_8">Compliance with laws and regulations</li>
       </ul>
 
-      <h2>Article 4 (Information Storage Period)</h2>
+      <h2 data-i18n="privacyArticle4Title">Article 4 (Information Storage Period)</h2>
       <ul>
-        <li><strong>Received Emails:</strong> Stored for 30 days from receipt, then automatically deleted</li>
-        <li><strong>Access Logs:</strong> Stored for 90 days from collection</li>
-        <li><strong>Cookies:</strong> 1 day to 2 years depending on type</li>
-        <li>When users delete addresses, all related data is immediately deleted</li>
+        <li data-i18n="privacyArticle4_1"><strong>Received Emails:</strong> Stored for 30 days from receipt, then automatically deleted</li>
+        <li data-i18n="privacyArticle4_2"><strong>Access Logs:</strong> Stored for 90 days from collection</li>
+        <li data-i18n="privacyArticle4_3"><strong>Cookies:</strong> 1 day to 2 years depending on type</li>
+        <li data-i18n="privacyArticle4_4">When users delete addresses, all related data is immediately deleted</li>
       </ul>
 
-      <h2>Article 5 (Third-Party Disclosure)</h2>
-      <p>The Operator does not provide users' personal information to third parties except in the following cases:</p>
+      <h2 data-i18n="privacyArticle5Title">Article 5 (Third-Party Disclosure)</h2>
+      <p data-i18n="privacyArticle5Intro">The Operator does not provide users' personal information to third parties except in the following cases:</p>
       <ul>
-        <li>When there is user consent</li>
-        <li>When disclosure is required by law</li>
-        <li>When necessary to protect human life, body, or property</li>
-        <li>When particularly necessary for improving public health or promoting healthy development of children</li>
-        <li>When national agencies or local governments need cooperation in performing affairs prescribed by law</li>
+        <li data-i18n="privacyArticle5_1">When there is user consent</li>
+        <li data-i18n="privacyArticle5_2">When disclosure is required by law</li>
+        <li data-i18n="privacyArticle5_3">When necessary to protect human life, body, or property</li>
+        <li data-i18n="privacyArticle5_4">When particularly necessary for improving public health or promoting healthy development of children</li>
+        <li data-i18n="privacyArticle5_5">When national agencies or local governments or their entrusted parties need cooperation in performing affairs prescribed by law</li>
       </ul>
 
-      <h2>Article 6 (About Advertising)</h2>
-      <p>This Service displays advertisements through third-party ad delivery providers such as Google AdSense. These providers may use cookies to display ads according to user interests.</p>
+      <h2 data-i18n="privacyArticle6Title">Article 6 (About Advertising)</h2>
+      <p data-i18n="privacyArticle6_1">This Service displays advertisements through third-party ad delivery providers such as Google AdSense. These ad delivery providers may use cookies to display ads according to user interests.</p>
 
-      <h2>Article 7 (Cookie Policy)</h2>
+      <h2 data-i18n="privacyArticle7Title">Article 7 (Cookie Policy)</h2>
       
-      <h3>7.1 What are Cookies</h3>
-      <p>Cookies are small text files that websites save to users' devices through browsers. Cookies allow websites to remember user settings and past actions to provide more convenient services.</p>
+      <h3 data-i18n="privacyArticle7_1Title">7.1 What are Cookies</h3>
+      <p data-i18n="privacyArticle7_1">Cookies are small text files that websites save to users' devices through browsers. Cookies allow websites to remember user settings and past actions to provide more convenient services.</p>
 
-      <h3>7.2 Types of Cookies Used</h3>
+      <h3 data-i18n="privacyArticle7_2Title">7.2 Types of Cookies Used</h3>
       <table class="cookie-type-table">
         <thead>
           <tr>
-            <th>Type</th>
-            <th>Purpose</th>
-            <th>Duration</th>
+            <th data-i18n="privacyCookieType">Type</th>
+            <th data-i18n="privacyCookiePurpose">Purpose</th>
+            <th data-i18n="privacyCookieDuration">Duration</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Essential Cookies</td>
-            <td>Provide basic service functionality (login status, language settings, theme settings)</td>
+            <td data-i18n="privacyCookieEssential">Essential Cookies</td>
+            <td data-i18n="privacyCookieEssentialDesc">Provide basic service functionality (login status maintenance, language settings, theme settings)</td>
             <td>30 days</td>
           </tr>
           <tr>
-            <td>Analytics Cookies</td>
-            <td>Usage analysis by Google Analytics, service improvement</td>
+            <td data-i18n="privacyCookieAnalytics">Analytics & Performance Cookies</td>
+            <td data-i18n="privacyCookieAnalyticsDesc">Usage analysis by Google Analytics, service improvement</td>
             <td>2 years</td>
           </tr>
           <tr>
-            <td>Advertising Cookies</td>
-            <td>Appropriate ad delivery by Google AdSense, effectiveness measurement</td>
+            <td data-i18n="privacyCookieAdvertising">Advertising & Targeting Cookies</td>
+            <td data-i18n="privacyCookieAdvertisingDesc">Appropriate ad delivery by Google AdSense, effectiveness measurement</td>
             <td>13 months</td>
           </tr>
         </tbody>
       </table>
 
-      <h3>7.3 Managing Cookies</h3>
-      <p>Users can refuse acceptance of cookies or delete saved cookies through browser settings. However, if essential cookies are disabled, some features of this Service may become unavailable.</p>
+      <h3 data-i18n="privacyArticle7_3Title">7.3 Consent for Users in EU/EEA Regions (GDPR Compliance)</h3>
+      <p data-i18n="privacyArticle7_3">For users accessing from the European Economic Area (EEA) and United Kingdom, we obtain explicit consent for cookie use and personalized advertising. If consent is declined, some features or personalized ads may be disabled.</p>
 
-      <h2>Article 8 (Information Security)</h2>
-      <p>The Operator implements the following security management measures:</p>
+      <h3 data-i18n="privacyArticle7_4Title">7.4 How to Manage Cookies</h3>
+      <p data-i18n="privacyArticle7_4">Users can refuse acceptance of cookies or delete saved cookies through browser settings. However, if essential cookies are disabled, some features of this Service may become unavailable.</p>
+
+      <h2 data-i18n="privacyArticle8Title">Article 8 (Use of Google Analytics)</h2>
+      <p data-i18n="privacyArticle8_1">This Service uses "Google Analytics," an access analysis tool provided by Google LLC. Google Analytics collects and analyzes user usage using cookies. Collected information is managed according to Google's Privacy Policy.</p>
+      <p data-i18n="privacyArticle8_2">Users can disable Google Analytics tracking by installing the Google Analytics Opt-out Add-on.</p>
+
+      <h2 data-i18n="privacyArticle9Title">Article 9 (Information Security Management)</h2>
+      <p data-i18n="privacyArticle9Intro">The Operator implements the following security management measures to prevent leakage, loss, or damage of personal information:</p>
       <ul>
-        <li>Encrypted password storage (hashed with bcrypt)</li>
-        <li>Encrypted communication via HTTPS</li>
-        <li>Access restrictions and authentication functions</li>
-        <li>Regular security reviews</li>
+        <li data-i18n="privacyArticle9_1">Encrypted password storage (hashed with bcrypt)</li>
+        <li data-i18n="privacyArticle9_2">Encrypted communication via HTTPS</li>
+        <li data-i18n="privacyArticle9_3">Access restrictions and authentication functions</li>
+        <li data-i18n="privacyArticle9_4">Regular security reviews</li>
       </ul>
 
-      <h2>Article 9 (User Rights)</h2>
-      <p>Users have the following rights:</p>
+      <h2 data-i18n="privacyArticle10Title">Article 10 (User Rights)</h2>
+      <p data-i18n="privacyArticle10Intro">Users have the following rights:</p>
       <ul>
-        <li><strong>Right to Access:</strong> Right to confirm whether your personal information is being processed</li>
-        <li><strong>Right to Rectification:</strong> Right to request correction of inaccurate personal information</li>
-        <li><strong>Right to Erasure:</strong> Right to request deletion of personal information (can be achieved through address deletion)</li>
-        <li><strong>Right to Restriction:</strong> Right to request restriction of personal information processing</li>
-        <li><strong>Right to Data Portability:</strong> Right to receive your data in a structured format</li>
-        <li><strong>Right to Object:</strong> Right to object to processing for marketing purposes</li>
+        <li data-i18n="privacyArticle10_1"><strong>Right to Access:</strong> Right to confirm whether your personal information is being processed and to know its contents</li>
+        <li data-i18n="privacyArticle10_2"><strong>Right to Rectification:</strong> Right to request correction of inaccurate personal information</li>
+        <li data-i18n="privacyArticle10_3"><strong>Right to Erasure:</strong> Right to request deletion of personal information (can be achieved through address deletion)</li>
+        <li data-i18n="privacyArticle10_4"><strong>Right to Restriction:</strong> Right to request restriction of personal information processing</li>
+        <li data-i18n="privacyArticle10_5"><strong>Right to Data Portability:</strong> Right to receive your data in a structured format</li>
+        <li data-i18n="privacyArticle10_6"><strong>Right to Object:</strong> Right to object to processing for marketing purposes</li>
+      </ul>
+      <p data-i18n="privacyArticle10_7">To exercise these rights, please contact us via this Service's contact point.</p>
+
+      <h2 data-i18n="privacyArticle11Title">Article 11 (Children's Privacy)</h2>
+      <p data-i18n="privacyArticle11_1">This Service is not intended for children under 13. If we become aware that we have collected personal information from a child under 13, we will promptly delete such information.</p>
+
+      <h2 data-i18n="privacyArticle12Title">Article 12 (Changes to Privacy Policy)</h2>
+      <p data-i18n="privacyArticle12_1">The Operator may change this policy as necessary.</p>
+      <p data-i18n="privacyArticle12_2">The changed policy shall take effect when posted on this Service.</p>
+      <p data-i18n="privacyArticle12_3">In case of significant changes, we will notify through notices on this Service or other appropriate methods.</p>
+      <p data-i18n="privacyArticle12_4">If you cannot agree to the changed policy, please discontinue use of this Service.</p>
+
+      <h2 data-i18n="privacyArticle13Title">Article 13 (International Data Transfer)</h2>
+      <p data-i18n="privacyArticle13_1">Information collected by this Service is stored on servers in Japan. However, through use of Google AdSense and Google Analytics, data may be sent to servers of Google LLC (United States). In this case, Google implements appropriate protective measures based on EU Standard Contractual Clauses.</p>
+
+      <h2 data-i18n="privacyArticle14Title">Article 14 (Contact)</h2>
+      <p data-i18n="privacyArticle14Intro">For inquiries, opinions, or requests for exercising rights regarding this policy, please contact:</p>
+      <ul>
+        <li data-i18n="privacyArticle14_1">Contact Form: Access from this Service's menu</li>
       </ul>
 
-      <h2>Article 10 (Children's Privacy)</h2>
-      <p>This Service is not intended for children under 13. If we become aware that we have collected personal information from a child under 13, we will promptly delete such information.</p>
+      <h2 data-i18n="privacyArticle15Title">Article 15 (Governing Law)</h2>
+      <p data-i18n="privacyArticle15_1">This policy shall be interpreted in accordance with Japanese law. For users in EU/EEA regions, within the scope where the General Data Protection Regulation (GDPR) applies, this policy shall also satisfy the requirements of said regulation.</p>
 
-      <h2>Article 11 (Changes to Privacy Policy)</h2>
-      <p>The Operator may change this policy as necessary. The changed policy shall take effect when posted on this Service. In case of significant changes, we will notify through notices on this Service.</p>
-
-      <h2>Article 12 (Contact)</h2>
-      <p>For inquiries regarding this policy, please contact us via the <a href="/contact-en.html" style="color: var(--neon-cyan);">contact page</a>.</p>
+      <p data-i18n="privacyCompliantNotice" style="margin-top: 2rem; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md); text-align: center; font-size: 0.875rem;">This page complies with Google AdSense and GDPR/CCPA</p>
     </div>
 
     <div class="legal-footer">
       <p>&copy; 2026 Sutemeado - All Rights Reserved</p>
-      <p style="margin-top: 0.5rem; font-size: 0.75rem;">This page complies with Google AdSense and GDPR/CCPA</p>
     </div>
   </div>
 
-  <script>
-    const menuToggle = document.getElementById('menu-toggle');
-    const drawer = document.getElementById('drawer');
-    const drawerOverlay = document.getElementById('drawer-overlay');
-    const drawerClose = document.getElementById('drawer-close');
-
-    function openDrawer() {
-      drawer.classList.add('active');
-      drawerOverlay.classList.add('active');
-      document.body.classList.add('drawer-open');
-    }
-
-    function closeDrawer() {
-      drawer.classList.remove('active');
-      drawerOverlay.classList.remove('active');
-      document.body.classList.remove('drawer-open');
-    }
-
-    menuToggle.addEventListener('click', openDrawer);
-    drawerOverlay.addEventListener('click', closeDrawer);
-    drawerClose.addEventListener('click', closeDrawer);
-  </script>
-
-  <script src="/common.js?v=20260410a"></script>
+  <!-- Shared Application Logic -->
+  <script src="/common.js"></script>
 </body>
 </html>

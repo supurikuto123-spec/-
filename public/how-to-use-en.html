@@ -641,31 +641,6 @@ curl -X POST https://sutemeado.com/api/login \
     </div>
   </div>
 
-  <!-- Drawer Toggle Script -->
-  <script>
-    const menuToggle = document.getElementById('menu-toggle');
-    const drawer = document.getElementById('drawer');
-    const drawerOverlay = document.getElementById('drawer-overlay');
-    const drawerClose = document.getElementById('drawer-close');
-
-    function openDrawer() {
-      drawer.classList.add('active');
-      drawerOverlay.classList.add('active');
-      document.body.classList.add('drawer-open');
-    }
-
-    function closeDrawer() {
-      drawer.classList.remove('active');
-      drawerOverlay.classList.remove('active');
-      document.body.classList.remove('drawer-open');
-    }
-
-    menuToggle.addEventListener('click', openDrawer);
-    drawerOverlay.addEventListener('click', closeDrawer);
-    drawerClose.addEventListener('click', closeDrawer);
-  </script>
-
-  <!-- Common Functions -->
-  <script src="/common.js?v=20260410a"></script>
+  <script src="/common.js"></script>
 </body>
 </html>

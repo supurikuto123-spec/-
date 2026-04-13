@@ -968,6 +968,7 @@ function checkLanguageRedirect() {
   // Check if we're already on a language-specific page
   const isEnglishPage = path.endsWith('-en.html');
   // Support both .html and extension-less paths (like /api.html)
+  // A page is Japanese if it ends with .html but NOT -en.html
   const isJapanesePage = (path.endsWith('.html') && !path.endsWith('-en.html'));
 
   // Special handling for API page and other extension-less paths
@@ -990,15 +991,19 @@ function checkLanguageRedirect() {
   // If language is English but we're on Japanese page, redirect to English page
   if (savedLang === 'en' && isJapanesePage) {
     const englishPage = path.replace('.html', '-en.html');
-    window.location.href = englishPage;
-    return true;
+    if (englishPage !== path) {
+      window.location.href = englishPage;
+      return true;
+    }
   }
 
   // If language is Japanese but we're on English page, redirect to Japanese page
   if (savedLang === 'ja' && isEnglishPage) {
     const japanesePage = path.replace('-en.html', '.html');
-    window.location.href = japanesePage;
-    return true;
+    if (japanesePage !== path) {
+      window.location.href = japanesePage;
+      return true;
+    }
   }
 
   return false;
