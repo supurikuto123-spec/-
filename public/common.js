@@ -962,22 +962,16 @@ function checkLanguageRedirect() {
   const path = window.location.pathname;
   if (path === '/') return false;
 
-  // デバッグ用: リダイレクトチェック開始をログ出力
-  console.log('[i18n] checkLanguageRedirect called for path:', path);
-
   // URLに明示的な言語パラメータがある場合は、それを優先してリダイレクトをスキップ
   const urlParams = new URLSearchParams(window.location.search);
   const urlLang = urlParams.get('lang');
   if (urlLang === 'en' || urlLang === 'ja') {
-    // URLの言語パラメータがある場合は、localStorageをその言語に更新してリダイレクトは行わない
-    console.log('[i18n] URL lang param found:', urlLang, '- updating localStorage, skipping redirect');
     localStorage.setItem('sutemeado_lang', urlLang);
     return false;
   }
 
-  // Get the saved language preference from localStorage
+  // Get the saved language preference from localStorage (default: 'ja')
   const savedLang = localStorage.getItem('sutemeado_lang') || 'ja';
-  console.log('[i18n] savedLang:', savedLang);
 
   // Check if we're already on a language-specific page
   const isEnglishPage = path.endsWith('-en.html');
@@ -990,16 +984,40 @@ function checkLanguageRedirect() {
   const isApiEnglishPage = path === '/api-en.html' || path === '/api-en';
 
   // If not a standard .html page (and not API), skip further checks
-  if (!isEnglishPage && !isJapanesePage) return false;
+  if (!isEnglishPage && !isJapanesePage && !isApiPage && !isApiEnglishPage) return false;
 
-  // サブページでは、ページの言語を検出するだけでlocalStorageは更新しない
-  // ユーザーの言語設定を尊重し、ページの内容のみをその言語で表示する
-  const pageLang = isEnglishPage ? 'en' : 'ja';
-  console.log('[i18n] Page language:', pageLang, '| Saved language:', savedLang, '| Not updating localStorage on subpages');
+  // Determine current page language
+  const pageLang = isEnglishPage || isApiEnglishPage ? 'en' : 'ja';
+
+  // If saved language matches page language, no redirect needed
+  if (savedLang === pageLang) {
+    return false;
+  }
+
+  // Redirect to the correct language version based on saved preference
   
-  // リダイレクトは行わない - ユーザーが明示的にアクセスしたページの言語を尊重
-  return false;
-
+  if (savedLang === 'en') {
+    // Redirect to English version
+    if (isApiPage || path === '/api') {
+      window.location.replace('/api-en.html');
+      return true;
+    } else if (isJapanesePage) {
+      const newPath = path.replace('.html', '-en.html');
+      window.location.replace(newPath);
+      return true;
+    }
+  } else {
+    // savedLang === 'ja', redirect to Japanese version
+    if (isApiEnglishPage || path === '/api-en') {
+      window.location.replace('/api.html');
+      return true;
+    } else if (isEnglishPage) {
+      const newPath = path.replace('-en.html', '.html');
+      window.location.replace(newPath);
+      return true;
+    }
+  }
+  
   return false;
 }
 
@@ -1024,7 +1042,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load saved theme
   loadTheme();
 
-  console.log('[i18n] DOMContentLoaded - Initial state.currentLang:', state.currentLang);
+
 
   // Initialize language (Skip on homepage - let app.js handle language there to avoid conflicts)
   // ホームは / のみ（/?lang=xx クエリパラメータ形式）
@@ -1041,7 +1059,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateI18n(pageLang);
   }
   
-  console.log('[i18n] After init - state.currentLang:', state.currentLang, 'isHomePage:', isHomePage);
+
 
   // Drawer toggle
   const menuToggle = document.getElementById('menu-toggle');
@@ -1063,15 +1081,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ※ isHomePage は上で定義済み
 
   // Language buttons (すべてのページで有効)
-  const langBtns = document.querySelectorAll('.lang-btn');
-  console.log(`[LangBtn] Found ${langBtns.length} language buttons`);
-  langBtns.forEach(btn => {
-    console.log(`[LangBtn] Attaching listener to button:`, btn.dataset.lang, btn.className);
+  document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
       const lang = btn.dataset.lang;
-      console.log(`[LangBtn] Clicked: ${lang}, current: ${state.currentLang}`);
       if (lang && lang !== state.currentLang) {
         // 言語を保存
         localStorage.setItem('sutemeado_lang', lang);
@@ -1114,20 +1126,14 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
         
-        console.log(`[LangBtn] currentPath: ${currentPath}, newPath: ${newPath}, search: ${window.location.search}`);
-        
         // 遷移先が現在と異なる場合のみ遷移
         const currentFullPath = currentPath + window.location.search;
         if (newPath && newPath !== currentFullPath) {
-          console.log(`[LangBtn] Navigating to: ${newPath}`);
           window.location.href = newPath;
         } else {
           // 同じページならi18nのみ更新
-          console.log(`[LangBtn] Same page, updating i18n only`);
           updateI18n(lang);
         }
-      } else {
-        console.log(`[LangBtn] Language same or invalid, skipping`);
       }
     });
   });
