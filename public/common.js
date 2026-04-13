@@ -949,6 +949,7 @@ function checkLoginStatus() {
 // Button handlers for subpages - redirect to homepage with action params
 function redirectToHome(action) {
   const lang = state.currentLang || 'ja';
+  // ホームは /?lang=xx のみ（/index.html禁止）
   window.location.href = `/?action=${action}&lang=${lang}`;
 }
 
@@ -956,10 +957,10 @@ function redirectToHome(action) {
 // NOTE: This function is called IMMEDIATELY at script load time (not waiting for DOMContentLoaded)
 // to prevent flash of incorrect language content
 function checkLanguageRedirect() {
-  // Only run on subpages (not index.html or /)
+  // Only run on subpages (not /)
+  // ホームは / のみ（/?lang=xx クエリパラメータ形式）
   const path = window.location.pathname;
-  const isHomePage = path === '/' || path === '/index.html';
-  if (isHomePage) return false;
+  if (path === '/') return false;
 
   // Get the saved language preference from localStorage
   const savedLang = localStorage.getItem('sutemeado_lang') || 'ja';
@@ -1007,8 +1008,9 @@ function checkLanguageRedirect() {
 // Run this RIGHT NOW before any content renders to prevent flash of wrong language
 (function immediateLanguageCheck() {
   // Skip on homepage - app.js handles language there
+  // ホームは / のみ（/?lang=xx クエリパラメータ形式）
   const path = window.location.pathname;
-  if (path === '/' || path === '/index.html' || path === '/index-en.html') return;
+  if (path === '/') return;
   
   // Check if redirect needed - no sessionStorage flags needed since we're not preventing
   // cross-page redirects anymore (we WANT to redirect when language preference changes)
@@ -1024,7 +1026,8 @@ document.addEventListener('DOMContentLoaded', () => {
   loadTheme();
 
   // Initialize language (Skip on homepage - let app.js handle language there to avoid conflicts)
-  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '/index-en.html';
+  // ホームは / のみ（/?lang=xx クエリパラメータ形式）
+  const isHomePage = window.location.pathname === '/';
   if (!isHomePage) {
     updateI18n(state.currentLang);
   }
@@ -1045,7 +1048,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ホームページ判定（複数箇所で使用）
-  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '/index-en.html';
+  // ホームは / のみ（/?lang=xx クエリパラメータ形式）
+  const isHomePage = window.location.pathname === '/';
 
   // Language buttons (すべてのページで有効)
   document.querySelectorAll('.lang-btn').forEach(btn => {

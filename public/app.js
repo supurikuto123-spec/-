@@ -311,15 +311,38 @@ function setLanguage(lang) {
   const currentLang = localStorage.getItem(CONFIG.LANG_KEY) || 'ja';
   if (currentLang !== lang) {
     localStorage.setItem(CONFIG.LANG_KEY, lang);
-    // ホームページは /index-en.html または /index.html に遷移
+    // ホームページは /?lang=en または /?lang=ja に遷移（htmlファイル禁止）
     const path = window.location.pathname;
     if (path === '/' || path === '/index.html' || path === '/index-en.html') {
-      window.location.href = lang === 'en' ? '/index-en.html' : '/index.html';
+      window.location.href = lang === 'en' ? '/?lang=en' : '/?lang=ja';
     } else {
-      // サブページはクエリパラメータを使用（common.jsで処理）
-      const url = new URL(window.location.href);
-      url.searchParams.set('lang', lang);
-      window.location.href = url.toString();
+      // サブページは適切な言語版に直接遷移
+      const currentPath = window.location.pathname;
+      let newPath;
+      if (lang === 'en') {
+        // 英語版へ
+        if (currentPath === '/api.html' || currentPath === '/api') {
+          newPath = '/api-en.html';
+        } else if (currentPath.endsWith('-en.html')) {
+          newPath = currentPath; // 既に英語版
+        } else if (currentPath.endsWith('.html')) {
+          newPath = currentPath.replace('.html', '-en.html');
+        } else {
+          newPath = currentPath + '-en.html';
+        }
+      } else {
+        // 日本語版へ
+        if (currentPath === '/api-en.html' || currentPath === '/api-en') {
+          newPath = '/api.html';
+        } else if (currentPath.endsWith('-en.html')) {
+          newPath = currentPath.replace('-en.html', '.html');
+        } else if (currentPath.endsWith('.html')) {
+          newPath = currentPath; // 既に日本語版
+        } else {
+          newPath = currentPath + '.html';
+        }
+      }
+      window.location.href = newPath;
     }
     return;
   }
