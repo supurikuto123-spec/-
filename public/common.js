@@ -989,24 +989,13 @@ function checkLanguageRedirect() {
   const isApiPage = path === '/api.html' || path === '/api';
   const isApiEnglishPage = path === '/api-en.html' || path === '/api-en';
 
-  // APIページの言語を検出してlocalStorageを更新（リダイレクトは行わない）
-  if (isApiPage && savedLang !== 'ja') {
-    console.log('[i18n] API page is Japanese, updating localStorage to ja');
-    localStorage.setItem('sutemeado_lang', 'ja');
-  } else if (isApiEnglishPage && savedLang !== 'en') {
-    console.log('[i18n] API page is English, updating localStorage to en');
-    localStorage.setItem('sutemeado_lang', 'en');
-  }
-
   // If not a standard .html page (and not API), skip further checks
   if (!isEnglishPage && !isJapanesePage) return false;
 
-  // ページの言語を検出してlocalStorageを更新（強制リダイレクトは行わない）
+  // サブページでは、ページの言語を検出するだけでlocalStorageは更新しない
+  // ユーザーの言語設定を尊重し、ページの内容のみをその言語で表示する
   const pageLang = isEnglishPage ? 'en' : 'ja';
-  if (savedLang !== pageLang) {
-    console.log('[i18n] Page language (' + pageLang + ') differs from saved language (' + savedLang + '). Updating localStorage to match page language.');
-    localStorage.setItem('sutemeado_lang', pageLang);
-  }
+  console.log('[i18n] Page language:', pageLang, '| Saved language:', savedLang, '| Not updating localStorage on subpages');
   
   // リダイレクトは行わない - ユーザーが明示的にアクセスしたページの言語を尊重
   return false;
@@ -1039,7 +1028,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // ホームは / のみ（/?lang=xx クエリパラメータ形式）
   const isHomePage = window.location.pathname === '/';
   if (!isHomePage) {
-    updateI18n(state.currentLang);
+    // サブページでは、ページの言語を検出してその言語でupdateI18nを呼ぶ
+    const path = window.location.pathname;
+    const isEnglishPage = path.endsWith('-en.html');
+    const pageLang = isEnglishPage ? 'en' : 'ja';
+    
+    // state.currentLangをページの言語に更新
+    state.currentLang = pageLang;
+    console.log('[i18n] Subpage detected, setting language to:', pageLang);
+    updateI18n(pageLang);
   }
 
   // Drawer toggle
