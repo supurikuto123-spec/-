@@ -1403,12 +1403,6 @@ async function checkPasswordVersion() {
       
       // サーバーのバージョンがローカルより新しい = 他でパスワードが変更された可能性
       if (serverVersion > localVersion) {
-        // 強制ログアウトせず、警告トーストのみ表示（ユーザーが選択できるように）
-        showToast(
-          'セキュリティ警告: このアカウントのパスワードが他の端末で変更された可能性があります。',
-          'warning',
-          5000
-        );
         // ローカルのバージョンをサーバーと同期（次回チェックで再警告を防ぐ）
         state.passwordVersion = serverVersion;
         saveSession(state.currentAddress, state.currentPassword, serverVersion);
@@ -2073,14 +2067,7 @@ async function init() {
           // ローカルの方が新しい（異常状態）→サーバーに同期
           state.passwordVersion = localVersion;
         } else if (serverVersion > localVersion) {
-          // サーバーの方が新しい（他で変更された可能性）→警告を表示するがログアウトはしない
-          // （ユーザーが明示的にパスワードを変更していない場合に強制ログアウトされる問題を防ぐ）
-          showToast(
-            'セキュリティ警告: このアカウントのパスワードが他の端末で変更された可能性があります。問題があればパスワードを変更してください。',
-            'warning',
-            8000
-          );
-          // ローカルのバージョンをサーバーと同期
+          // サーバーの方が新しい（他で変更された可能性）→警告なしでバージョン同期
           state.passwordVersion = serverVersion;
         } else {
           state.passwordVersion = serverVersion;
