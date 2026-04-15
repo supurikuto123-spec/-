@@ -106,7 +106,7 @@ var i18n = {
     unfavoriteMail: 'お気に入り解除',
     authCode: '認証コード',
     expiresOn: '期限',
-    notFavoritedWarning: '未お気に入り：30日後に自動削除されます',
+    notFavoritedWarning: '{days}日後に削除される予定です',
     favoritedSuccess: 'お気に入り登録しました',
     unfavoritedSuccess: 'お気に入り解除しました',
     copyAuthCode: 'タップでコピー',
@@ -217,7 +217,7 @@ var i18n = {
     unfavoriteMail: 'Remove from Favorites',
     authCode: 'Auth Code',
     expiresOn: 'Expires',
-    notFavoritedWarning: 'Not favorited: Auto-deleted after 30 days',
+    notFavoritedWarning: 'Will be deleted in {days} days',
     favoritedSuccess: 'Added to favorites',
     unfavoritedSuccess: 'Removed from favorites',
     copyAuthCode: 'Tap to copy',
@@ -783,7 +783,16 @@ function renderMailList(mails) {
   
   // メールリスト要素が存在しないページ（サブページ）では処理をスキップ
   if (!mailList) return;
-  
+
+  // 削除予定日の警告文言を生成
+  function getDeletionWarningText(expiresAt) {
+    if (!expiresAt) return t('notFavoritedWarning').replace('{days}', '30');
+    const now = Date.now();
+    const daysLeft = Math.ceil((expiresAt - now) / (1000 * 60 * 60 * 24));
+    const days = Math.max(0, daysLeft);
+    return t('notFavoritedWarning').replace('{days}', days);
+  }
+
   // 未読数と累計受信数を表示（削除しても減らない）
   const unreadCount = (mails || []).filter(m => !m.read).length;
   const totalCount = mails ? mails.length : 0;
@@ -856,7 +865,7 @@ function renderMailList(mails) {
         <div class="mail-from">${escapeHtml(mail.from)}</div>
         ${authCodeHtml}
         <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}${mail.body.length > 100 ? '...' : ''}</div>
-        ${!mail.saved ? `<div class="mail-not-saved-warning">${t('notFavoritedWarning') || '未お気に入り：30日後に自動削除'}</div>` : ''}
+        ${!mail.saved ? `<div class="mail-not-saved-warning">${getDeletionWarningText(mail.expiresAt)}</div>` : ''}
       </div>
       <div class="mail-actions">
         ${starIcon}
