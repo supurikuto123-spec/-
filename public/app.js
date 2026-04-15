@@ -1110,17 +1110,25 @@ function openMailModal(mailId) {
     bodyContainer.appendChild(authCodeEl);
   }
   
-  // お気に入り状態の警告表示
+  // お気に入り状態の警告表示 - 削除予定日を計算
   if (!mail.saved) {
     const warningEl = document.createElement('div');
     warningEl.className = 'mail-not-saved-banner';
+    
+    // expires_atがない場合は受信日から30日後を計算
+    let expiresAt = mail.expiresAt;
+    if (!expiresAt && mail.receivedAt) {
+      expiresAt = mail.receivedAt + (30 * 24 * 60 * 60 * 1000);
+    }
+    const warningText = getDeletionWarningText(expiresAt);
+    
     warningEl.innerHTML = `
       <svg class="warning-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
         <line x1="12" y1="9" x2="12" y2="13"/>
         <line x1="12" y1="17" x2="12.01" y2="17"/>
       </svg>
-      <span>${t('notFavoritedWarning')}</span>
+      <span>${warningText}</span>
     `;
     bodyContainer.appendChild(warningEl);
   }
