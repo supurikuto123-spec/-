@@ -785,17 +785,19 @@ function updateNavBadge() {
 function getDeletionWarningText(expiresAt) {
   // expiresAt が文字列の場合は数値に変換
   const expires = typeof expiresAt === 'string' ? parseInt(expiresAt, 10) : expiresAt;
+  const warningTemplate = t('notFavoritedWarning') || '{days}日後に削除される予定です';
   if (!expires || isNaN(expires)) {
     console.log('[DeletionWarning] expiresAt is null/invalid, using default 30 days');
-    return t('notFavoritedWarning').replace('{days}', '30');
+    return warningTemplate.replace(/{days}/g, '30');
   }
   const now = Date.now();
   const daysLeft = Math.ceil((expires - now) / (1000 * 60 * 60 * 24));
   const days = Math.max(0, daysLeft);
   console.log(`[DeletionWarning] expiresAt=${expires}, now=${now}, daysLeft=${daysLeft}, days=${days}`);
-  const text = t('notFavoritedWarning');
-  console.log(`[DeletionWarning] translation text: ${text}`);
-  return text.replace('{days}', days.toString());
+  console.log(`[DeletionWarning] template: ${warningTemplate}`);
+  const result = warningTemplate.replace(/{days}/g, days.toString());
+  console.log(`[DeletionWarning] result: ${result}`);
+  return result;
 }
 
 function renderMailList(mails) {
@@ -879,7 +881,11 @@ function renderMailList(mails) {
         <div class="mail-from">${escapeHtml(mail.from)}</div>
         ${authCodeHtml}
         <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}${mail.body.length > 100 ? '...' : ''}</div>
-        ${!mail.saved ? `<div class="mail-not-saved-warning">${getDeletionWarningText(mail.expiresAt)}</div>` : ''}
+        ${!mail.saved ? (() => {
+          const warningText = getDeletionWarningText(mail.expiresAt);
+          console.log(`[MailItem] Final warning text: ${warningText}`);
+          return `<div class="mail-not-saved-warning">${warningText}</div>`;
+        })() : ''}
       </div>
       <div class="mail-actions">
         ${starIcon}
