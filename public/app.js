@@ -785,7 +785,10 @@ function updateNavBadge() {
 // ブラウザコンソール用デバッグ - windowに公開
 window.debugDeletionText = function() {
   const template = t('notFavoritedWarning');
+  console.log('Current lang:', state?.currentLang);
   console.log('Raw template from i18n:', JSON.stringify(template));
+  console.log('Direct access i18n.en:', JSON.stringify(i18n?.en?.notFavoritedWarning));
+  console.log('Direct access i18n.ja:', JSON.stringify(i18n?.ja?.notFavoritedWarning));
   console.log('Type:', typeof template);
   console.log('Has {days}:', template && template.includes('{days}'));
   const test = template.replace(/{days}/g, '99');
@@ -796,12 +799,15 @@ window.debugDeletionText = function() {
 function getDeletionWarningText(expiresAt) {
   // 強制的にテンプレートを取得（i18nオブジェクトから直接）
   const lang = state?.currentLang || 'ja';
-  let warningTemplate = i18n[lang]?.notFavoritedWarning;
+  console.log(`[DeletionWarning] currentLang=${lang}, state.currentLang=${state?.currentLang}`);
   
-  // フォールバック
+  let warningTemplate = i18n[lang]?.notFavoritedWarning;
+  console.log(`[DeletionWarning] Template from i18n[${lang}]:`, JSON.stringify(warningTemplate));
+  
+  // フォールバック - 明示的に言語別のテンプレートを使用
   if (!warningTemplate || typeof warningTemplate !== 'string') {
     console.warn('[DeletionWarning] Template missing, using hardcoded fallback');
-    warningTemplate = lang === 'en' ? 'Will be deleted in 30 days' : '30日後に削除される予定です';
+    warningTemplate = lang === 'en' ? 'Will be deleted in {days} days' : '{days}日後に削除される予定です';
   }
   
   // expiresAt が文字列の場合は数値に変換
@@ -809,22 +815,28 @@ function getDeletionWarningText(expiresAt) {
   let days;
   if (!expires || isNaN(expires)) {
     days = 30;
+    console.log(`[DeletionWarning] Using default 30 days (expiresAt invalid)`);
   } else {
     const now = Date.now();
     const daysLeft = Math.ceil((expires - now) / (1000 * 60 * 60 * 24));
     days = Math.max(0, daysLeft);
+    console.log(`[DeletionWarning] Calculated: now=${now}, expires=${expires}, daysLeft=${daysLeft}, days=${days}`);
   }
   
-  // 置換（複数回試行）
-  let result = warningTemplate;
-  if (result.includes('{days}')) {
-    result = result.split('{days}').join(days.toString());
+  // 置換 - 明示的に文字列操作
+  let result = String(warningTemplate);
+  const daysStr = String(days);
+  
+  if (result.indexOf('{days}') !== -1) {
+    result = result.split('{days}').join(daysStr);
+    console.log(`[DeletionWarning] Replaced {days} with ${daysStr}`);
   } else {
-    // {days} がない場合はテンプレート全体の後ろに日数を追加
+    // {days} がない場合はフォールバック
+    console.warn(`[DeletionWarning] No {days} placeholder found in: ${result}`);
     result = lang === 'en' ? `Will be deleted in ${days} days` : `${days}日後に削除される予定です`;
   }
   
-  console.log(`[DeletionWarning] lang=${lang}, template=${warningTemplate}, days=${days}, result=${result}`);
+  console.log(`[DeletionWarning] FINAL: lang=${lang}, result=${result}`);
   return result;
 }
 
