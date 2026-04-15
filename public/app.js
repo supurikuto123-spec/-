@@ -796,31 +796,36 @@ window.debugDeletionText = function() {
   return test;
 };
 
-function getDeletionWarningText(expiresAt) {
+function getDeletionWarningText(receivedAt, expiresAt) {
   // 強制的にテンプレートを取得（i18nオブジェクトから直接）
   const lang = state?.currentLang || 'ja';
-  console.log(`[DeletionWarning] currentLang=${lang}, state.currentLang=${state?.currentLang}`);
   
   let warningTemplate = i18n[lang]?.notFavoritedWarning;
-  console.log(`[DeletionWarning] Template from i18n[${lang}]:`, JSON.stringify(warningTemplate));
   
   // フォールバック - 明示的に言語別のテンプレートを使用
   if (!warningTemplate || typeof warningTemplate !== 'string') {
-    console.warn('[DeletionWarning] Template missing, using hardcoded fallback');
     warningTemplate = lang === 'en' ? 'Will be deleted in {days} days' : '{days}日後に削除される予定です';
   }
   
-  // expiresAt が文字列の場合は数値に変換
-  const expires = typeof expiresAt === 'string' ? parseInt(expiresAt, 10) : expiresAt;
+  // 削除予定日を計算：受信日から30日後（データベースのexpires_atを無視）
+  let deletionDate;
+  const received = typeof receivedAt === 'string' ? parseInt(receivedAt, 10) : receivedAt;
+  
+  if (received && !isNaN(received)) {
+    // 受信日から30日後を計算
+    deletionDate = received + (30 * 24 * 60 * 60 * 1000);
+  } else if (expiresAt) {
+    // 受信日がない場合のみexpires_atを使用（フォールバック）
+    deletionDate = typeof expiresAt === 'string' ? parseInt(expiresAt, 10) : expiresAt;
+  }
+  
   let days;
-  if (!expires || isNaN(expires)) {
+  if (!deletionDate || isNaN(deletionDate)) {
     days = 30;
-    console.log(`[DeletionWarning] Using default 30 days (expiresAt invalid)`);
   } else {
     const now = Date.now();
-    const daysLeft = Math.ceil((expires - now) / (1000 * 60 * 60 * 24));
+    const daysLeft = Math.ceil((deletionDate - now) / (1000 * 60 * 60 * 24));
     days = Math.max(0, daysLeft);
-    console.log(`[DeletionWarning] Calculated: now=${now}, expires=${expires}, daysLeft=${daysLeft}, days=${days}`);
   }
   
   // 置換 - 明示的に文字列操作
@@ -829,14 +834,11 @@ function getDeletionWarningText(expiresAt) {
   
   if (result.indexOf('{days}') !== -1) {
     result = result.split('{days}').join(daysStr);
-    console.log(`[DeletionWarning] Replaced {days} with ${daysStr}`);
   } else {
     // {days} がない場合はフォールバック
-    console.warn(`[DeletionWarning] No {days} placeholder found in: ${result}`);
     result = lang === 'en' ? `Will be deleted in ${days} days` : `${days}日後に削除される予定です`;
   }
   
-  console.log(`[DeletionWarning] FINAL: lang=${lang}, result=${result}`);
   return result;
 }
 
@@ -922,8 +924,7 @@ function renderMailList(mails) {
         ${authCodeHtml}
         <div class="mail-preview">${escapeHtml(mail.body.substring(0, 100))}${mail.body.length > 100 ? '...' : ''}</div>
         ${!mail.saved ? (() => {
-          const warningText = getDeletionWarningText(mail.expiresAt);
-          console.log(`[MailItem] Final warning text: ${warningText}`);
+          const warningText = getDeletionWarningText(mail.receivedAt, mail.expiresAt);
           return `<div class="mail-not-saved-warning">${warningText}</div>`;
         })() : ''}
       </div>
@@ -1115,12 +1116,8 @@ function openMailModal(mailId) {
     const warningEl = document.createElement('div');
     warningEl.className = 'mail-not-saved-banner';
     
-    // expires_atがない場合は受信日から30日後を計算
-    let expiresAt = mail.expiresAt;
-    if (!expiresAt && mail.receivedAt) {
-      expiresAt = mail.receivedAt + (30 * 24 * 60 * 60 * 1000);
-    }
-    const warningText = getDeletionWarningText(expiresAt);
+    // 受信日から30日後を計算（データベースのexpires_atを無視）
+    const warningText = getDeletionWarningText(mail.receivedAt, mail.expiresAt);
     
     warningEl.innerHTML = `
       <svg class="warning-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
