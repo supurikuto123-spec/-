@@ -782,21 +782,49 @@ function updateNavBadge() {
 }
 
 // 削除予定日の警告文言を生成（renderMailList の外に定義して巻き上げ問題を回避）
+// ブラウザコンソール用デバッグ - windowに公開
+window.debugDeletionText = function() {
+  const template = t('notFavoritedWarning');
+  console.log('Raw template from i18n:', JSON.stringify(template));
+  console.log('Type:', typeof template);
+  console.log('Has {days}:', template && template.includes('{days}'));
+  const test = template.replace(/{days}/g, '99');
+  console.log('After replace:', test);
+  return test;
+};
+
 function getDeletionWarningText(expiresAt) {
+  // 強制的にテンプレートを取得（i18nオブジェクトから直接）
+  const lang = state?.currentLang || 'ja';
+  let warningTemplate = i18n[lang]?.notFavoritedWarning;
+  
+  // フォールバック
+  if (!warningTemplate || typeof warningTemplate !== 'string') {
+    console.warn('[DeletionWarning] Template missing, using hardcoded fallback');
+    warningTemplate = lang === 'en' ? 'Will be deleted in 30 days' : '30日後に削除される予定です';
+  }
+  
   // expiresAt が文字列の場合は数値に変換
   const expires = typeof expiresAt === 'string' ? parseInt(expiresAt, 10) : expiresAt;
-  const warningTemplate = t('notFavoritedWarning') || '{days}日後に削除される予定です';
+  let days;
   if (!expires || isNaN(expires)) {
-    console.log('[DeletionWarning] expiresAt is null/invalid, using default 30 days');
-    return warningTemplate.replace(/{days}/g, '30');
+    days = 30;
+  } else {
+    const now = Date.now();
+    const daysLeft = Math.ceil((expires - now) / (1000 * 60 * 60 * 24));
+    days = Math.max(0, daysLeft);
   }
-  const now = Date.now();
-  const daysLeft = Math.ceil((expires - now) / (1000 * 60 * 60 * 24));
-  const days = Math.max(0, daysLeft);
-  console.log(`[DeletionWarning] expiresAt=${expires}, now=${now}, daysLeft=${daysLeft}, days=${days}`);
-  console.log(`[DeletionWarning] template: ${warningTemplate}`);
-  const result = warningTemplate.replace(/{days}/g, days.toString());
-  console.log(`[DeletionWarning] result: ${result}`);
+  
+  // 置換（複数回試行）
+  let result = warningTemplate;
+  if (result.includes('{days}')) {
+    result = result.split('{days}').join(days.toString());
+  } else {
+    // {days} がない場合はテンプレート全体の後ろに日数を追加
+    result = lang === 'en' ? `Will be deleted in ${days} days` : `${days}日後に削除される予定です`;
+  }
+  
+  console.log(`[DeletionWarning] lang=${lang}, template=${warningTemplate}, days=${days}, result=${result}`);
   return result;
 }
 
