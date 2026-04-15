@@ -995,24 +995,25 @@ function checkLanguageRedirect() {
   }
 
   // Redirect to the correct language version based on saved preference
+  // Add ?lang= parameter to prevent infinite redirect loops on mobile browsers
   
   if (savedLang === 'en') {
     // Redirect to English version
     if (isApiPage || path === '/api') {
-      window.location.replace('/api-en.html');
+      window.location.replace('/api-en.html?lang=en');
       return true;
     } else if (isJapanesePage) {
-      const newPath = path.replace('.html', '-en.html');
+      const newPath = path.replace('.html', '-en.html') + '?lang=en';
       window.location.replace(newPath);
       return true;
     }
   } else {
     // savedLang === 'ja', redirect to Japanese version
     if (isApiEnglishPage || path === '/api-en') {
-      window.location.replace('/api.html');
+      window.location.replace('/api.html?lang=ja');
       return true;
     } else if (isEnglishPage) {
-      const newPath = path.replace('-en.html', '.html');
+      const newPath = path.replace('-en.html', '.html') + '?lang=ja';
       window.location.replace(newPath);
       return true;
     }
@@ -1249,7 +1250,8 @@ document.addEventListener('DOMContentLoaded', () => {
         el.removeAttribute('onclick');
         el.addEventListener('click', (e) => {
           e.preventDefault();
-          window.location.href = link.base + suffix;
+          const langParam = currentLang === 'en' ? '?lang=en' : '?lang=ja';
+          window.location.href = link.base + suffix + langParam;
         });
       }
     });
@@ -1266,19 +1268,17 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // 利用規約リンク
       if (href && (href.includes('/terms') || href.includes('termsOfService') || link.dataset.i18n === 'termsOfService')) {
-        const newHref = currentLang === 'en' ? '/terms-en.html' : '/terms.html';
+        const newHref = currentLang === 'en' ? '/terms-en.html?lang=en' : '/terms.html?lang=ja';
         if (link.href !== newHref) {
           link.href = newHref;
-          console.log('[i18n] Updated terms link to:', newHref);
         }
       }
       
       // プライバシーリンク
       if (href && (href.includes('/privacy') || href.includes('privacyPolicy') || link.dataset.i18n === 'privacyPolicy')) {
-        const newHref = currentLang === 'en' ? '/privacy-en.html' : '/privacy.html';
+        const newHref = currentLang === 'en' ? '/privacy-en.html?lang=en' : '/privacy.html?lang=ja';
         if (link.href !== newHref) {
           link.href = newHref;
-          console.log('[i18n] Updated privacy link to:', newHref);
         }
       }
     });
