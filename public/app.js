@@ -279,7 +279,13 @@ function closeDrawer() {
 
 // ===== i18n Functions =====
 function t(key) {
-  return i18n[state.currentLang][key] || key;
+  const lang = state?.currentLang || 'ja';
+  const translation = i18n[lang]?.[key];
+  if (!translation) {
+    console.warn(`[i18n] Missing translation for key: ${key} in lang: ${lang}`);
+    return i18n['ja']?.[key] || i18n['en']?.[key] || key;
+  }
+  return translation;
 }
 
 // Helper function to update drawer menu links based on language
@@ -775,6 +781,23 @@ function updateNavBadge() {
   return unreadCount;
 }
 
+// 削除予定日の警告文言を生成（renderMailList の外に定義して巻き上げ問題を回避）
+function getDeletionWarningText(expiresAt) {
+  // expiresAt が文字列の場合は数値に変換
+  const expires = typeof expiresAt === 'string' ? parseInt(expiresAt, 10) : expiresAt;
+  if (!expires || isNaN(expires)) {
+    console.log('[DeletionWarning] expiresAt is null/invalid, using default 30 days');
+    return t('notFavoritedWarning').replace('{days}', '30');
+  }
+  const now = Date.now();
+  const daysLeft = Math.ceil((expires - now) / (1000 * 60 * 60 * 24));
+  const days = Math.max(0, daysLeft);
+  console.log(`[DeletionWarning] expiresAt=${expires}, now=${now}, daysLeft=${daysLeft}, days=${days}`);
+  const text = t('notFavoritedWarning');
+  console.log(`[DeletionWarning] translation text: ${text}`);
+  return text.replace('{days}', days.toString());
+}
+
 function renderMailList(mails) {
   const mailList = document.getElementById('mail-list');
   const mailCount = document.getElementById('mail-count');
@@ -783,15 +806,6 @@ function renderMailList(mails) {
   
   // メールリスト要素が存在しないページ（サブページ）では処理をスキップ
   if (!mailList) return;
-
-  // 削除予定日の警告文言を生成
-  function getDeletionWarningText(expiresAt) {
-    if (!expiresAt) return t('notFavoritedWarning').replace('{days}', '30');
-    const now = Date.now();
-    const daysLeft = Math.ceil((expiresAt - now) / (1000 * 60 * 60 * 24));
-    const days = Math.max(0, daysLeft);
-    return t('notFavoritedWarning').replace('{days}', days);
-  }
 
   // 未読数と累計受信数を表示（削除しても減らない）
   const unreadCount = (mails || []).filter(m => !m.read).length;
