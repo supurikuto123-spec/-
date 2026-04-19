@@ -22,6 +22,7 @@ if (typeof window.i18nCommon === 'undefined') {
     howToUse: '使い方',
     status: '稼働状況',
     news: 'お知らせ',
+    blog: 'ブログ',
     faq: 'よくある質問',
     contact: 'お問い合わせ',
     siteGuide: 'サイト案内',
