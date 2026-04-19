@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>捨てメアドよくある質問〜認証コードが届かない？期限切れ？解決方法まとめ〜 | Sutemeadoブログ</title>
+    <meta name="description" content="捨てメアド利用時によくあるトラブルとその解決方法をQ&A形式で解説。認証コードが届かない、メールが消えた、期限切れなど、実際の悩みに答えます。">
+    <meta name="keywords" content="捨てメアド 届かない,一時メール 認証コード,捨てメアド 期限,一時メール トラブル,捨てメアド FAQ">
+    <meta property="og:title" content="捨てメアドよくある質問〜解決方法まとめ〜">
+    <meta property="og:description" content="認証コードが届かない、メールが消えた、期限切れなどのトラブル解決策をQ&Aで解説。">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://sutemeado.com/blog/articles/faq-troubleshooting.html">
+    <meta property="og:image" content="https://sutemeado.com/blog/images/ogp-faq.jpg">
+    <link rel="canonical" href="https://sutemeado.com/blog/articles/faq-troubleshooting.html">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%); --accent-gradient: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); --dark-bg: #0f0f1a; --darker-bg: #0a0a12; --card-bg: rgba(255,255,255,0.03); --text-primary: #fff; --text-secondary: #a0a0b8; --border-color: rgba(255,255,255,0.08); }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans JP', sans-serif; background: var(--darker-bg); color: var(--text-primary); line-height: 1.8; min-height: 100vh; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; background: radial-gradient(circle at 50% 50%, rgba(210,153,194,0.08) 0%, transparent 50%); }
+        .header { background: rgba(15,15,26,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); padding: 18px 40px; position: sticky; top: 0; z-index: 1000; }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; color: var(--text-primary); text-decoration: none; font-size: 1.4rem; font-weight: 700; }
+        .logo-icon { width: 40px; height: 40px; background: var(--accent-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .nav-links { display: flex; gap: 8px; background: rgba(255,255,255,0.03); padding: 6px; border-radius: 50px; border: 1px solid var(--border-color); }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; padding: 10px 20px; border-radius: 50px; transition: all 0.3s; }
+        .nav-links a:hover { color: var(--text-primary); background: rgba(255,255,255,0.1); }
+        .article-container { max-width: 800px; margin: 0 auto; padding: 60px 40px; }
+        .article-header { text-align: center; margin-bottom: 60px; }
+        .article-category { display: inline-flex; align-items: center; gap: 8px; background: rgba(210,153,194,0.1); border: 1px solid rgba(210,153,194,0.3); color: #d299c2; padding: 10px 20px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 24px; }
+        h1 { font-size: 2.3rem; font-weight: 800; line-height: 1.3; margin-bottom: 24px; background: linear-gradient(135deg, #fff 0%, #a8b2d1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .article-content h2 { font-size: 1.8rem; font-weight: 700; margin: 60px 0 24px; padding-left: 20px; border-left: 4px solid #d299c2; }
+        .article-content p { color: var(--text-secondary); margin-bottom: 24px; font-size: 1.05rem; }
+        .faq-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 28px; margin: 24px 0; }
+        .faq-question { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px; }
+        .faq-icon { width: 32px; height: 32px; background: var(--accent-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; color: #0a0a12; flex-shrink: 0; }
+        .faq-answer { color: var(--text-secondary); line-height: 1.8; }
+        .solution-box { background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.2); border-radius: 12px; padding: 20px; margin: 16px 0; }
+        .solution-title { color: #4ade80; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .warning-box { background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); border-radius: 12px; padding: 20px; margin: 16px 0; }
+        .warning-title { color: #f87171; font-weight: 700; margin-bottom: 10px; }
+        .cta-box { background: linear-gradient(135deg, rgba(210,153,194,0.1), rgba(254,249,215,0.1)); border: 2px solid rgba(210,153,194,0.3); border-radius: 20px; padding: 40px; margin: 48px 0; text-align: center; }
+        .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--primary-gradient); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 600; text-decoration: none; margin-top: 20px; transition: all 0.3s; }
+        .btn:hover { transform: translateY(-2px); }
+        .related-section { margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border-color); }
+        .related-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 24px; }
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .related-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; text-decoration: none; transition: all 0.3s; }
+        .related-card:hover { border-color: rgba(210,153,194,0.3); transform: translateY(-4px); }
+        .related-card-category { font-size: 0.8rem; color: #d299c2; margin-bottom: 8px; }
+        .related-card-title { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); }
+        .footer { background: rgba(15,15,26,0.5); border-top: 1px solid var(--border-color); padding: 40px; text-align: center; margin-top: 80px; }
+        .footer-copyright { color: var(--text-secondary); font-size: 0.9rem; }
+        @media (max-width: 768px) { .header { padding: 16px 20px; } .article-container { padding: 40px 20px; } h1 { font-size: 1.7rem; } }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <header class="header">
+        <div class="header-content">
+            <a href="/blog/" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    </svg>
+                </div>
+                Sutemeado Blog
+            </a>
+            <nav class="nav-links">
+                <a href="/blog/">記事一覧</a>
+                <a href="shopping-guide.html">← 前の記事</a>
+                <a href="service-comparison.html">次の記事 →</a>
+            </nav>
+        </div>
+    </header>
+
+    <article class="article-container">
+        <header class="article-header">
+            <span class="article-category">FAQ・トラブル</span>
+            <h1>捨てメアド<br>よくある質問</h1>
+            <p style="color: var(--text-secondary); margin-top: -10px; margin-bottom: 24px;">認証コードが届かない？期限切れ？解決方法まとめ</p>
+        </header>
+
+        <div class="article-content">
+            <p>捨てメアドを初めて使う方や、利用中にトラブルに遭遇した方向けに、<strong>よくある質問とその解決方法</strong>をまとめました。順番に確認して解決してください。</p>
+
+            <h2>認証コード・メール受信の問題</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="faq-icon">Q</div>
+                    認証コードが届かない場合は？
+                </div>
+                <div class="faq-answer">
+                    <p>認証コードが届かない場合、以下を確認してください：</p>
+                    <div class="solution-box">
+                        <div class="solution-title">解決策</div>
+                        <ol style="padding-left: 24px;">
+                            <li><strong>30秒〜2分待つ</strong>：メール配信には時間がかかることがあります</li>
+                            <li><strong>アドレスを再確認</strong>：入力時のタイプミスがないか確認</li>
+                            <li><strong>迷惑メールフォルダ確認</strong>：まれにそこに振り分けられることも</li>
+                            <li><strong>再送信をリクエスト</strong>：サービスの「コードを再送信」機能を使用</li>
+                            <li><strong>別のアドレスを発行</strong>：特定のドメインがブロックされている場合も</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="faq-icon">Q</div>
+                    メールが表示されない・消えた？
+                </div>
+                <div class="faq-answer">
+                    <p>メールが見つからない場合：</p>
+                    <div class="solution-box">
+                        <div class="solution-title">確認ポイント</div>
+                        <ul style="padding-left: 24px;">
+                            <li><strong>ページを更新</strong>：F5または⌘+Rで最新メールを読み込み</li>
+                            <li><strong>30日期限を確認</strong>：期限切れのメールは自動削除されます</li>
+                            <li><strong>お気に入りを確認</strong>：保存したメールは「Saved」フォルダにあります</li>
+                            <li><strong>パスワード確認</strong>：正しいパスワードでログインしているか</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h2>パスワード・アクセス関連</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="faq-icon">Q</div>
+                    パスワードを忘れた場合は？
+                </div>
+                <div class="faq-answer">
+                    <p>残念ながら、Sutemeadoではパスワードの再設定機能はありません（プライバシー保護のため）。</p>
+                    <div class="solution-box">
+                        <div class="solution-title">対処方法</div>
+                        <ol style="padding-left: 24px;">
+                            <li>ブラウザの保存パスワードを確認（Chrome設定→パスワード）</li>
+                            <li>メモ帳・ノート等のパスワード記録を確認</li>
+                            <li>見つからない場合は<strong>新しいアドレスを発行</strong>してください</li>
+                        </ol>
+                    </div>
+                    <div class="warning-box">
+                        <div class="warning-title">重要</div>
+                        <p>パスワードは必ず保存してください。パスワードなしではいかなる場合でもアクセス復旧はできません。</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>期限・保存関連</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="faq-icon">Q</div>
+                    30日の期限が切れるとどうなる？
+                </div>
+                <div class="faq-answer">
+                    <p>30日後に自動的に以下が実行されます：</p>
+                    <ul style="padding-left: 24px; margin: 16px 0;">
+                        <li>受信メールがすべて削除</li>
+                        <li>アドレスが無効化</li>
+                        <li>お気に入りに保存したメールのみ<strong>永続的に保持</strong></li>
+                    </ul>
+                    <div class="solution-box">
+                        <div class="solution-title">防止策</div>
+                        <p>期限切れを防ぐには、重要なメールは必ず「Save」ボタンで保存してください。保存したメールは30日後もアクセス可能です。</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>サービス利用関連</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="faq-icon">Q</div>
+                    特定のサイトで使えない・ブロックされた？
+                </div>
+                <div class="faq-answer">
+                    <p>一部のサービスでは一時メールドメインをブロックしています。これは過去の悪用事例への対策です。</p>
+                    <div class="solution-box">
+                        <div class="solution-title">代替案</div>
+                        <ul style="padding-left: 24px;">
+                            <li>別の一時メールサービスを試す</li>
+                            <li>サブメールアドレス（Gmailの+アドレスなど）を使用</li>
+                            <li>そのサービスでは永久メールを使用する</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="faq-icon">Q</div>
+                    送信（返信）はできますか？
+                </div>
+                <div class="faq-answer">
+                    <p>Sutemeadoは<strong>受信専用</strong>のサービスです。送信・返信機能はありません。</p>
+                    <p>返信が必要な場合は、通常のメールアドレスを使用してください。</p>
+                </div>
+            </div>
+
+            <h2>セキュリティ・プライバシー</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <div class="faq-icon">Q</div>
+                    受信したメールは他の人に見られますか？
+                </div>
+                <div class="faq-answer">
+                    <p>いいえ。パスワードを持っている本人のみがアクセスできます。</p>
+                    <ul style="padding-left: 24px; margin: 16px 0;">
+                        <li>メールは暗号化して保存されます</li>
+                        <li>パスワードがないと誰も閲覧できません</li>
+                        <li>同じアドレス名が再発行されることはありません</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cta-box">
+                <h3>その他の質問は？</h3>
+                <p>解決しない問題がある場合は、新しいアドレスを発行してお試しください。</p>
+                <a href="/" class="btn">新しいアドレスを発行する</a>
+            </div>
+        </div>
+
+        <div class="related-section">
+            <h3 class="related-title">📚 関連記事</h3>
+            <div class="related-grid">
+                <a href="what-is-tempmail.html" class="related-card">
+                    <div class="related-card-category">初心者ガイド</div>
+                    <div class="related-card-title">捨てメアドとは？初心者向け完全ガイド</div>
+                </a>
+                <a href="blocked-services.html" class="related-card">
+                    <div class="related-card-category">トラブル</div>
+                    <div class="related-card-title">一時メールが使えないサービス一覧と対処法</div>
+                </a>
+                <a href="security-guide.html" class="related-card">
+                    <div class="related-card-category">セキュリティ</div>
+                    <div class="related-card-title">一時メールの安全性完全ガイド</div>
+                </a>
+            </div>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p class="footer-copyright">© 2024-2025 Sutemeado. 登録不要の一時メールサービス</p>
+    </footer>
+</body>
+</html>

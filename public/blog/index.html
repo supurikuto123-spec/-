@@ -12,8 +12,8 @@
     <meta property="og:description" content="捨てメアド（一時メール）の使い方、SNS登録活用術、セキュリティ対策を解説。プライバシー保護の最新情報をチェック。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sutemeado.com/blog/">
-    <meta property="og:image" content="https://sutemeado.com/ogp-blog.jpg">
-    <meta property="og:site_name" content="Sutemeado - 捨てメアド">
+    <meta property="og:image" content="https://sutemeado.com/blog/images/ogp-blog.jpg">
+    <meta property="og:site_name" content="Sutemeadoブログ">
     <meta property="og:locale" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="捨てメアド・一時メールガイド | Sutemeadoブログ">
@@ -35,86 +35,39 @@
                 "@type": "ImageObject",
                 "url": "https://sutemeado.com/favicon.png"
             }
-        },
-        "mainEntity": {
-            "@type": "ItemList",
-            "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "item": {
-                        "@type": "BlogPosting",
-                        "headline": "捨てメアドとは？初心者向け完全ガイド",
-                        "url": "https://sutemeado.com/blog/articles/what-is-tempmail.html"
-                    }
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "item": {
-                        "@type": "BlogPosting",
-                        "headline": "SNS登録に最適！捨てメアド活用術5選",
-                        "url": "https://sutemeado.com/blog/articles/sns-registration-guide.html"
-                    }
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 3,
-                    "item": {
-                        "@type": "BlogPosting",
-                        "headline": "一時メールと永久メールの違いと選び方",
-                        "url": "https://sutemeado.com/blog/articles/temp-vs-permanent.html"
-                    }
-                }
-            ]
         }
-    }
-    </script>
-    
-    <!-- Breadcrumb Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "ホーム",
-                "item": "https://sutemeado.com/"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "ブログ",
-                "item": "https://sutemeado.com/blog/"
-            }
-        ]
     }
     </script>
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://sutemeado.com/blog/">
     <link rel="alternate" hreflang="ja" href="https://sutemeado.com/blog/">
-    <link rel="alternate" hreflang="en" href="https://sutemeado.com/blog/en/">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png">
     
-    <!-- Preconnect for Performance -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --neon-blue: #00f0ff;
-            --neon-pink: #ff00ff;
-            --neon-purple: #b829dd;
-            --dark-bg: #0a0a12;
-            --card-bg: rgba(15, 15, 25, 0.85);
-            --text-primary: #e0e0ff;
-            --text-secondary: #a0a0c0;
-            --border-glow: rgba(0, 240, 255, 0.3);
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-bg: #0f0f1a;
+            --darker-bg: #0a0a12;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-hover: rgba(255, 255, 255, 0.06);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b8;
+            --text-muted: #6c6c8a;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --glow-primary: rgba(102, 126, 234, 0.4);
+            --glow-secondary: rgba(240, 147, 251, 0.4);
+            --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.2);
         }
         
         *, *::before, *::after {
@@ -124,21 +77,92 @@
         }
         
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--dark-bg);
+            font-family: 'Noto Sans JP', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--darker-bg);
             color: var(--text-primary);
             line-height: 1.7;
             min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(0, 240, 255, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(184, 41, 221, 0.03) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(240, 147, 251, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(79, 172, 254, 0.05) 0%, transparent 40%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+        
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+        
+        /* Floating Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: orbFloat 15s ease-in-out infinite;
+        }
+        
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            top: 10%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+        
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            bottom: 20%;
+            left: 10%;
+            animation-delay: -5s;
+        }
+        
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            top: 50%;
+            left: 50%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
         }
         
         /* Header */
         .header {
-            background: rgba(10, 10, 18, 0.95);
+            background: rgba(15, 15, 26, 0.8);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+            border-bottom: 1px solid var(--border-color);
             padding: 0;
             position: sticky;
             top: 0;
@@ -148,7 +172,7 @@
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 15px 30px;
+            padding: 18px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -157,214 +181,234 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: var(--neon-blue);
+            gap: 14px;
+            color: var(--text-primary);
             text-decoration: none;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             transition: all 0.3s;
         }
         
-        .logo:hover {
-            text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
-        .logo svg {
-            width: 36px;
-            height: 36px;
-            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5));
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+        
+        .logo-text span {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
         }
         
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 8px;
             align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
         }
         
         .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 500;
             transition: all 0.3s;
-            position: relative;
-            padding: 5px 0;
-        }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
-            transition: width 0.3s;
+            padding: 10px 20px;
+            border-radius: 50px;
         }
         
         .nav-links a:hover,
         .nav-links a.active {
-            color: var(--neon-blue);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.1);
         }
         
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
-        }
-        
-        /* Breadcrumb */
-        .breadcrumb {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px 30px 0;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        .breadcrumb a {
-            color: var(--neon-blue);
-            text-decoration: none;
-        }
-        
-        .breadcrumb a:hover {
-            text-decoration: underline;
+        .nav-links a.active {
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
         /* Hero Section */
         .hero {
             text-align: center;
-            padding: 60px 30px 40px;
-            background: linear-gradient(135deg, 
-                rgba(0, 240, 255, 0.05) 0%, 
-                rgba(184, 41, 221, 0.03) 50%,
-                transparent 100%);
-            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+            padding: 100px 40px 80px;
             position: relative;
             overflow: hidden;
         }
         
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, transparent 70%);
-            z-index: -1;
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 30px;
         }
         
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
             font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff 0%, var(--neon-blue) 100%);
+            margin-bottom: 24px;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #fff 0%, #a8b2d1 50%, #667eea 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
         .hero-subtitle {
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto 25px;
+            max-width: 650px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
         }
         
-        .hero-keywords {
+        .hero-tags {
             display: flex;
             gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
         }
         
-        .keyword-tag {
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            color: var(--neon-blue);
-            padding: 8px 16px;
-            border-radius: 20px;
+        .hero-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 50px;
             font-size: 0.85rem;
             font-weight: 500;
+            transition: all 0.3s;
         }
         
-        /* Main Layout */
+        .hero-tag:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.3);
+            color: #667eea;
+        }
+        
+        /* Main Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 50px 30px;
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 50px;
+            padding: 0 40px 100px;
         }
         
-        @media (max-width: 1100px) {
-            .container {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
+        /* Section Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .section-title-icon svg {
+            width: 20px;
+            height: 20px;
+            color: white;
         }
         
         /* Blog Grid */
         .blog-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
             gap: 30px;
-        }
-        
-        .section-title {
-            font-size: 1.5rem;
-            color: var(--neon-blue);
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 80px;
         }
         
         /* Post Cards */
         .post-card {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-        }
-        
-        .post-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--border-glow);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.4),
-                0 0 30px rgba(0, 240, 255, 0.1);
-        }
-        
-        .post-card.featured {
-            border: 2px solid rgba(0, 240, 255, 0.3);
+            text-decoration: none;
             position: relative;
         }
         
-        .post-card.featured::before {
-            content: 'おすすめ';
+        .post-card::before {
+            content: '';
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            color: #000;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            z-index: 10;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-8px);
+            background: var(--card-hover);
+            border-color: rgba(102, 126, 234, 0.2);
+            box-shadow: var(--shadow-soft), var(--shadow-glow);
+        }
+        
+        .post-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .post-card.featured {
+            grid-column: span 2;
+            flex-direction: row;
+        }
+        
+        @media (max-width: 900px) {
+            .post-card.featured {
+                grid-column: span 1;
+                flex-direction: column;
+            }
         }
         
         .post-image {
             width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, 
-                rgba(0, 240, 255, 0.1) 0%, 
-                rgba(184, 41, 221, 0.1) 100%);
+            height: 220px;
+            background: var(--darker-bg);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -372,14 +416,61 @@
             overflow: hidden;
         }
         
-        .post-image svg {
-            width: 48px;
-            height: 48px;
-            color: rgba(0, 240, 255, 0.3);
+        .post-card.featured .post-image {
+            width: 45%;
+            height: auto;
+            min-height: 300px;
+        }
+        
+        @media (max-width: 900px) {
+            .post-card.featured .post-image {
+                width: 100%;
+                height: 220px;
+                min-height: auto;
+            }
+        }
+        
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .post-card:hover .post-image img {
+            transform: scale(1.05);
+        }
+        
+        .post-image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .post-image-placeholder svg {
+            width: 60px;
+            height: 60px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .post-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: var(--secondary-gradient);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 10;
         }
         
         .post-content {
-            padding: 25px;
+            padding: 28px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -388,32 +479,23 @@
         .post-category {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            background: rgba(0, 240, 255, 0.1);
-            color: var(--neon-blue);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            gap: 6px;
+            color: #667eea;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 15px;
-            width: fit-content;
-        }
-        
-        .post-title {
-            font-size: 1.35rem;
-            font-weight: 700;
-            line-height: 1.4;
             margin-bottom: 12px;
         }
         
-        .post-title a {
-            color: #fff;
-            text-decoration: none;
-            transition: color 0.3s;
+        .post-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            color: var(--text-primary);
         }
         
-        .post-title a:hover {
-            color: var(--neon-blue);
+        .post-card.featured .post-title {
+            font-size: 1.5rem;
         }
         
         .post-excerpt {
@@ -429,9 +511,7 @@
             align-items: center;
             gap: 20px;
             font-size: 0.85rem;
-            color: var(--text-secondary);
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
         }
         
         .post-meta span {
@@ -440,121 +520,172 @@
             gap: 6px;
         }
         
-        /* Sidebar */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
+        /* Categories Section */
+        .categories-section {
+            margin-bottom: 80px;
         }
         
-        .sidebar-widget {
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .category-card {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 25px;
-        }
-        
-        .widget-title {
-            font-size: 1.1rem;
-            color: var(--neon-blue);
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .popular-posts {
-            list-style: none;
-        }
-        
-        .popular-posts li {
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .popular-posts li:last-child {
-            border-bottom: none;
-        }
-        
-        .popular-posts a {
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            display: block;
-            transition: color 0.3s;
-            line-height: 1.5;
-        }
-        
-        .popular-posts a:hover {
-            color: var(--neon-blue);
-        }
-        
-        .popular-posts .views {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .categories-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .category-tag {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-size: 0.85rem;
+            padding: 28px;
             text-decoration: none;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
         
-        .category-tag:hover {
-            background: rgba(0, 240, 255, 0.1);
-            border-color: rgba(0, 240, 255, 0.3);
-            color: var(--neon-blue);
+        .category-card:hover {
+            background: var(--card-hover);
+            border-color: rgba(102, 126, 234, 0.3);
+            transform: translateY(-4px);
         }
         
-        .about-widget p {
-            font-size: 0.9rem;
+        .category-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--primary-gradient);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .category-icon svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+        
+        .category-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .category-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        /* Newsletter Section */
+        .newsletter-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .newsletter-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        
+        .newsletter-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .newsletter-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .newsletter-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+        
+        .newsletter-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .newsletter-section p {
             color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 15px;
+            max-width: 500px;
+            margin: 0 auto 32px;
         }
         
-        .cta-button {
+        .newsletter-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            color: #000;
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-decoration: none;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 0.9rem;
+            text-decoration: none;
             transition: all 0.3s;
+            font-size: 1rem;
         }
         
-        .cta-button:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(102, 126, 234, 0.3);
         }
         
         /* Footer */
         .footer {
-            background: rgba(10, 10, 18, 0.95);
-            border-top: 1px solid rgba(0, 240, 255, 0.1);
-            padding: 50px 30px;
+            background: rgba(15, 15, 26, 0.5);
+            border-top: 1px solid var(--border-color);
+            padding: 60px 40px;
             text-align: center;
         }
         
@@ -563,48 +694,64 @@
             margin: 0 auto;
         }
         
-        .footer-links {
+        .footer-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .footer-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
         }
         
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
+        .footer-logo-icon svg {
+            width: 20px;
+            height: 20px;
+            color: white;
         }
         
-        .footer-links a:hover {
-            color: var(--neon-blue);
+        .footer-logo span {
+            font-size: 1.25rem;
+            font-weight: 700;
         }
         
         .footer-copyright {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px 20px;
+                padding: 16px 20px;
+            }
+            
+            .logo-text span {
+                display: none;
             }
             
             .nav-links {
-                gap: 20px;
+                gap: 4px;
+            }
+            
+            .nav-links a {
+                padding: 8px 14px;
+                font-size: 0.8rem;
             }
             
             .hero {
-                padding: 40px 20px 30px;
+                padding: 60px 20px 50px;
             }
             
             .hero h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             
             .hero-subtitle {
@@ -612,87 +759,135 @@
             }
             
             .container {
-                padding: 30px 20px;
+                padding: 0 20px 60px;
             }
             
-            .post-title {
-                font-size: 1.2rem;
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .newsletter-section {
+                padding: 40px 24px;
+            }
+            
+            .newsletter-section h2 {
+                font-size: 1.5rem;
+            }
+            
+            .newsletter-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Header - Blog Only Navigation -->
     <header class="header">
         <div class="header-content">
-            <a href="/" class="logo">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                    <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-                <span>Sutemeado</span>
+            <a href="/blog/" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span>BLOG</span>
+                    Sutemeado
+                </div>
             </a>
             <nav class="nav-links">
-                <a href="/">ホーム</a>
-                <a href="/blog/" class="active">ブログ</a>
-                <a href="/api.html">API</a>
-                <a href="/faq.html">FAQ</a>
+                <a href="/blog/" class="active">記事一覧</a>
+                <a href="#categories">カテゴリ</a>
+                <a href="#newsletter">サービス</a>
             </nav>
         </div>
     </header>
 
-    <!-- Breadcrumb -->
-    <nav class="breadcrumb" aria-label="パンくずリスト">
-        <a href="/">ホーム</a> &gt; <span>ブログ</span>
-    </nav>
-
     <!-- Hero Section -->
     <section class="hero">
-        <h1>捨てメアド・一時メールガイド</h1>
+        <div class="hero-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <polyline points="2 17 12 22 22 17"></polyline>
+            </svg>
+            プライバシー保護・スパム対策
+        </div>
+        <h1>捨てメアド・一時メール<br>完全ガイド</h1>
         <p class="hero-subtitle">
-            スパム防止からSNS登録活用まで、一時メールの使い方とセキュリティ対策を徹底解説
+            個人情報を守り、スパムを防ぐ。一時メールの正しい使い方と活用術を、初心者から上級者まで徹底解説。
         </p>
-        <div class="hero-keywords">
-            <span class="keyword-tag">#捨てメアド</span>
-            <span class="keyword-tag">#一時メール</span>
-            <span class="keyword-tag">#プライバシー保護</span>
-            <span class="keyword-tag">#SNS登録</span>
+        <div class="hero-tags">
+            <span class="hero-tag"># 捨てメアド</span>
+            <span class="hero-tag"># 一時メール</span>
+            <span class="hero-tag"># プライバシー保護</span>
+            <span class="hero-tag"># SNS登録</span>
+            <span class="hero-tag"># スパム対策</span>
         </div>
     </section>
 
     <!-- Main Container -->
     <div class="container">
-        <!-- Blog Posts -->
-        <main class="blog-grid">
+        <!-- Featured & Latest Posts -->
+        <div class="section-header">
+            <h2 class="section-title">
+                <div class="section-title-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                </div>
+                最新記事
+            </h2>
+        </div>
+        
+        <div class="blog-grid">
             <!-- Featured Article -->
             <article class="post-card featured">
                 <div class="post-image">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="9" x2="21" y2="9"></line>
-                        <line x1="9" y1="21" x2="9" y2="9"></line>
-                    </svg>
+                    <div class="post-image-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </div>
+                    <span class="post-badge">おすすめ</span>
                 </div>
                 <div class="post-content">
                     <span class="post-category">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="12" y1="16" x2="12" y2="12"></line>
                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                         </svg>
                         初心者ガイド
                     </span>
-                    <h2 class="post-title">
-                        <a href="/blog/articles/what-is-tempmail.html">
-                            捨てメアドとは？初心者向け完全ガイド〜スパム対策からSNS登録まで〜
-                        </a>
-                    </h2>
+                    <h3 class="post-title">捨てメアドとは？初心者向け完全ガイド〜スパム対策からSNS登録まで〜</h3>
                     <p class="post-excerpt">
                         捨てメアド（一時メール）の基本概念から実践的な使い方までを解説。個人情報保護、スパム防止、SNSアカウント登録など、具体的な活用シーンと注意点を網羅的に紹介します。
                     </p>
                     <div class="post-meta">
                         <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                 <line x1="16" y1="2" x2="16" y2="6"></line>
                                 <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -701,10 +896,9 @@
                             2025年4月19日
                         </span>
                         <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                                 <polyline points="2 17 12 22 22 17"></polyline>
-                                <polyline points="2 12 12 17 22 12"></polyline>
                             </svg>
                             基礎知識
                         </span>
@@ -713,320 +907,304 @@
             </article>
 
             <!-- Article 2 -->
-            <article class="post-card">
+            <a href="articles/sns-registration-guide.html" class="post-card">
                 <div class="post-image">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
+                    <div class="post-image-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </div>
                 </div>
                 <div class="post-content">
-                    <span class="post-category">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <span class="post-category" style="color: #f5576c;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                         </svg>
                         SNS活用
                     </span>
-                    <h2 class="post-title">
-                        <a href="/blog/articles/sns-registration-guide.html">
-                            SNS登録に最適！捨てメアド活用術5選〜Twitter・Instagram・TikTok編〜
-                        </a>
-                    </h2>
+                    <h3 class="post-title">SNS登録に最適！捨てメアド活用術5選〜Twitter・Instagram・TikTok編〜</h3>
                     <p class="post-excerpt">
-                        Twitter(X)、Instagram、TikTokなどのSNS登録に捨てメアドを活用する方法を詳しく解説。認証コードの受信からアカウント管理まで、実際の手順と便利な活用テクニックを紹介します。
+                        Twitter(X)、Instagram、TikTokなどのSNS登録に捨てメアドを活用する方法を詳しく解説。認証コードの受信からアカウント管理まで。
                     </p>
                     <div class="post-meta">
                         <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                 <line x1="16" y1="2" x2="16" y2="6"></line>
                                 <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
                             2025年4月18日
                         </span>
-                        <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                                <polyline points="2 17 12 22 22 17"></polyline>
-                                <polyline points="2 12 12 17 22 12"></polyline>
-                            </svg>
-                            活用術
-                        </span>
                     </div>
                 </div>
-            </article>
+            </a>
 
             <!-- Article 3 -->
-            <article class="post-card">
+            <a href="articles/security-guide.html" class="post-card">
                 <div class="post-image">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
+                    <div class="post-image-placeholder" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
                 </div>
                 <div class="post-content">
-                    <span class="post-category">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <span class="post-category" style="color: #00f2fe;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                         </svg>
                         セキュリティ
                     </span>
-                    <h2 class="post-title">
-                        <a href="/blog/articles/security-guide.html">
-                            一時メールの安全性完全ガイド〜追跡されないための8つの対策〜
-                        </a>
-                    </h2>
+                    <h3 class="post-title">一時メールの安全性完全ガイド〜追跡されないための8つの対策〜</h3>
                     <p class="post-excerpt">
-                        捨てメアドの安全性について徹底解説。IPアドレスログ、追跡対策、個人情報保護の実態を専門的に分析し、安全に利用するための実践的なセキュリティ対策を8つ紹介します。
+                        捨てメアドの安全性について徹底解説。IPアドレスログ、追跡対策、個人情報保護の実態を専門的に分析。
                     </p>
                     <div class="post-meta">
                         <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                 <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
                             2025年4月17日
                         </span>
-                        <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                                <polyline points="2 17 12 22 22 17"></polyline>
-                                <polyline points="2 12 12 17 22 12"></polyline>
-                            </svg>
-                            セキュリティ
-                        </span>
                     </div>
                 </div>
-            </article>
+            </a>
 
             <!-- Article 4 -->
-            <article class="post-card">
+            <a href="articles/temp-vs-permanent.html" class="post-card">
                 <div class="post-image">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="20" x2="18" y2="10"></line>
-                        <line x1="12" y1="20" x2="12" y2="4"></line>
-                        <line x1="6" y1="20" x2="6" y2="14"></line>
-                    </svg>
+                    <div class="post-image-placeholder" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
                 </div>
                 <div class="post-content">
-                    <span class="post-category">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <span class="post-category" style="color: #fa709a;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
                         </svg>
                         比較・検討
                     </span>
-                    <h2 class="post-title">
-                        <a href="/blog/articles/temp-vs-permanent.html">
-                            一時メールと永久メールの違いと選び方〜使い分けのスマート術〜
-                        </a>
-                    </h2>
+                    <h3 class="post-title">一時メールと永久メールの違いと選び方〜使い分けのスマート術〜</h3>
                     <p class="post-excerpt">
-                        一時メールと通常のメールアドレスの違いを機能、安全性、使いやすさの観点から徹底比較。どのシーンでどちらを使うべきか、賢い使い分けの方法を解説します。
+                        一時メールと通常のメールアドレスの違いを機能、安全性、使いやすさの観点から徹底比較。
                     </p>
                     <div class="post-meta">
                         <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
                             2025年4月16日
                         </span>
-                        <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                                <polyline points="2 17 12 22 22 17"></polyline>
-                                <polyline points="2 12 12 17 22 12"></polyline>
-                            </svg>
-                            比較
-                        </span>
                     </div>
                 </div>
-            </article>
+            </a>
 
             <!-- Article 5 -->
-            <article class="post-card">
+            <a href="articles/shopping-guide.html" class="post-card">
                 <div class="post-image">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                    <div class="post-image-placeholder" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <path d="M16 10a4 4 0 0 1-8 0"></path>
+                        </svg>
+                    </div>
                 </div>
                 <div class="post-content">
-                    <span class="post-category">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
+                    <span class="post-category" style="color: #fed6e3;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                         </svg>
-                        ショッピング活用
+                        ショッピング
                     </span>
-                    <h2 class="post-title">
-                        <a href="/blog/articles/shopping-guide.html">
-                            ECサイトでの捨てメアド活用術〜Amazon・楽天・ヤフーショッピング編〜
-                        </a>
-                    </h2>
+                    <h3 class="post-title">ECサイトでの捨てメアド活用術〜Amazon・楽天・ヤフーショッピング編〜</h3>
                     <p class="post-excerpt">
-                            Amazon、楽天、ヤフーショッピングなどのECサイトで捨てメアドを活用するメリットと注意点を解説。メルマガ回避、個人情報保護、ポイント活用のコツを紹介します。
+                        Amazon、楽天、ヤフーショッピングなどのECサイトで捨てメアドを活用するメリットと注意点を解説。
                     </p>
                     <div class="post-meta">
                         <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
                             2025年4月15日
                         </span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Article 6 -->
+            <a href="articles/faq-troubleshooting.html" class="post-card">
+                <div class="post-image">
+                    <div class="post-image-placeholder" style="background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <span class="post-category" style="color: #d299c2;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        </svg>
+                        FAQ・トラブル
+                    </span>
+                    <h3 class="post-title">捨てメアドよくある質問〜認証コードが届かない？期限切れ？解決方法まとめ〜</h3>
+                    <p class="post-excerpt">
+                        捨てメアド利用時によくあるトラブルとその解決方法をQ&A形式で解説。
+                    </p>
+                    <div class="post-meta">
                         <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                                <polyline points="2 17 12 22 22 17"></polyline>
-                                <polyline points="2 12 12 17 22 12"></polyline>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                             </svg>
-                            活用術
+                            2025年4月14日
                         </span>
                     </div>
                 </div>
-            </article>
+            </a>
+        </div>
 
-            <!-- Article 6 -->
-            <article class="post-card">
-                <div class="post-image">
+        <!-- Categories Section -->
+        <div class="categories-section" id="categories">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <div class="section-title-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6h-4V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z"></path>
+                        </svg>
+                    </div>
+                    カテゴリから探す
+                </h2>
+            </div>
+            <div class="categories-grid">
+                <a href="#" class="category-card">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>初心者ガイド</h3>
+                        <p>一時メールの基礎知識</p>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <div class="category-icon" style="background: var(--secondary-gradient);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>SNS活用</h3>
+                        <p>ソーシャルメディア活用術</p>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>セキュリティ</h3>
+                        <p>安全性・プライバシー保護</p>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>比較・検討</h3>
+                        <p>サービス比較・選び方</p>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>ショッピング</h3>
+                        <p>ECサイト活用術</p>
+                    </div>
+                </a>
+                <a href="#" class="category-card">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>FAQ・トラブル</h3>
+                        <p>よくある質問・解決方法</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Newsletter Section -->
+        <div class="newsletter-section" id="newsletter">
+            <div class="newsletter-content">
+                <div class="newsletter-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                         <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
                 </div>
-                <div class="post-content">
-                    <span class="post-category">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <h2>一時メールを今すぐ使ってみる</h2>
+                <p>
+                    登録不要、個人情報不要。今すぐ使える一時メールサービス Sutemeado。
+                    スパム対策とプライバシー保護を、たった数秒で開始できます。
+                </p>
+                <div class="newsletter-buttons">
+                    <a href="/" class="btn btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                        無料でアドレスを発行
+                    </a>
+                    <a href="articles/what-is-tempmail.html" class="btn btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="12" y1="16" x2="12" y2="12"></line>
                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                         </svg>
-                        FAQ・トラブル
-                    </span>
-                    <h2 class="post-title">
-                        <a href="/blog/articles/faq-troubleshooting.html">
-                            捨てメアドよくある質問〜認証コードが届かない？期限切れ？解決方法まとめ〜
-                        </a>
-                    </h2>
-                    <p class="post-excerpt">
-                            捨てメアド利用時によくあるトラブルとその解決方法をQ&A形式で解説。認証コードが届かない、メールが消えた、期限切れなど、実際の悩みに答えます。
-                    </p>
-                    <div class="post-meta">
-                        <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
-                            2025年4月14日
-                        </span>
-                        <span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                                <polyline points="2 17 12 22 22 17"></polyline>
-                                <polyline points="2 12 12 17 22 12"></polyline>
-                            </svg>
-                            FAQ
-                        </span>
-                    </div>
-                </div>
-            </article>
-        </main>
-
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <!-- About Widget -->
-            <div class="sidebar-widget about-widget">
-                <h3 class="widget-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                    Sutemeadoとは
-                </h3>
-                <p>
-                    登録不要ですぐに使える一時メールサービス。スパムメールを回避し、大切なメールアドレスを守ります。
-                </p>
-                <a href="/" class="cta-button">
-                    サービスを使う
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </a>
-            </div>
-
-            <!-- Popular Posts -->
-            <div class="sidebar-widget">
-                <h3 class="widget-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                    人気記事
-                </h3>
-                <ul class="popular-posts">
-                    <li>
-                        <a href="/blog/articles/what-is-tempmail.html">捨てメアドとは？初心者向け完全ガイド</a>
-                        <div class="views">基礎知識カテゴリ</div>
-                    </li>
-                    <li>
-                        <a href="/blog/articles/sns-registration-guide.html">SNS登録に最適！捨てメアド活用術5選</a>
-                        <div class="views">活用術カテゴリ</div>
-                    </li>
-                    <li>
-                        <a href="/blog/articles/security-guide.html">一時メールの安全性完全ガイド</a>
-                        <div class="views">セキュリティカテゴリ</div>
-                    </li>
-                    <li>
-                        <a href="/blog/articles/faq-troubleshooting.html">捨てメアドよくある質問まとめ</a>
-                        <div class="views">FAQカテゴリ</div>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Categories -->
-            <div class="sidebar-widget">
-                <h3 class="widget-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 6h-4V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z"></path>
-                    </svg>
-                    カテゴリ
-                </h3>
-                <div class="categories-list">
-                    <a href="/blog/articles/what-is-tempmail.html" class="category-tag">初心者ガイド</a>
-                    <a href="/blog/articles/sns-registration-guide.html" class="category-tag">SNS活用</a>
-                    <a href="/blog/articles/security-guide.html" class="category-tag">セキュリティ</a>
-                    <a href="/blog/articles/temp-vs-permanent.html" class="category-tag">比較・検討</a>
-                    <a href="/blog/articles/shopping-guide.html" class="category-tag">ショッピング</a>
-                    <a href="/blog/articles/faq-troubleshooting.html" class="category-tag">FAQ</a>
+                        使い方を詳しく見る
+                    </a>
                 </div>
             </div>
-        </aside>
+        </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer - Blog Only -->
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-links">
-                <a href="/">ホーム</a>
-                <a href="/blog/">ブログ</a>
-                <a href="/terms.html">利用規約</a>
-                <a href="/privacy.html">プライバシーポリシー</a>
-                <a href="/faq.html">FAQ</a>
+            <div class="footer-logo">
+                <div class="footer-logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </div>
+                <span>Sutemeado Blog</span>
             </div>
             <p class="footer-copyright">
                 © 2024-2025 Sutemeado. 登録不要の一時メールサービス
