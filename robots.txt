@@ -1,10 +1,7 @@
 User-agent: *
-Allow: /
 Disallow: /api/
-Disallow: /data/
-Disallow: /lib/
-
+Allow: /api/blog/posts
+Allow: /api/blog/popular
+Allow: /api/blog/categories
+Allow: /api/blog/post/
 Sitemap: https://sutemeado.com/sitemap.xml
-
-# Crawl-delay for bots
-Crawl-delay: 1

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記事を読み込み中... | Sutemeado Blog</title>
+    <meta name="description" content="一時メールサービスSutemeadoの公式ブログ">
+    <meta name="keywords" content="一時メール,スパム防止,プライバシー保護,メールセキュリティ">
+    
+    <!-- OGP for SNS -->
+    <meta property="og:title" content="Sutemeado Blog">
+    <meta property="og:description" content="一時メールサービスSutemeadoの公式ブログ">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://sutemeado.com/blog/post.html">
+    <meta property="og:site_name" content="Sutemeado">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c1d 0%, #1a1a2e 100%);
+            color: #e0e0ff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(16, 16, 32, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #00ffff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            color: #a0a0c0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #00ffff;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 30px;
+            font-size: 0.85rem;
+            color: #606080;
+        }
+        
+        .breadcrumb a {
+            color: #00ffff;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Article */
+        .article {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+        }
+        
+        @media (max-width: 600px) {
+            .article {
+                padding: 25px;
+            }
+        }
+        
+        .article-header {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .article-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #00ffff, #0080ff);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .article-title {
+            font-size: 2rem;
+            color: #ffffff;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .article-title {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: #606080;
+        }
+        
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .article-content {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #c0c0e0;
+        }
+        
+        .article-content h1,
+        .article-content h2,
+        .article-content h3 {
+            color: #ffffff;
+            margin: 30px 0 15px 0;
+        }
+        
+        .article-content h1 {
+            font-size: 1.8rem;
+        }
+        
+        .article-content h2 {
+            font-size: 1.5rem;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        
+        .article-content h3 {
+            font-size: 1.2rem;
+        }
+        
+        .article-content p {
+            margin-bottom: 20px;
+        }
+        
+        .article-content ul,
+        .article-content ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+        
+        .article-content li {
+            margin-bottom: 10px;
+        }
+        
+        .article-content a {
+            color: #00ffff;
+            text-decoration: none;
+        }
+        
+        .article-content a:hover {
+            text-decoration: underline;
+        }
+        
+        .article-content strong {
+            color: #ffffff;
+        }
+        
+        .article-content blockquote {
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 4px solid #00ffff;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .article-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+        }
+        
+        .article-content pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        /* Tags */
+        .article-tags {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .tags-label {
+            font-size: 0.85rem;
+            color: #606080;
+            margin-bottom: 10px;
+        }
+        
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tag {
+            background: rgba(0, 255, 255, 0.1);
+            color: #00ffff;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .tag:hover {
+            background: rgba(0, 255, 255, 0.2);
+        }
+        
+        /* AdSense */
+        .ad-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .ad-label {
+            font-size: 0.7rem;
+            color: #606080;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        /* Related Posts */
+        .related-posts {
+            margin-top: 40px;
+        }
+        
+        .related-title {
+            font-size: 1.2rem;
+            color: #00ffff;
+            margin-bottom: 20px;
+        }
+        
+        .related-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .related-post {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .related-post:hover {
+            border-color: rgba(0, 255, 255, 0.3);
+        }
+        
+        .related-post a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .related-post a:hover {
+            color: #00ffff;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+            margin-top: 40px;
+            color: #606080;
+            font-size: 0.85rem;
+        }
+        
+        .footer a {
+            color: #00ffff;
+            text-decoration: none;
+        }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #606080;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(0, 255, 255, 0.3);
+            border-top-color: #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Error */
+        .error-message {
+            text-align: center;
+            padding: 40px;
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+    </style>
+    
+    <!-- AdSense Code -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                Sutemeado Blog
+            </a>
+            <nav class="nav-links">
+                <a href="/">ホーム</a>
+                <a href="/blog">ブログ</a>
+                <a href="/status">サービス状況</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="/">ホーム</a> &gt; 
+            <a href="/blog">ブログ</a> &gt; 
+            <span id="current-title">記事を読み込み中...</span>
+        </nav>
+
+        <!-- Article -->
+        <article class="article" id="article">
+            <div class="loading">記事を読み込み中...</div>
+        </article>
+
+        <!-- Related Posts -->
+        <div class="related-posts" id="related-posts" style="display: none;">
+            <h3 class="related-title">関連記事</h3>
+            <div class="related-grid" id="related-grid"></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024-2025 Sutemeado. <a href="/">一時メールサービスはこちら</a></p>
+        </footer>
+    </main>
+
+    <script>
+        // Get slug from URL
+        function getSlug() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('slug');
+        }
+
+        // Load post
+        async function loadPost() {
+            const slug = getSlug();
+            const articleContainer = document.getElementById('article');
+            
+            if (!slug) {
+                articleContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>記事が見つかりません。</p>
+                        <p>URLにスラグが指定されていません。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/blog/post/${encodeURIComponent(slug)}`);
+                const data = await response.json();
+
+                if (!data.success || !data.post) {
+                    articleContainer.innerHTML = `
+                        <div class="error-message">
+                            <p>記事が見つかりません。</p>
+                            <p>指定された記事は存在しないか、削除されました。</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const post = data.post;
+                
+                // Update page meta
+                document.title = `${post.title} | Sutemeado Blog`;
+                document.querySelector('meta[name="description"]').content = post.meta_description || post.excerpt || '';
+                document.querySelector('meta[property="og:title"]').content = post.title;
+                document.querySelector('meta[property="og:description"]').content = post.meta_description || post.excerpt || '';
+                document.getElementById('current-title').textContent = post.title;
+                
+                // Update structured data
+                const schemaScript = document.createElement('script');
+                schemaScript.type = 'application/ld+json';
+                schemaScript.textContent = JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'Article',
+                    headline: post.title,
+                    description: post.meta_description || post.excerpt,
+                    author: {
+                        '@type': 'Person',
+                        name: post.author
+                    },
+                    datePublished: post.published_date,
+                    dateModified: post.updated_date || post.published_date,
+                    publisher: {
+                        '@type': 'Organization',
+                        name: 'Sutemeado',
+                        logo: {
+                            '@type': 'ImageObject',
+                            url: 'https://sutemeado.com/favicon.png'
+                        }
+                    }
+                });
+                document.head.appendChild(schemaScript);
+
+                // Tags
+                let tagsHtml = '';
+                if (post.tags) {
+                    const tags = post.tags.split(',').map(t => t.trim()).filter(t => t);
+                    tagsHtml = `
+                        <div class="article-tags">
+                            <div class="tags-label">タグ:</div>
+                            <div class="tag-list">
+                                ${tags.map(tag => `<a href="/blog?tag=${encodeURIComponent(tag)}" class="tag">${escapeHtml(tag)}</a>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Render article
+                articleContainer.innerHTML = `
+                    <div class="article-header">
+                        ${post.category ? `<span class="article-category">${escapeHtml(post.category)}</span>` : ''}
+                        <h1 class="article-title">${escapeHtml(post.title)}</h1>
+                        <div class="article-meta">
+                            <span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                ${formatDate(post.published_date)}
+                            </span>
+                            <span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                ${escapeHtml(post.author)}
+                            </span>
+                            <span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                ${post.views} views
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- AdSense -->
+                    <div class="ad-container">
+                        <div class="ad-label">Advertisement</div>
+                        <ins class="adsbygoogle"
+                             style="display:block; text-align:center;"
+                             data-ad-layout="in-article"
+                             data-ad-format="fluid"
+                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                             data-ad-slot="XXXXXXXXXX"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                    </div>
+                    
+                    <div class="article-content">
+                        ${post.content}
+                    </div>
+                    
+                    ${tagsHtml}
+                `;
+
+                // Load related posts
+                loadRelatedPosts(slug);
+
+            } catch (error) {
+                console.error('Error loading post:', error);
+                articleContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>記事の読み込みに失敗しました。</p>
+                        <p>時間をおいて再度お試しください。</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load related posts
+        async function loadRelatedPosts(currentSlug) {
+            try {
+                const response = await fetch('/api/blog/popular?limit=3');
+                const data = await response.json();
+
+                if (data.success && data.posts && data.posts.length > 0) {
+                    const container = document.getElementById('related-grid');
+                    const wrapper = document.getElementById('related-posts');
+                    
+                    // Filter out current post
+                    const related = data.posts.filter(p => p.slug !== currentSlug).slice(0, 3);
+                    
+                    if (related.length > 0) {
+                        container.innerHTML = related.map(post => `
+                            <div class="related-post">
+                                <a href="/blog/post.html?slug=${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a>
+                                <div style="font-size: 0.75rem; color: #606080; margin-top: 5px;">
+                                    ${post.views} views
+                                </div>
+                            </div>
+                        `).join('');
+                        wrapper.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading related posts:', error);
+            }
+        }
+
+        // Utility: Escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Utility: Format date
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Load on page load
+        document.addEventListener('DOMContentLoaded', loadPost);
+    </script>
+</body>
+</html>

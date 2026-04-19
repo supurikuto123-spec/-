@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sutemeado Blog - 一時メールの最新情報と使い方ガイド</title>
+    <meta name="description" content="一時メールサービスSutemeadoの公式ブログ。最新アップデート、使い方ガイド、メールセキュリティのヒントを配信しています。">
+    <meta name="keywords" content="一時メール,スパム防止,プライバシー保護,メールセキュリティ,Sutemeado">
+    
+    <!-- OGP for SNS -->
+    <meta property="og:title" content="Sutemeado Blog - 一時メールの最新情報と使い方ガイド">
+    <meta property="og:description" content="一時メールサービスSutemeadoの公式ブログ。最新アップデート、使い方ガイド、メールセキュリティのヒントを配信しています。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sutemeado.com/blog">
+    <meta property="og:image" content="https://sutemeado.com/ogp-blog.jpg">
+    <meta property="og:site_name" content="Sutemeado">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Sutemeado Blog",
+        "description": "一時メールサービスSutemeadoの公式ブログ",
+        "url": "https://sutemeado.com/blog",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Sutemeado",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://sutemeado.com/favicon.png"
+            }
+        }
+    }
+    </script>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://sutemeado.com/blog">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c1d 0%, #1a1a2e 100%);
+            color: #e0e0ff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(16, 16, 32, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #00ffff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            color: #a0a0c0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #00ffff;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 40px;
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Blog Header */
+        .blog-header {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05), rgba(255, 0, 255, 0.05));
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .blog-header h1 {
+            font-size: 2rem;
+            color: #00ffff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .blog-header p {
+            color: #a0a0c0;
+            font-size: 1rem;
+        }
+        
+        /* AdSense Top Banner */
+        .ad-container {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .ad-label {
+            font-size: 0.7rem;
+            color: #606080;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .ad-placeholder {
+            color: #404060;
+            font-size: 0.8rem;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        
+        /* Blog Posts Grid */
+        .posts-grid {
+            display: grid;
+            gap: 25px;
+        }
+        
+        .post-card {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(0, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
+        }
+        
+        .post-content {
+            padding: 25px;
+        }
+        
+        .post-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #00ffff, #0080ff);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        
+        .post-title {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .post-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .post-title a:hover {
+            color: #00ffff;
+        }
+        
+        .post-excerpt {
+            color: #a0a0c0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #606080;
+        }
+        
+        .post-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .sidebar-widget {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .widget-title {
+            font-size: 1rem;
+            color: #00ffff;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .popular-posts {
+            list-style: none;
+        }
+        
+        .popular-posts li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .popular-posts li:last-child {
+            border-bottom: none;
+        }
+        
+        .popular-posts a {
+            color: #c0c0e0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            transition: color 0.3s;
+        }
+        
+        .popular-posts a:hover {
+            color: #00ffff;
+        }
+        
+        .popular-posts .views {
+            font-size: 0.75rem;
+            color: #606080;
+            margin-top: 3px;
+        }
+        
+        .categories-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .category-tag {
+            background: rgba(0, 255, 255, 0.1);
+            color: #00ffff;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .category-tag:hover {
+            background: rgba(0, 255, 255, 0.2);
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #606080;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-top-color: #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Footer */
+        .footer {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+            margin-top: 40px;
+            color: #606080;
+            font-size: 0.85rem;
+        }
+        
+        .footer a {
+            color: #00ffff;
+            text-decoration: none;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .pagination a {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            color: #a0a0c0;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .pagination a:hover,
+        .pagination a.active {
+            background: rgba(0, 255, 255, 0.1);
+            color: #00ffff;
+            border-color: #00ffff;
+        }
+        
+        /* Error State */
+        .error-message {
+            text-align: center;
+            padding: 40px;
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+    </style>
+    
+    <!-- AdSense Code (Replace with your actual AdSense ID) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                Sutemeado Blog
+            </a>
+            <nav class="nav-links">
+                <a href="/">ホーム</a>
+                <a href="/blog">ブログ</a>
+                <a href="/status">サービス状況</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Blog Header -->
+        <div class="blog-header">
+            <h1>Sutemeado Blog</h1>
+            <p>一時メールの最新情報、使い方ガイド、メールセキュリティのヒントをお届けします</p>
+        </div>
+
+        <!-- Top AdSense Banner -->
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+            <!-- Replace with actual AdSense code -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <!-- Blog Posts -->
+        <div class="posts-grid" id="posts-container">
+            <div class="loading">記事を読み込み中...</div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Popular Posts -->
+            <div class="sidebar-widget">
+                <h3 class="widget-title">人気記事</h3>
+                <ul class="popular-posts" id="popular-posts">
+                    <li>読み込み中...</li>
+                </ul>
+            </div>
+
+            <!-- Categories -->
+            <div class="sidebar-widget">
+                <h3 class="widget-title">カテゴリ</h3>
+                <div class="categories-list" id="categories">
+                    読み込み中...
+                </div>
+            </div>
+
+            <!-- Sidebar Ad -->
+            <div class="ad-container">
+                <div class="ad-label">Advertisement</div>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                     data-ad-slot="XXXXXXXXXX"
+                     data-ad-format="auto"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <!-- About Widget -->
+            <div class="sidebar-widget">
+                <h3 class="widget-title">Sutemeadoとは</h3>
+                <p style="font-size: 0.85rem; color: #a0a0c0; line-height: 1.6;">
+                    Sutemeadoは、登録不要で即座に使える一時メールサービスです。スパムメールを回避し、プライバシーを保護します。
+                </p>
+                <a href="/" style="display: inline-block; margin-top: 10px; color: #00ffff; text-decoration: none; font-size: 0.85rem;">
+                    → サービスを使う
+                </a>
+            </div>
+        </aside>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination" style="display: none;">
+            <!-- Pagination will be inserted here -->
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024-2025 Sutemeado. <a href="/">一時メールサービスはこちら</a></p>
+        </footer>
+    </main>
+
+    <script>
+        // Fetch blog posts
+        async function loadPosts() {
+            const container = document.getElementById('posts-container');
+            
+            try {
+                const response = await fetch('/api/blog/posts');
+                const data = await response.json();
+                
+                if (!data.success || !data.posts || data.posts.length === 0) {
+                    container.innerHTML = `
+                        <div class="error-message">
+                            <p>記事が見つかりません。</p>
+                            <p>まだ記事が投稿されていないか、読み込みに失敗しました。</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const postsHtml = data.posts.map(post => `
+                    <article class="post-card">
+                        <div class="post-content">
+                            ${post.category ? `<span class="post-category">${escapeHtml(post.category)}</span>` : ''}
+                            <h2 class="post-title">
+                                <a href="/blog/post.html?slug=${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a>
+                            </h2>
+                            <p class="post-excerpt">${escapeHtml(post.excerpt || post.meta_description || '')}</p>
+                            <div class="post-meta">
+                                <span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    ${formatDate(post.published_date)}
+                                </span>
+                                <span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    ${post.views || 0} views
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+                `).join('');
+                
+                container.innerHTML = postsHtml;
+                
+                // Show pagination if needed
+                if (data.pagination && data.pagination.totalPages > 1) {
+                    renderPagination(data.pagination);
+                }
+                
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                container.innerHTML = `
+                    <div class="error-message">
+                        <p>記事の読み込みに失敗しました。</p>
+                        <p>時間をおいて再度お試しください。</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Fetch popular posts
+        async function loadPopularPosts() {
+            const container = document.getElementById('popular-posts');
+            
+            try {
+                const response = await fetch('/api/blog/popular');
+                const data = await response.json();
+                
+                if (!data.success || !data.posts || data.posts.length === 0) {
+                    container.innerHTML = '<li>記事がありません</li>';
+                    return;
+                }
+                
+                const html = data.posts.map(post => `
+                    <li>
+                        <a href="/blog/post.html?slug=${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a>
+                        <div class="views">${post.views || 0} views</div>
+                    </li>
+                `).join('');
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                container.innerHTML = '<li>読み込みエラー</li>';
+            }
+        }
+
+        // Fetch categories
+        async function loadCategories() {
+            const container = document.getElementById('categories');
+            
+            try {
+                const response = await fetch('/api/blog/categories');
+                const data = await response.json();
+                
+                if (!data.success || !data.categories || data.categories.length === 0) {
+                    container.innerHTML = 'カテゴリがありません';
+                    return;
+                }
+                
+                const html = data.categories.map(cat => `
+                    <a href="/blog?category=${encodeURIComponent(cat.category)}" class="category-tag">
+                        ${escapeHtml(cat.category)} (${cat.count})
+                    </a>
+                `).join('');
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                container.innerHTML = '読み込みエラー';
+            }
+        }
+
+        // Render pagination
+        function renderPagination(pagination) {
+            const container = document.getElementById('pagination');
+            const { currentPage, totalPages } = pagination;
+            
+            let html = '';
+            
+            if (currentPage > 1) {
+                html += `<a href="?page=${currentPage - 1}">← 前へ</a>`;
+            }
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += `<a href="?page=${i}" class="active">${i}</a>`;
+                } else if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `<a href="?page=${i}">${i}</a>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += '<span>...</span>';
+                }
+            }
+            
+            if (currentPage < totalPages) {
+                html += `<a href="?page=${currentPage + 1}">次へ →</a>`;
+            }
+            
+            container.innerHTML = html;
+            container.style.display = 'flex';
+        }
+
+        // Utility: Escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Utility: Format date
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Load all data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPosts();
+            loadPopularPosts();
+            loadCategories();
+        });
+    </script>
+</body>
+</html>
