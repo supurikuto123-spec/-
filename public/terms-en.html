@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="termsTitle">Terms of Service - Sutemeado (Temporary Email Service)</title>
+  <meta name="description" data-i18n="termsMetaDesc" content="Terms of Service for Sutemeado temporary email service. Usage conditions, disclaimers, and usage restrictions for the free disposable email service without registration.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .legal-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+    .legal-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .legal-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .legal-back-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      border-color: var(--accent-primary);
+    }
+    .legal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .legal-content {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+    .legal-content h2 {
+      color: var(--text-primary);
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .legal-content h3 {
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .legal-content p {
+      margin-bottom: 1rem;
+    }
+    .legal-content ul, .legal-content ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+    .legal-content li {
+      margin-bottom: 0.5rem;
+    }
+    .legal-content strong {
+      color: var(--text-primary);
+    }
+    .legal-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .effective-date {
+      background: var(--bg-secondary);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 2rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    @media (max-width: 640px) {
+      .legal-page {
+        padding: 1rem;
+      }
+      .legal-header {
+        flex-wrap: wrap;
+      }
+      .legal-title {
+        font-size: 1.25rem;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+  <link rel="canonical" href="https://sutemeado.com/terms-en.html">
+</head>
+<body>
+  <!-- Navigation: Brand + Hamburger Button -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="nav-logo-wrap">
+        <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <span class="nav-title">Sutemeado</span>
+    </div>
+
+    <!-- Right side: Mail counter + Theme + Language + Hamburger -->
+    <div class="nav-right">
+      <!-- Mail counter (shown when logged in) -->
+      <div class="nav-mail-counter" id="nav-mail-counter" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span class="nav-counter-value" id="nav-counter-value">0</span>
+      </div>
+
+
+      <button class="hamburger-btn" id="menu-toggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Drawer Overlay -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+
+  <!-- Drawer Menu -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title" data-i18n="menuTitle">Menu</span>
+      <button class="drawer-close" id="drawer-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+
+      <!-- === Account === -->
+      <div class="drawer-section" id="drawer-loggedin-section">
+        <div class="drawer-section-label drawer-section-main" data-i18n="accountSection">Account Actions</div>
+
+        <button class="drawer-item" id="menu-login-other" onclick="location.href='/?action=login&lang=en'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span data-i18n="login">Login with Another Account</span>
+        </button>
+
+        <button class="drawer-item" id="menu-new-address" onclick="location.href='/?action=new-address&lang=en'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span data-i18n="newAddress">Create New Email Address</span>
+        </button>
+
+        <div class="drawer-divider"></div>
+        <div class="drawer-section-label drawer-section-danger" data-i18n="dangerousSection">Dangerous Actions (Caution Required)</div>
+
+        <button class="drawer-item drawer-item-danger" id="menu-delete-all-mail" onclick="location.href='/?action=delete-all-mail&lang=en'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          <span data-i18n="deleteAllMail">Delete All Emails</span>
+        </button>
+
+        <button class="drawer-item drawer-item-danger" id="menu-delete-address" onclick="location.href='/?action=delete-address&lang=en'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/>
+            <path d="M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+          <span data-i18n="deleteAddress">Delete Address</span>
+        </button>
+      </div>
+
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label drawer-section-guide" data-i18n="guideSection">Site Guide</div>
+
+      <button class="drawer-item" id="menu-home" onclick="location.href='/?lang=en'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span data-i18n="home">Home</span>
+      </button>
+
+      <button class="drawer-item" id="menu-howto" onclick="location.href='/how-to-use-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <line x1="10" y1="9" x2="8" y2="9"/>
+        </svg>
+        <span data-i18n="howToUse">How to Use</span>
+      </button>
+
+      <button class="drawer-item" id="menu-status" onclick="location.href='/status-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        <span data-i18n="status">Status</span>
+      </button>
+
+      <button class="drawer-item" id="menu-news" onclick="location.href='/news-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <path d="M22 6l-10 7L2 6"/>
+        </svg>
+        <span data-i18n="news">News</span>
+      </button>
+
+      <button class="drawer-item" id="menu-faq" onclick="location.href='/faq-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="8"/>
+        </svg>
+        <span data-i18n="faq">FAQ</span>
+      </button>
+
+      <button class="drawer-item" id="menu-contact" onclick="location.href='/contact-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span data-i18n="contact">Contact</span>
+      </button>
+
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label drawer-section-other" data-i18n="otherSection">Other Links</div>
+
+      <button class="drawer-item" id="menu-api" onclick="location.href='/api-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+        </svg>
+        <span data-i18n="apiDocs">API Documentation</span>
+      </button>
+
+    </div>
+
+    <!-- Drawer footer: Legal links -->
+    <div class="drawer-footer">
+      <div class="drawer-footer-links">
+        <a href="/terms-en.html" class="drawer-footer-link" data-i18n="termsOfService">Terms of Service</a>
+        <span class="drawer-footer-separator">|</span>
+        <a href="/privacy-en.html" class="drawer-footer-link" data-i18n="privacyPolicy">Privacy & Cookies</a>
+      </div>
+      <p class="drawer-footer-copy">&copy; 2026 Sutemeado</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="legal-page" style="padding-top: 80px;">
+    <header class="legal-header">
+      <a href="/" class="legal-back-btn" data-i18n="backBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12,19 5,12 12,5"/>
+        </svg>
+        <span data-i18n="backBtn">Back</span>
+      </a>
+      <h1 class="legal-title" data-i18n="termsTitle">Terms of Service</h1>
+    </header>
+
+    <div class="effective-date" data-i18n="termsDate"></div>
+
+    <div class="legal-content">
+      <p data-i18n="termsIntro">These Terms of Service (hereinafter referred to as "these Terms") define the rights and obligations between the operator (hereinafter referred to as "the Operator") providing Sutemeado (hereinafter referred to as "this Service"), and users (hereinafter referred to as "the User") of this Service. By using this Service, you agree to these Terms.</p>
+
+      <h2 data-i18n="termsArticle1Title">Article 1 (Scope of Application)</h2>
+      <ol>
+        <li data-i18n="termsArticle1_1">These Terms apply to all relationships between the Operator and the User regarding use of this Service.</li>
+        <li data-i18n="termsArticle1_2">The Operator may establish individual provisions (hereinafter referred to as "Individual Provisions") regarding use of this Service. Individual Provisions constitute part of these Terms.</li>
+        <li data-i18n="termsArticle1_3">In case of conflict between provisions of these Terms and Individual Provisions, Individual Provisions shall prevail.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle2Title">Article 2 (Service Overview)</h2>
+      <ol>
+        <li data-i18n="termsArticle2_1">This Service provides users with issuance of temporary email addresses (hereinafter referred to as "temporary address") and email reception functionality.</li>
+        <li data-i18n="termsArticle2_2">This Service can be used without registration and can be accessed anytime with password authentication.</li>
+        <li data-i18n="termsArticle2_3">This Service is provided free of charge and is operated through advertising revenue.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle3Title">Article 3 (Eligibility)</h2>
+      <ol>
+        <li data-i18n="termsArticle3_1">Users shall use this Service after agreeing to these Terms.</li>
+        <li data-i18n="termsArticle3_2">Users shall prepare their own internet connection environment at their own responsibility when using this Service.</li>
+        <li data-i18n="termsArticle3_3">Minors using this Service must obtain consent from a parent or legal guardian.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle4Title">Article 4 (Password Management)</h2>
+      <ol>
+        <li data-i18n="termsArticle4_1">Passwords for accessing temporary addresses issued by this Service shall be managed by the user.</li>
+        <li data-i18n="termsArticle4_2">If access to an address becomes impossible due to lost or forgotten passwords, the Operator does not guarantee recovery.</li>
+        <li data-i18n="termsArticle4_3">Users shall take care not to leak passwords to third parties and are encouraged to change them regularly.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle5Title">Article 5 (Prohibited Acts)</h2>
+      <p data-i18n="termsArticle5Intro">Users shall not engage in the following acts when using this Service:</p>
+      <ol>
+        <li data-i18n="termsArticle5_1">Acts violating laws or public order and morals</li>
+        <li data-i18n="termsArticle5_2">Acts related to criminal acts or acts that may be related to crimes</li>
+        <li data-i18n="termsArticle5_3">Acts infringing intellectual property rights, portrait rights, privacy, honor, or other rights or interests of the Operator, other users, or third parties</li>
+        <li data-i18n="termsArticle5_4">Acts destroying or interfering with the functions of this Service's servers or networks</li>
+        <li data-i18n="termsArticle5_5">Acts reverse engineering, disassembling, or decompiling this Service</li>
+        <li data-i18n="termsArticle5_6">Acts using this Service for commercial purposes (except when approved by the Operator)</li>
+        <li data-i18n="termsArticle5_7">Spam acts sending mass emails or acts supporting such acts</li>
+        <li data-i18n="termsArticle5_8">Use for the purpose of receiving spam emails</li>
+        <li data-i18n="termsArticle5_9">Acts attempting unauthorized access to other users' addresses</li>
+        <li data-i18n="termsArticle5_10">Acts interfering with operation of this Service</li>
+        <li data-i18n="termsArticle5_11">Other acts deemed inappropriate by the Operator</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle6Title">Article 6 (Email Storage Period and Deletion)</h2>
+      <ol>
+        <li data-i18n="termsArticle6_1">Received emails are stored for 30 days from receipt and then automatically deleted.</li>
+        <li data-i18n="termsArticle6_2">Users can manually delete emails at any time.</li>
+        <li data-i18n="termsArticle6_3">When an address is deleted, all emails associated with that address are also deleted simultaneously.</li>
+        <li data-i18n="termsArticle6_4">Even if emails are lost due to system maintenance or failures, the Operator has no obligation to recover them.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle7Title">Article 7 (Service Changes, Interruptions, and Termination)</h2>
+      <ol>
+        <li data-i18n="termsArticle7_1">The Operator may change, add, or discontinue content of this Service without prior notice to users.</li>
+        <li data-i18n="termsArticle7_2">The Operator may interrupt all or part of this Service without prior notice to users in the following cases:
+          <ul>
+            <li data-i18n="termsArticle7_2_1">When performing system maintenance or updates</li>
+            <li data-i18n="termsArticle7_2_2">When provision of this Service becomes difficult due to force majeure such as natural disasters</li>
+            <li data-i18n="termsArticle7_2_3">When provision of this Service becomes difficult due to server, communication line failures, or unauthorized access</li>
+            <li data-i18n="termsArticle7_2_4">Other cases where the Operator deems interruption necessary</li>
+          </ul>
+        </li>
+        <li data-i18n="termsArticle7_3">When terminating this Service, the Operator shall notify users with reasonable advance notice.</li>
+        <li data-i18n="termsArticle7_4">The Operator bears no responsibility for damages caused to users due to changes, interruptions, or termination under this article.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle8Title">Article 8 (Advertisement Display)</h2>
+      <ol>
+        <li data-i18n="termsArticle8_1">This Service may display advertisements through third-party advertising networks such as Google AdSense.</li>
+        <li data-i18n="termsArticle8_2">Users shall use this Service on the condition of viewing advertisements.</li>
+        <li data-i18n="termsArticle8_3">Regarding advertisement content, the advertiser is responsible, and the Operator does not guarantee accuracy, legality, etc.</li>
+        <li data-i18n="termsArticle8_4">The Operator is not involved in and bears no responsibility for transactions between users and advertisers resulting from ad clicks.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle9Title">Article 9 (Disclaimer)</h2>
+      <ol>
+        <li data-i18n="termsArticle9_1">The Operator does not explicitly or implicitly guarantee accuracy, completeness, usefulness, fitness for particular purpose, security, etc. of this Service content.</li>
+        <li data-i18n="termsArticle9_2">The Operator bears no responsibility for damages caused to users through use of this Service (including data loss, lost profits, business interruption, etc.), except where the Operator has intentional or gross negligence.</li>
+        <li data-i18n="termsArticle9_3">The Operator bears no responsibility for disputes arising between users and other users or third parties.</li>
+        <li data-i18n="termsArticle9_4">The Operator does not guarantee truthfulness, legality, appropriateness, etc. of email content received through this Service.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle10Title">Article 10 (Intellectual Property Rights)</h2>
+      <ol>
+        <li data-i18n="termsArticle10_1">Copyrights, trademark rights, and other intellectual property rights related to this Service belong to the Operator or legitimate rights holders.</li>
+        <li data-i18n="termsArticle10_2">Users do not acquire these rights by using this Service.</li>
+        <li data-i18n="termsArticle10_3">Copyrights of information sent by users to this Service belong to users, but the Operator may use this within the scope necessary for operation and improvement of this Service.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle11Title">Article 11 (Changes to Terms)</h2>
+      <ol>
+        <li data-i18n="termsArticle11_1">The Operator may change these Terms without prior notice to users when deemed necessary.</li>
+        <li data-i18n="termsArticle11_2">Changed Terms shall take effect when posted on this Service.</li>
+        <li data-i18n="termsArticle11_3">If users use this Service after changes to these Terms, they are deemed to have agreed to the changed Terms.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle12Title">Article 12 (Handling of Personal Information)</h2>
+      <p>Handling of personal information in this Service shall follow the <a href="/privacy-en.html">Privacy Policy</a> separately established.</p>
+
+      <h2 data-i18n="termsArticle13Title">Article 13 (Governing Law and Jurisdiction)</h2>
+      <ol>
+        <li data-i18n="termsArticle13_1">Japanese law shall be the governing law for interpretation of these Terms.</li>
+        <li data-i18n="termsArticle13_2">For disputes regarding this Service, the court with jurisdiction over the Operator's location shall be the court of first instance with exclusive jurisdiction.</li>
+      </ol>
+
+      <h2 data-i18n="termsArticle14Title">Article 14 (Severability)</h2>
+      <p data-i18n="termsArticle14_1">Even if any provision of these Terms is deemed invalid or unenforceable, remaining provisions shall remain in effect.</p>
+
+      <h2 data-i18n="termsArticle15Title">Article 15 (Contact)</h2>
+      <p data-i18n="termsArticle15_1">Inquiries regarding these Terms should be made through the contact form or methods specified by the Operator.</p>
+    </div>
+
+    <footer class="legal-footer">
+      <p>&copy; 2026 Sutemeado. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Shared Application Logic -->
+  <script src="/common.js"></script>
+</body>
+</html>

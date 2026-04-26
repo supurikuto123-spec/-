@@ -75,9 +75,12 @@ logs
 *.log
 
 # PM2
-ecosystem.config.js
 .pm2/
 
 # Temporary folders
 tmp/
 temp/
+
+# Database files (prevent data loss on git reset)
+data.db
+backups/

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Status - Sutemeado</title>
+  <meta name="description" content="Check the system status of Sutemeado temporary email service.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/favicon.ico?v=20260324c" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260324c">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .status-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+    .status-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .status-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .status-back-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      border-color: var(--accent-primary);
+    }
+    .status-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .status-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+    .status-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .status-indicator.online {
+      background: #00f5a0;
+      box-shadow: 0 0 10px #00f5a080;
+    }
+    .status-indicator.maintenance {
+      background: #ffb800;
+      box-shadow: 0 0 10px #ffb80080;
+    }
+    .status-indicator.offline {
+      background: #ff4757;
+      box-shadow: 0 0 10px #ff475780;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .status-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .status-card-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+    }
+    .status-card-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    .status-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .status-section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .status-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .status-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .status-list-item:last-child {
+      border-bottom: none;
+    }
+    .status-list-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .status-list-value {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .status-list-value.success {
+      color: #00f5a0;
+    }
+    .status-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent-primary);
+      color: #000;
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 2rem;
+    }
+    .refresh-btn:hover {
+      background: var(--accent-secondary);
+    }
+    .last-updated {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 640px) {
+      .status-page {
+        padding: 1rem;
+      }
+      .status-header {
+        flex-wrap: wrap;
+      }
+      .status-title {
+        font-size: 1.25rem;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <link rel="canonical" href="https://sutemeado.com/status-en.html">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="nav-logo-wrap">
+        <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <span class="nav-title">Sutemeado</span>
+    </div>
+
+    <div class="nav-right">
+      <div class="nav-mail-counter" id="nav-mail-counter" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span class="nav-counter-value" id="nav-counter-value">0</span>
+      </div>
+
+
+      <button class="hamburger-btn" id="menu-toggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+
+  <!-- Drawer Menu -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">Menu</span>
+      <button class="drawer-close" id="drawer-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+
+      <div class="drawer-section" id="drawer-loggedin-section">
+        <div class="drawer-section-label drawer-section-main">Account</div>
+
+        <button class="drawer-item" id="menu-login-other" onclick="location.href='/?action=login&lang=en'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span>Login with another account</span>
+        </button>
+
+        <button class="drawer-item" id="menu-new-address" onclick="location.href='/?action=new-address&lang=en'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span>Create new email address</span>
+        </button>
+
+        <div class="drawer-divider"></div>
+        <div class="drawer-section-label drawer-section-danger">Dangerous Operations</div>
+
+        <button class="drawer-item drawer-item-danger" id="menu-delete-all-mail" onclick="location.href='/?action=delete-all-mail&lang=en'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          <span>Delete all emails</span>
+        </button>
+
+        <button class="drawer-item drawer-item-danger" id="menu-delete-address" onclick="location.href='/?action=delete-address&lang=en'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/>
+            <path d="M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+          <span>Delete address</span>
+        </button>
+      </div>
+
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label drawer-section-guide">Site Guide</div>
+
+      <button class="drawer-item" id="menu-home" onclick="location.href='/?lang=en'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Home</span>
+      </button>
+
+      <button class="drawer-item" id="menu-howto" onclick="location.href='/how-to-use-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <line x1="10" y1="9" x2="8" y2="9"/>
+        </svg>
+        <span>How to Use</span>
+      </button>
+
+      <button class="drawer-item" id="menu-status" onclick="location.href='/status-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        <span>Status</span>
+      </button>
+
+      <button class="drawer-item" id="menu-news" onclick="location.href='/news-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <path d="M22 6l-10 7L2 6"/>
+        </svg>
+        <span>News</span>
+      </button>
+
+      <button class="drawer-item" id="menu-faq" onclick="location.href='/faq-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="8"/>
+        </svg>
+        <span>FAQ</span>
+      </button>
+
+      <button class="drawer-item" id="menu-contact" onclick="location.href='/contact-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span>Contact</span>
+      </button>
+
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label drawer-section-other">Other Links</div>
+
+      <button class="drawer-item" id="menu-api" onclick="location.href=/'/api-en.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+        </svg>
+        <span>API Documentation</span>
+      </button>
+
+    </div>
+
+    <div class="drawer-footer">
+      <div class="drawer-footer-links">
+        <a href="/terms-en.html" class="drawer-footer-link">Terms of Service</a>
+        <span class="drawer-footer-separator">|</span>
+        <a href="/privacy-en.html" class="drawer-footer-link">Privacy & Cookies</a>
+      </div>
+      <p class="drawer-footer-copy">&copy; 2026 Sutemeado</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="status-page" style="padding-top: 80px;">
+    <header class="status-header" style="justify-content: center;">
+      <h1 class="status-title">Service Status</h1>
+    </header>
+
+    <div class="last-updated" id="last-updated">
+      Last Updated: <span id="last-updated-time">Loading...</span>
+    </div>
+
+    <button class="refresh-btn" onclick="loadStatus()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+      Refresh
+    </button>
+
+    <div class="status-grid">
+      <div class="status-card">
+        <div class="status-card-header">
+          <div class="status-indicator online"></div>
+          <span class="status-card-title">Mail Reception Service</span>
+        </div>
+        <div class="status-card-value" id="stat-addresses">-</div>
+        <div class="status-card-label">Created Addresses</div>
+      </div>
+      <div class="status-card">
+        <div class="status-card-header">
+          <div class="status-indicator online"></div>
+          <span class="status-card-title">SMTP Server</span>
+        </div>
+        <div class="status-card-value" id="stat-mails">-</div>
+        <div class="status-card-label">Received Emails</div>
+      </div>
+    </div>
+
+    <div class="status-section">
+      <h2 class="status-section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        System Uptime (Last 24 Hours)
+      </h2>
+      <ul class="status-list">
+        <li class="status-list-item">
+          <span class="status-list-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+            Web Server
+          </span>
+          <span class="status-list-value" id="uptime-web">Measuring...</span>
+        </li>
+        <li class="status-list-item">
+          <span class="status-list-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22 6 12 13 2 6"/>
+            </svg>
+            SMTP Server (Port 2525)
+          </span>
+          <span class="status-list-value" id="uptime-smtp">Measuring...</span>
+        </li>
+        <li class="status-list-item">
+          <span class="status-list-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+            Database
+          </span>
+          <span class="status-list-value" id="uptime-database">Measuring...</span>
+        </li>
+        <li class="status-list-item">
+          <span class="status-list-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+            API Endpoint
+          </span>
+          <span class="status-list-value" id="uptime-api">Measuring...</span>
+        </li>
+      </ul>
+      <p style="margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted);">
+        Uptime is based on actual measurements over the past 24 hours. Status is checked and recorded at 5-minute intervals.
+      </p>
+    </div>
+
+    <div class="status-section">
+      <h2 class="status-section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="8"/>
+        </svg>
+        System Information
+      </h2>
+      <ul class="status-list">
+        <li class="status-list-item">
+          <span class="status-list-label">Service Uptime</span>
+          <span class="status-list-value" id="uptime">-</span>
+        </li>
+        <li class="status-list-item">
+          <span class="status-list-label">API Response Time</span>
+          <span class="status-list-value" id="response-time">-</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="status-footer">
+      <p>&copy; 2026 Sutemeado</p>
+      <p style="margin-top: 0.5rem; font-size: 0.75rem;">System status automatically updates every 2 minutes</p>
+    </div>
+  </div>
+
+  <script>
+    function getUptimeColorClass(percentage) {
+      if (percentage >= 99) return 'success';
+      if (percentage >= 95) return 'warning';
+      return 'error';
+    }
+    
+    function formatUptimeText(uptimeData) {
+      if (!uptimeData) return 'No data';
+      const pct = uptimeData.percentage || 0;
+      const total = uptimeData.total || 0;
+      
+      if (total === 0) {
+        return 'Measuring...';
+      }
+      
+      const meterWidth = Math.round(pct);
+      let meterColor = '#10b981';
+      if (pct < 95) meterColor = '#ef4444';
+      else if (pct < 99) meterColor = '#f59e0b';
+      
+      return `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-weight:600;min-width:45px;">${pct}%</span>
+        <div style="width:80px;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;flex-shrink:0;">
+          <div style="width:${meterWidth}%;height:100%;background:${meterColor};transition:width 0.3s;"></div>
+        </div>
+        ${pct < 95 ? '<span style="color:#ef4444;">⚠️</span>' : ''}
+      </div>`;
+    }
+    
+    async function loadStatus() {
+      const startTime = performance.now();
+      const cacheBuster = '?_=' + Date.now();
+      
+      try {
+        const response = await fetch('/api/status' + cacheBuster);
+        if (!response.ok) {
+          throw new Error('HTTP error! status: ' + response.status);
+        }
+        const data = await response.json();
+        const endTime = performance.now();
+        
+        if (!data.success) {
+          throw new Error('API error: ' + (data.error || 'Unknown error'));
+        }
+        
+        const stats = data.stats || {};
+        const addresses = stats.totalAddressesAllTime || stats.total_addresses || 0;
+        const mails = stats.totalMailsAllTime || stats.total_mails || 0;
+        
+        document.getElementById('stat-addresses').textContent = addresses.toLocaleString();
+        document.getElementById('stat-mails').textContent = mails.toLocaleString();
+        
+        const uptimeSeconds = data.uptime || 0;
+        const hours = Math.floor(uptimeSeconds / 3600);
+        const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+        document.getElementById('uptime').textContent = hours + 'h ' + minutes + 'm';
+        document.getElementById('response-time').textContent = Math.round(endTime - startTime) + 'ms';
+        
+        const uptimePct = data.uptimePercentage || {};
+        document.getElementById('uptime-web').innerHTML = formatUptimeText(uptimePct.web);
+        document.getElementById('uptime-smtp').innerHTML = formatUptimeText(uptimePct.smtp);
+        document.getElementById('uptime-database').innerHTML = formatUptimeText(uptimePct.database);
+        document.getElementById('uptime-api').innerHTML = formatUptimeText(uptimePct.api);
+        
+        ['web', 'smtp', 'database', 'api'].forEach(component => {
+          const el = document.getElementById('uptime-' + component);
+          const data = uptimePct[component];
+          if (el && data) {
+            const pct = data.percentage || 0;
+            el.className = 'status-list-value ' + getUptimeColorClass(pct);
+          }
+        });
+        
+      } catch (error) {
+        console.error('Status fetch failed:', error);
+        document.getElementById('stat-addresses').textContent = 'Error';
+        document.getElementById('stat-mails').textContent = 'Error';
+        document.getElementById('uptime').textContent = 'Failed to get';
+        document.getElementById('uptime-web').innerHTML = 'Failed';
+        document.getElementById('uptime-smtp').innerHTML = 'Failed';
+        document.getElementById('uptime-database').innerHTML = 'Failed';
+        document.getElementById('uptime-api').innerHTML = 'Failed';
+      }
+      
+      const updateTime = new Date().toLocaleString('en-US');
+      document.getElementById('last-updated').textContent = 'Last Updated: ' + updateTime;
+      document.getElementById('last-updated-time').textContent = updateTime;
+    }
+
+    loadStatus();
+    setInterval(loadStatus, 30000);
+  </script>
+
+  <script src="/common.js"></script>
+</body>
+</html>

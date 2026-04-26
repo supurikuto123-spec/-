@@ -1,0 +1,6 @@
+# URL正規化リダイレクト
+# /index.html → /
+/index.html / 301
+
+# www → non-www（Cloudflare Pagesはサポートしていない可能性あり）
+# この設定はCloudflare DashboardのRulesで設定する必要があるかもしれません
