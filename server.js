@@ -6,6 +6,7 @@ const { SMTPServer } = require('smtp-server');
 const simpleParser = require('mailparser').simpleParser;
 const MailStore = require('./lib/mailstore');
 const Database = require('better-sqlite3');
+const tls = require('tls');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -1085,35 +1086,97 @@ async function startServer() {
     console.log(`📧 API: http://localhost:${PORT}`);
   });
 
+  // ===== TLS Certificate Setup for STARTTLS =====
+  const CERT_DIR = path.join(path.dirname(DB_PATH), 'certs');
+  const KEY_PATH = path.join(CERT_DIR, 'smtp-key.pem');
+  const CERT_PATH = path.join(CERT_DIR, 'smtp-cert.pem');
+
+  // Generate self-signed certificate if not exists
+  if (!fs.existsSync(CERT_DIR)) {
+    fs.mkdirSync(CERT_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(KEY_PATH) || !fs.existsSync(CERT_PATH)) {
+    try {
+      const { execSync } = require('child_process');
+      execSync(
+        `openssl req -x509 -newkey rsa:2048 -keyout "${KEY_PATH}" -out "${CERT_PATH}" -days 365 -nodes -subj "/CN=sutemeado.com"`,
+        { stdio: 'ignore' }
+      );
+      console.log('🔐 Generated self-signed TLS certificate for STARTTLS');
+    } catch (e) {
+      console.warn('⚠️ Failed to generate TLS certificate:', e.message);
+    }
+  }
+
+  const tlsOptions = (fs.existsSync(KEY_PATH) && fs.existsSync(CERT_PATH))
+    ? { key: fs.readFileSync(KEY_PATH), cert: fs.readFileSync(CERT_PATH) }
+    : null;
+
   // ===== SMTP Server =====
   const smtpServer = new SMTPServer({
     port: SMTP_PORT,
     host: '0.0.0.0',
     banner: 'Sutemeado SMTP Server',
-    disabledCommands: ['AUTH', 'STARTTLS'],
-    
+    disabledCommands: ['AUTH'],
+    // Enable STARTTLS if certificate is available
+    ...(tlsOptions ? { key: tlsOptions.key, cert: tlsOptions.cert } : {}),
+    // Disable requirement for client certificate
+    requireTLS: false,
+    // Allow insecure connections (many mail servers will still deliver without TLS)
+    allowInsecureAuth: true,
+    // Logger for debugging SMTP protocol
+    logger: true,
+    // Size limit for messages
+    size: 10 * 1024 * 1024,
+
     // 接続ログ
     onConnect(session, callback) {
-      console.log(`📥 SMTP Connection from: ${session.remoteAddress}`);
+      console.log(`📥 [SMTP] Connection from: ${session.remoteAddress} (secured=${session.secure})`);
       callback();
     },
-    
-    // メール受信時の処理（非同期化してイベントループをブロックしない）
+
+    // MAIL FROM handler with logging
+    onMailFrom(address, session, callback) {
+      console.log(`📤 [SMTP] MAIL FROM: ${address.address} from ${session.remoteAddress}`);
+      callback();
+    },
+
+    // RCPT TO handler with validation
+    onRcptTo(address, session, callback) {
+      const rcpt = address.address.toLowerCase();
+      console.log(`📥 [SMTP] RCPT TO: ${rcpt}`);
+      if (!rcpt.endsWith('@sutemeado.com')) {
+        console.warn(`   ⚠️ Rejected: domain not allowed`);
+        return callback(new Error('Only @sutemeado.com addresses are accepted'));
+      }
+      callback();
+    },
+
+    // メール受信時の処理
     onData(stream, session, callback) {
-      // タイムアウト設定（30秒）
+      console.log(`📨 [SMTP] DATA started from ${session.remoteAddress}`);
+
+      // タイムアウト設定（45秒 - メール本文が大きい場合に対応）
       const timeout = setTimeout(() => {
-        console.error('⏱️ SMTP processing timeout');
+        console.error(`⏱️ [SMTP] DATA timeout from ${session.remoteAddress}`);
         callback(new Error('Processing timeout'));
-      }, 30000);
-      
-      simpleParser(stream, { maxSize: 10 * 1024 * 1024 }) // 10MB制限
+      }, 45000);
+
+      // Handle stream errors
+      stream.on('error', (err) => {
+        clearTimeout(timeout);
+        console.error(`❌ [SMTP] Stream error from ${session.remoteAddress}:`, err.message);
+        callback(new Error('Stream error'));
+      });
+
+      simpleParser(stream, { maxSize: 10 * 1024 * 1024 })
         .then(async parsed => {
           clearTimeout(timeout);
-          console.log(`📨 Email received: From=${parsed.from?.text}, Subject=${parsed.subject}`);
-          
+          console.log(`✅ [SMTP] Parsed email: From=${parsed.from?.text}, Subject=${parsed.subject || '(no subject)'}`);
+
           // 宛先アドレスを抽出
           const recipients = new Set();
-          
+
           if (parsed.to) {
             if (Array.isArray(parsed.to)) {
               parsed.to.forEach(addr => {
@@ -1123,25 +1186,33 @@ async function startServer() {
               recipients.add(parsed.to.address.toLowerCase());
             }
           }
-          
+
           // envelope.rcptTo からも取得（BCC対応）
           if (session.envelope && session.envelope.rcptTo) {
             session.envelope.rcptTo.forEach(addr => {
               recipients.add(addr.address.toLowerCase());
             });
           }
-          
+
           const recipientList = Array.from(recipients).filter(r => r.endsWith('@sutemeado.com'));
           console.log(`   Recipients: ${recipientList.join(', ') || 'none'}`);
-          
+
+          if (recipientList.length === 0) {
+            console.warn(`   ⚠️ No valid @sutemeado.com recipients found`);
+          }
+
           // 大量の宛先を制限（スパム対策）
           if (recipientList.length > 50) {
             console.warn(`   ⚠️ Too many recipients (${recipientList.length}), limiting to 50`);
             recipientList.splice(50);
           }
-          
-          // 非同期でメールを処理（イベントループをブロックしない）
+
+          // すぐにcallbackを呼び出してSMTP応答を返す（非同期処理はバックグラウンドで続行）
+          callback();
+
+          // 非同期でメールを保存（クライアントに応答後、バックグラウンドで処理）
           setImmediate(async () => {
+            let savedCount = 0;
             for (const address of recipientList) {
               try {
                 const mail = await mailStore.addMail(address, {
@@ -1151,6 +1222,7 @@ async function startServer() {
                   html: parsed.html || null
                 });
                 if (mail) {
+                  savedCount++;
                   console.log(`   ✅ Saved: ${address} (ID: ${mail.id})`);
                 } else {
                   console.log(`   ⚠️ Mailbox not found: ${address}`);
@@ -1159,14 +1231,13 @@ async function startServer() {
                 console.error(`   ❌ Error saving for ${address}:`, err.message);
               }
             }
+            console.log(`📊 [SMTP] Saved ${savedCount}/${recipientList.length} mails from ${session.remoteAddress}`);
           });
-          
-          // すぐにcallbackを呼び出し（非同期処理はバックグラウンドで続行）
-          callback();
         })
         .catch(err => {
           clearTimeout(timeout);
-          console.error('❌ Failed to parse email:', err.message);
+          console.error(`❌ [SMTP] Failed to parse email from ${session.remoteAddress}:`, err.message);
+          // Only call callback if not already called
           callback(new Error('Failed to parse email'));
         });
     }
@@ -1175,12 +1246,18 @@ async function startServer() {
   // SMTPサーバー起動
   smtpServer.listen(SMTP_PORT, '0.0.0.0', () => {
     console.log(`📬 SMTP Server running on port ${SMTP_PORT}`);
+    console.log(`   STARTTLS: ${tlsOptions ? 'enabled' : 'disabled (no certificate)'}`);
     console.log(`   Port: ${SMTP_PORT}`);
   });
 
   // エラーハンドリング
   smtpServer.on('error', (err) => {
-    console.error('SMTP Server Error:', err);
+    console.error('SMTP Server Error:', err.message);
+  });
+
+  // 接続クローズ時のログ
+  smtpServer.on('close', (session) => {
+    console.log(`🔌 [SMTP] Connection closed: ${session?.remoteAddress || 'unknown'}`);
   });
 }
 
